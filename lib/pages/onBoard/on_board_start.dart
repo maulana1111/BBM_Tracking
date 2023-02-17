@@ -1,4 +1,4 @@
-import 'package:bbm_tracking/mainMenu/home.dart';
+import 'package:bbm_tracking/pages/home.dart';
 import 'package:flutter/material.dart';
 
 class OnBoardStart extends StatefulWidget {
@@ -74,7 +74,8 @@ class _OnBoardStartState extends State<OnBoardStart> {
             InkWell(
               onTap: () {
                 Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(builder: (context) => Home()));
+                  _createRoute(),
+                );
                 // print("object");
               },
               child: Stack(
@@ -108,4 +109,22 @@ class _OnBoardStartState extends State<OnBoardStart> {
       ),
     );
   }
+}
+
+Route _createRoute() {
+  return PageRouteBuilder(
+    pageBuilder: (context, animation, secondaryAnimation) => const Home(),
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      const begin = Offset(4.0, 3.0);
+      const end = Offset.zero;
+      const curve = Curves.ease;
+
+      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+      return SlideTransition(
+        position: animation.drive(tween),
+        child: child,
+      );
+    },
+  );
 }

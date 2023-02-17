@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:bbm_tracking/onBoard/on_board_start.dart';
+import 'package:bbm_tracking/pages/onBoard/on_board_start.dart';
 import 'package:flutter/material.dart';
 
 class SplsScreen extends StatefulWidget {
@@ -22,7 +22,8 @@ class _SplsScreen extends State<SplsScreen> {
       Duration(seconds: 3),
       () {
         Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => OnBoardStart()));
+          _createRoute(),
+        );
       },
     );
 
@@ -39,4 +40,23 @@ class _SplsScreen extends State<SplsScreen> {
       ),
     );
   }
+}
+
+Route _createRoute() {
+  return PageRouteBuilder(
+    pageBuilder: (context, animation, secondaryAnimation) =>
+        const OnBoardStart(),
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      const begin = Offset(4.0, 3.0);
+      const end = Offset.zero;
+      const curve = Curves.ease;
+
+      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+      return SlideTransition(
+        position: animation.drive(tween),
+        child: child,
+      );
+    },
+  );
 }

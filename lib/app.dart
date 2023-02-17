@@ -1,5 +1,5 @@
-import 'package:bbm_tracking/onBoard/on_board_start.dart';
-import 'package:bbm_tracking/onBoard/splash_screen.dart';
+import 'package:bbm_tracking/pages/onBoard/on_board_start.dart';
+import 'package:bbm_tracking/pages/onBoard/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

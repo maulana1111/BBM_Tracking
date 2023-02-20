@@ -47,150 +47,194 @@ class _CardKendaraanState extends State<CardKendaraan> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      height: 135,
-      margin: EdgeInsets.only(
-        top: 8,
-        bottom: 8,
-      ),
-      decoration: BoxDecoration(
-        color: kendaraan.status ? Color(0xFFFC8D05) : Color(0xFFDDB05E),
-        borderRadius: BorderRadius.all(
-          Radius.circular(8),
+    return InkWell(
+      onTap: () {
+        !kendaraan.status
+            ? showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return showDialogError();
+                },
+              )
+            : print("object");
+      },
+      child: Container(
+        width: double.infinity,
+        height: 135,
+        margin: EdgeInsets.only(
+          top: 8,
+          bottom: 8,
         ),
-      ),
-      child: Column(
-        children: [
-          Container(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Container(
-                  padding: EdgeInsets.all(10),
-                  child: Text(
-                    "Kendaraan Anda Saat ini",
-                    style: styleText,
-                  ),
-                ),
-                Container(
-                  // padding: EdgeInsets.all(10),
-                  child: Switch(
-                    activeColor: Color(0xFFDDB05E),
-                    activeTrackColor: Colors.white,
-                    inactiveThumbColor: Color(0xFFE3EAEA),
-                    inactiveTrackColor: Colors.white,
-                    splashRadius: 50,
-                    value: kendaraan.status,
-                    onChanged: (value) {
-                      !kendaraan.status
-                          ? showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return CustomeDialogBox(
-                                  title: 'Aktifkan Kendaraan?',
-                                  description:
-                                      'Anda dapat melihat semua detail data kendaraan ketika status kendaraan sudah aktif kembali',
-                                  positiveText: "Ya, Aktifkan",
-                                  negativeText: "Batalkan",
-                                  screen: "cardKendaraan",
-                                  onChangeStatus: () => {
-                                    onChangeStatus(
-                                        kendaraan.id, !kendaraan.status),
-                                  },
-                                );
-                              },
-                            )
-                          : onChangeStatus(kendaraan.id, !kendaraan.status);
-                    },
-                  ),
-                ),
-              ],
-            ),
+        decoration: BoxDecoration(
+          color: kendaraan.status ? Color(0xFFFC8D05) : Color(0xFFDDB05E),
+          borderRadius: BorderRadius.all(
+            Radius.circular(8),
           ),
-          Container(
-            padding: EdgeInsets.only(
-              left: 10,
-              right: 10,
+        ),
+        child: Column(
+          children: [
+            Container(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    padding: EdgeInsets.all(10),
+                    child: Text(
+                      kendaraan.status
+                          ? "Kendaraan Anda Saat ini"
+                          : "Kendaraan Lainnya",
+                      style: styleText,
+                    ),
+                  ),
+                  Container(
+                    // padding: EdgeInsets.all(10),
+                    child: Switch(
+                      activeColor: Color(0xFFDDB05E),
+                      activeTrackColor: Colors.white,
+                      inactiveThumbColor: Color(0xFFE3EAEA),
+                      inactiveTrackColor: Colors.white,
+                      splashRadius: 50,
+                      value: kendaraan.status,
+                      onChanged: (value) {
+                        !kendaraan.status
+                            ? showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return CustomeDialogBox(
+                                    title: 'Aktifkan Kendaraan?',
+                                    description:
+                                        'Anda dapat melihat semua detail data kendaraan ketika status kendaraan sudah aktif kembali',
+                                    positiveText: "Ya, Aktifkan",
+                                    negativeText: "Batalkan",
+                                    screen: "cardKendaraan",
+                                    onChangeStatus: () => {
+                                      onChangeStatus(
+                                          kendaraan.id, !kendaraan.status),
+                                    },
+                                  );
+                                },
+                              )
+                            : onChangeStatus(kendaraan.id, !kendaraan.status);
+                      },
+                    ),
+                  ),
+                ],
+              ),
             ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              // crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Container(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "Tipe Kendaraan : ",
-                                style: cardTitle,
-                              ),
-                              Text(
-                                "${kendaraan.namaKendaraan}",
-                                style: cardData,
-                              ),
-                            ],
-                          ),
-                        ),
-                        SizedBox(
-                          width: 20,
-                        ),
-                        Container(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "Nomor Plat : ",
-                                style: cardTitle,
-                              ),
-                              Text(
-                                "${kendaraan.nomorPlat}",
-                                style: cardData,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    Container(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        // mainAxisAlignment: MainAxisAlignment.start,
+            Container(
+              padding: EdgeInsets.only(
+                left: 10,
+                right: 10,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                // crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
                         children: [
-                          Text(
-                            "Bahan Bakar saat ini ",
-                            style: cardTitle,
+                          Container(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Tipe Kendaraan : ",
+                                  style: cardTitle,
+                                ),
+                                Text(
+                                  "${kendaraan.namaKendaraan}",
+                                  style: cardData,
+                                ),
+                              ],
+                            ),
                           ),
-                          Text(
-                            "${kendaraan.bahanBakar}",
-                            style: cardData,
+                          SizedBox(
+                            width: 20,
+                          ),
+                          Container(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Nomor Plat : ",
+                                  style: cardTitle,
+                                ),
+                                Text(
+                                  "${kendaraan.nomorPlat}",
+                                  style: cardData,
+                                ),
+                              ],
+                            ),
                           ),
                         ],
                       ),
-                    ),
-                  ],
-                ),
-                Container(
-                  child: Image.asset(
-                    kendaraan.jenisKendaraan == "mobil"
-                        ? "assets/images/car.png"
-                        : "assets/images/motor.png",
-                    width: 80,
-                    height: 80,
+                      SizedBox(
+                        height: 15,
+                      ),
+                      Container(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          // mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Bahan Bakar saat ini ",
+                              style: cardTitle,
+                            ),
+                            Text(
+                              "${kendaraan.bahanBakar}",
+                              style: cardData,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-              ],
+                  Container(
+                    child: Image.asset(
+                      kendaraan.jenisKendaraan == "mobil"
+                          ? "assets/images/car.png"
+                          : "assets/images/motor.png",
+                      width: 80,
+                      height: 80,
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
+      ),
+    );
+  }
+
+  Dialog showDialogError() {
+    return Dialog(
+      elevation: 1,
+      backgroundColor: Colors.white,
+      child: Container(
+        height: 230,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Image.asset("assets/images/error_kendaraan.png"),
+            SizedBox(
+              height: 25,
+            ),
+            Text(
+              "Maaf, Anda menonaktifkan kendaraan ini",
+              style: TextStyle(
+                color: Color(0xFF677D81),
+                fontSize: 12,
+                fontFamily: 'Poppins',
+                fontWeight: FontWeight.w600,
+              ),
+              textAlign: TextAlign.center,
+            )
+          ],
+        ),
       ),
     );
   }

@@ -113,7 +113,7 @@ class _OnBoardStartState extends State<OnBoardStart> {
 
 Route _createRoute() {
   return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => const Home(),
+    pageBuilder: (context, animation, secondaryAnimation) => Home("", ""),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       const begin = Offset(4.0, 3.0);
       const end = Offset.zero;

@@ -1,3 +1,4 @@
+import 'package:bbm_tracking/pages/kendaraan/form-tambah-kendaraan/form.dart';
 import 'package:bbm_tracking/pages/kendaraan/index_kendaraan.dart';
 import 'package:bbm_tracking/pages/mainMenu/component/chart.dart';
 import 'package:bbm_tracking/pages/mainMenu/component/item_bensin.dart';
@@ -7,13 +8,27 @@ import 'package:pandabar/main.view.dart';
 import 'package:pandabar/model.dart';
 
 class Home extends StatefulWidget {
-  const Home({super.key});
+  final String screen;
+  final String param;
+
+  Home(this.screen, this.param);
 
   @override
   State<Home> createState() => _HomeState();
 }
 
 class _HomeState extends State<Home> {
+  late String screen;
+  late String param;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    screen = widget.screen;
+    param = widget.param;
+  }
+
   String page = 'home';
   @override
   Widget build(BuildContext context) {
@@ -47,34 +62,39 @@ class _HomeState extends State<Home> {
         ],
         onChange: (id) {
           setState(() {
-            page = id;
+            screen = id;
           });
         },
         onFabButtonPressed: () {},
       ),
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.only(
-            left: 10,
-            right: 10,
-          ),
-          child: Builder(builder: (context) {
-            switch(page){
-              case 'home':
-                return IndexMainMenu();
-              case 'kendaraan':
-                return IndexKendaraan();
-              case 'kendaraan':
-                return IndexMainMenu();
-              case 'kendaraan':
-                return IndexMainMenu();
-              default:
-                return IndexMainMenu();
-            }
-          },)
-        ),
+            padding: EdgeInsets.only(
+              left: 10,
+              right: 10,
+            ),
+            child: Builder(
+              builder: (context) {
+                // print("screen = " + param);
+                switch (screen) {
+                  case 'home':
+                    return IndexMainMenu();
+                  case 'kendaraan':
+                    return IndexKendaraan();
+                  case 'kendaraan':
+                    return IndexMainMenu();
+                  case 'kendaraan':
+                    return IndexMainMenu();
+                  case 'formKendaraan':
+                    return FormKendaraan(
+                      kendaraan: param,
+                    );
+                  default:
+                    return IndexMainMenu();
+                }
+              },
+            )),
       ),
     );
   }
 }
-

@@ -175,16 +175,8 @@ class _IndexKendaraanState extends State<IndexKendaraan> {
             SizedBox(
               height: 25,
             ),
-            GestureDetector(
+            InkWell(
               onTap: () {
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(
-                //     builder: (context) => FormKendaraan(
-                //       kendaraan: "motor",
-                //     ),
-                //   ),
-                // );
                 Navigator.of(context).pushReplacement(
                   MaterialPageRoute(
                     builder: (context) => Home("formKendaraan", "motor"),

@@ -1,5 +1,6 @@
 // import 'package:fl_chart_app/presentation/resources/app_resources.dart';
 // import 'package:fl_chart_app/util/extensions/color_extensions.dart';
+import 'package:syncfusion_flutter_charts/sparkcharts.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
@@ -191,6 +192,62 @@ class _BarChart extends StatelessWidget {
       ];
 }
 
+class _BarChart2 extends StatelessWidget {
+  const _BarChart2({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: SfSparkLineChart(
+        //Enable the trackball
+        trackball: SparkChartTrackball(
+          activationMode: SparkChartActivationMode.tap,
+          color: Colors.black,
+        ),
+        //Enable marker
+        marker: SparkChartMarker(
+            displayMode: SparkChartMarkerDisplayMode.all, color: Colors.black),
+        //Enable data label
+        labelDisplayMode: SparkChartLabelDisplayMode.none,
+        color: Color(0xFFFC8D05),
+        // dashArray: [],
+        data: <double>[
+          10000,
+          30000,
+          60000,
+          10000,
+          70000,
+          80000,
+          20000,
+          33000,
+          70000,
+          10000,
+          10000,
+          30000,
+          60000,
+          10000,
+          70000,
+          80000,
+          20000,
+          33000,
+          70000,
+          100000,
+          10000,
+          30000,
+          60000,
+          10000,
+          70000,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+      ),
+    );
+  }
+}
+
 class BarChartSample3 extends StatefulWidget {
   const BarChartSample3({super.key});
 
@@ -203,7 +260,7 @@ class BarChartSample3State extends State<BarChartSample3> {
   Widget build(BuildContext context) {
     return const AspectRatio(
       aspectRatio: 1.6,
-      child: _BarChart(),
+      child: _BarChart2(),
     );
   }
 }

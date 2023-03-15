@@ -1,6 +1,10 @@
-import 'package:bbm_tracking/pages/mainMenu/component/chart.dart';
+import 'package:bbm_tracking/resource/component-bersama/chart.dart';
 import 'package:bbm_tracking/pages/mainMenu/component/item_bensin.dart';
+import 'package:bbm_tracking/resource/component-bersama/card_kendaraan.dart';
 import 'package:flutter/material.dart';
+import 'package:month_year_picker/month_year_picker.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:intl/intl.dart';
 
 class IndexMainMenu extends StatefulWidget {
   const IndexMainMenu({super.key});
@@ -11,6 +15,14 @@ class IndexMainMenu extends StatefulWidget {
 
 class _IndexMainMenuState extends State<IndexMainMenu> {
   String _toggle = "Harga";
+  DateTime? _selected = DateTime.now();
+
+  TextStyle styleData = TextStyle(
+    fontFamily: 'Poppins',
+    fontSize: 6,
+    color: Color(0xFF3B3C48),
+    fontWeight: FontWeight.w500,
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -44,172 +56,7 @@ class _IndexMainMenuState extends State<IndexMainMenu> {
                     SizedBox(
                       height: 10,
                     ),
-                    Stack(
-                      children: [
-                        Image.asset(
-                          "assets/images/card.png",
-                          width: double.infinity,
-                          fit: BoxFit.fill,
-                        ),
-                        Container(
-                          child: Padding(
-                            padding: EdgeInsets.all(20),
-                            child: Column(
-                              children: [
-                                Container(
-                                  width: double.infinity,
-                                  child: Text(
-                                    "Data Pribadi Kendaraan Anda",
-                                    style: TextStyle(
-                                      fontFamily: 'Poppins',
-                                      fontWeight: FontWeight.w700,
-                                      fontSize: 16,
-                                      color: Color(0xFF3B3C48),
-                                    ),
-                                  ),
-                                ),
-                                Container(
-                                  child: Row(
-                                    children: [
-                                      Image.asset(
-                                        "assets/images/car.png",
-                                        width: 120,
-                                        height: 120,
-                                      ),
-                                      SizedBox(
-                                        width: 10,
-                                      ),
-                                      Container(
-                                        child: Column(
-                                          children: [
-                                            Container(
-                                              child: Row(
-                                                children: [
-                                                  Container(
-                                                    child: Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        Text(
-                                                          "Tipe Kendaraan : ",
-                                                          style: TextStyle(
-                                                            fontFamily:
-                                                                'Poppins',
-                                                            fontSize: 10,
-                                                            fontWeight:
-                                                                FontWeight.w400,
-                                                            color: Color(
-                                                                0xFF25235B),
-                                                          ),
-                                                        ),
-                                                        SizedBox(
-                                                          height: 5,
-                                                        ),
-                                                        Text(
-                                                          "Toyota Vitz",
-                                                          style: TextStyle(
-                                                            fontFamily:
-                                                                'Poppins',
-                                                            fontSize: 10,
-                                                            fontWeight:
-                                                                FontWeight.w700,
-                                                            color: Color(
-                                                                0xFFffffff),
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  SizedBox(
-                                                    width: 30,
-                                                  ),
-                                                  Container(
-                                                    child: Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        Text(
-                                                          "Nomor Plat :",
-                                                          style: TextStyle(
-                                                            fontFamily:
-                                                                'Poppins',
-                                                            fontSize: 10,
-                                                            fontWeight:
-                                                                FontWeight.w400,
-                                                            color: Color(
-                                                                0xFF25235B),
-                                                          ),
-                                                        ),
-                                                        SizedBox(
-                                                          height: 5,
-                                                        ),
-                                                        Text(
-                                                          "B 506 WLG ",
-                                                          style: TextStyle(
-                                                            fontFamily:
-                                                                'Poppins',
-                                                            fontSize: 10,
-                                                            fontWeight:
-                                                                FontWeight.w700,
-                                                            color: Color(
-                                                                0xFFffffff),
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              height: 20,
-                                            ),
-                                            Container(
-                                              width: 180,
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Text(
-                                                    "Bahan Bakar saat ini",
-                                                    style: TextStyle(
-                                                      fontFamily: 'Poppins',
-                                                      fontSize: 10,
-                                                      fontWeight:
-                                                          FontWeight.w400,
-                                                      color: Color(0xFF25235B),
-                                                    ),
-                                                  ),
-                                                  SizedBox(
-                                                    height: 5,
-                                                  ),
-                                                  Text(
-                                                    "Pertalite",
-                                                    style: TextStyle(
-                                                      fontFamily: 'Poppins',
-                                                      fontSize: 10,
-                                                      fontWeight:
-                                                          FontWeight.w700,
-                                                      color: Color(0xFFffffff),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
+                    MainCardKendaraan(),
                     Container(
                       width: double.infinity,
                       height: 58,
@@ -261,7 +108,8 @@ class _IndexMainMenuState extends State<IndexMainMenu> {
                                     Row(
                                       children: [
                                         Image.asset(
-                                            "assets/images/compass.png"),
+                                          "assets/images/compass.png",
+                                        ),
                                         SizedBox(
                                           width: 10,
                                         ),
@@ -386,7 +234,7 @@ class _IndexMainMenuState extends State<IndexMainMenu> {
                     ),
                     Container(
                       width: double.infinity,
-                      height: 250,
+                      height: 300,
                       margin: EdgeInsets.all(5),
                       decoration: BoxDecoration(
                         color: Color(0xffE3EAEA),
@@ -408,99 +256,154 @@ class _IndexMainMenuState extends State<IndexMainMenu> {
                         child: Column(
                           children: [
                             Container(
-                              width: 130,
-                              height: 30,
-                              alignment: Alignment.topRight,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(4),
-                                ),
-                              ),
                               child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
                                   InkWell(
-                                    onTap: () {
-                                      setState(() {
-                                        _toggle = "Harga";
-                                      });
-                                    },
+                                    onTap: () => _onPressed(context: context),
                                     child: Container(
-                                      width: 65,
-                                      height: 30,
                                       decoration: BoxDecoration(
-                                        color: _toggle == "Harga"
-                                            ? Color(0xFF677D81)
-                                            : Color(0xFFffffff),
-                                        borderRadius: BorderRadius.all(
-                                          Radius.circular(4),
+                                        border: Border.all(
+                                          width: 2,
+                                          color: Color(0xffDDB05E),
                                         ),
                                       ),
-                                      child: Container(
-                                        margin: EdgeInsets.only(top: 5),
+                                      child: Padding(
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: 20,
+                                          vertical: 5,
+                                        ),
                                         child: Text(
-                                          "Harga",
+                                          DateFormat(
+                                            "MMMM yyyy",
+                                            "id_ID",
+                                          ).format(_selected!),
                                           style: TextStyle(
-                                            fontSize: 12,
                                             fontFamily: 'Poppins',
-                                            color: _toggle == "Harga"
-                                                ? Colors.white
-                                                : Colors.black,
+                                            fontSize: 12,
+                                            color: Color(0xFF1A0F0F),
                                             fontWeight: FontWeight.w500,
                                           ),
-                                          textAlign: TextAlign.center,
                                         ),
                                       ),
                                     ),
                                   ),
-                                  InkWell(
-                                    onTap: () {
-                                      setState(() {
-                                        _toggle = "Liter";
-                                      });
-                                    },
-                                    child: Container(
-                                      width: 65,
-                                      height: 30,
-                                      decoration: BoxDecoration(
-                                        color: _toggle == "Harga"
-                                            ? Color(0xFFffffff)
-                                            : Color(0xFF677D81),
-                                        borderRadius: BorderRadius.all(
-                                          Radius.circular(4),
-                                        ),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  Container(
+                                    width: 130,
+                                    height: 30,
+                                    alignment: Alignment.topRight,
+                                    decoration: BoxDecoration(
+                                      color: Color.fromARGB(255, 197, 129, 74),
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(4),
                                       ),
-                                      child: Container(
-                                        margin: EdgeInsets.only(top: 5),
-                                        child: Text(
-                                          "Liter",
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                            fontFamily: 'Poppins',
-                                            color: _toggle == "Harga"
-                                                ? Colors.black
-                                                : Colors.white,
-                                            fontWeight: FontWeight.w500,
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        InkWell(
+                                          onTap: () {
+                                            setState(() {
+                                              _toggle = "Harga";
+                                            });
+                                          },
+                                          child: Container(
+                                            width: 65,
+                                            height: 30,
+                                            decoration: BoxDecoration(
+                                              color: _toggle == "Harga"
+                                                  ? Color(0xFF677D81)
+                                                  : Color(0xFFffffff),
+                                              borderRadius: BorderRadius.all(
+                                                Radius.circular(4),
+                                              ),
+                                            ),
+                                            child: Container(
+                                              margin: EdgeInsets.only(top: 5),
+                                              child: Text(
+                                                "Harga",
+                                                style: TextStyle(
+                                                  fontSize: 12,
+                                                  fontFamily: 'Poppins',
+                                                  color: _toggle == "Harga"
+                                                      ? Colors.white
+                                                      : Colors.black,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                                textAlign: TextAlign.center,
+                                              ),
+                                            ),
                                           ),
-                                          textAlign: TextAlign.center,
                                         ),
-                                      ),
+                                        InkWell(
+                                          onTap: () {
+                                            setState(() {
+                                              _toggle = "Liter";
+                                            });
+                                          },
+                                          child: Container(
+                                            width: 65,
+                                            height: 30,
+                                            decoration: BoxDecoration(
+                                              color: _toggle == "Harga"
+                                                  ? Color(0xFFffffff)
+                                                  : Color(0xFF677D81),
+                                              borderRadius: BorderRadius.all(
+                                                Radius.circular(4),
+                                              ),
+                                            ),
+                                            child: Container(
+                                              margin: EdgeInsets.only(top: 5),
+                                              child: Text(
+                                                "Liter",
+                                                style: TextStyle(
+                                                  fontSize: 12,
+                                                  fontFamily: 'Poppins',
+                                                  color: _toggle == "Harga"
+                                                      ? Colors.black
+                                                      : Colors.white,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                                textAlign: TextAlign.center,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ],
                               ),
                             ),
                             SizedBox(
-                              height: 10,
+                              height: 20,
                             ),
                             Container(
                               width: double.infinity,
                               height: 190,
                               child: BarChartSample3(),
                             ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Container(
+                              child: Text(
+                                "Bulan : Januari 2023",
+                                style: TextStyle(
+                                  fontFamily: 'Poppins',
+                                  fontSize: 12,
+                                  color: Color(0xFF1A0F0F),
+                                ),
+                              ),
+                            ),
                           ],
                         ),
                       ),
+                    ),
+                    SizedBox(
+                      height: 10,
                     ),
                   ],
                 ),
@@ -510,5 +413,31 @@ class _IndexMainMenuState extends State<IndexMainMenu> {
         ),
       ),
     );
+  }
+
+  Future<void> _onPressed({
+    required BuildContext context,
+    String? locale,
+  }) async {
+    final localeObj = locale != null ? Locale(locale) : null;
+    final selected = await showMonthYearPicker(
+      context: context,
+      initialDate: _selected ?? DateTime.now(),
+      firstDate: DateTime(2019),
+      lastDate: DateTime.now(),
+      locale: localeObj,
+    );
+    // final selected = await showDatePicker(
+    //   context: context,
+    //   initialDate: _selected ?? DateTime.now(),
+    //   firstDate: DateTime(2019),
+    //   lastDate: DateTime(2022),
+    //   locale: localeObj,
+    // );
+    if (selected != null) {
+      setState(() {
+        _selected = selected;
+      });
+    }
   }
 }

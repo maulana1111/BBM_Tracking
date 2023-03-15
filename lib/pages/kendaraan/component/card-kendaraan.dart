@@ -1,5 +1,5 @@
 import 'package:bbm_tracking/model/Kendaraan_model.dart';
-import 'package:bbm_tracking/pages/custom_dialog_box.dart';
+import 'package:bbm_tracking/pages/component/custom_dialog_box.dart';
 import 'package:flutter/material.dart';
 
 class CardKendaraan extends StatefulWidget {

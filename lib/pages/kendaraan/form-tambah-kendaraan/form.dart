@@ -1,5 +1,7 @@
+import 'package:animated_custom_dropdown/custom_dropdown.dart';
+import 'package:bbm_tracking/pages/component/success_dialog_box.dart';
+import 'package:bbm_tracking/pages/home.dart';
 import 'package:bbm_tracking/resource/resource.dart';
-import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -20,8 +22,8 @@ class _FormKendaraanState extends State<FormKendaraan> {
   final tipeKendaraanController = TextEditingController();
   final dateController = TextEditingController();
   final kilometerController = TextEditingController();
-  // final jenisKendaraanController = TextEditingController();
-  // final kepemilikanController = TextEditingController();
+  final jenisBBMController = TextEditingController();
+  final kepemilikanController = TextEditingController();
   final nomorPlatController = TextEditingController();
 
   @override
@@ -37,10 +39,17 @@ class _FormKendaraanState extends State<FormKendaraan> {
     if (tipeKendaraanController.value.text != "" &&
         dateController.value.text != "" &&
         kilometerController.value.text != "" &&
-        // tipeKendaraanController.value.text != "" &&
-        // tipeKendaraanController.value.text != "" &&
+        jenisBBMController.value.text != "" &&
+        kepemilikanController.value.text != "" &&
         nomorPlatController.value.text != "") {
       print("success");
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return SuccessDialogBox(deskripsi: "Berhasil Merubah Data");
+          });
+    } else {
+      print("faield");
     }
   }
 
@@ -51,16 +60,26 @@ class _FormKendaraanState extends State<FormKendaraan> {
     tipeKendaraanController.dispose();
     dateController.dispose();
     kilometerController.dispose();
-    // jenisKendaraanController.dispose();
-    // kepemilikanController.dispose();
+    jenisBBMController.dispose();
+    kepemilikanController.dispose();
     nomorPlatController.dispose();
   }
+
+  List<String> listNamaBensin = List.from(listBensin.map((e) => e.text));
+  List<String> listKepemilikan = [
+    'Pribadi',
+    'Perusahaan',
+    'Sewa',
+    'Lainnya',
+  ];
+  // listBensin.map
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xffE3EAEA),
       body: SingleChildScrollView(
+        reverse: true,
         child: Container(
           child: Padding(
             padding: EdgeInsets.all(10),
@@ -68,7 +87,9 @@ class _FormKendaraanState extends State<FormKendaraan> {
               children: [
                 Container(
                   child: InkWell(
-                    onTap: () {},
+                    onTap: () => Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(
+                            builder: (context) => Home("kendaraan", ""))),
                     child: Row(
                       children: [
                         Icon(
@@ -83,7 +104,7 @@ class _FormKendaraanState extends State<FormKendaraan> {
                             color: Color(0xff1A0F0F),
                             fontWeight: FontWeight.w400,
                           ),
-                        )
+                        ),
                       ],
                     ),
                   ),
@@ -157,6 +178,16 @@ class _FormKendaraanState extends State<FormKendaraan> {
                         "text",
                         tipeKendaraanController,
                       ),
+                      dropdownField(
+                        "Jenis Bahan Bakar",
+                        listNamaBensin,
+                        jenisBBMController,
+                      ),
+                      dropdownField(
+                        "Kepemilikan",
+                        listKepemilikan,
+                        kepemilikanController,
+                      ),
                       inputField(
                         "Data Penerimaan Kendaraan",
                         "MM/DD/YYYY",
@@ -203,7 +234,12 @@ class _FormKendaraanState extends State<FormKendaraan> {
                             textAlign: TextAlign.center,
                           ),
                         ),
-                      )
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(
+                          bottom: MediaQuery.of(context).viewInsets.bottom,
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -220,7 +256,7 @@ class _FormKendaraanState extends State<FormKendaraan> {
     return val;
   }
 
-  Widget dropdownField(title) {
+  Widget dropdownField(title, data, TextEditingController controller) {
     return Container(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -238,87 +274,34 @@ class _FormKendaraanState extends State<FormKendaraan> {
               fontWeight: FontWeight.w400,
             ),
           ),
-          DropdownButtonHideUnderline(
-            child: DropdownButton2(
-              isExpanded: true,
-              hint: Row(
-                children: const [
-                  Icon(
-                    Icons.list,
-                    size: 16,
-                    color: Colors.yellow,
+          title != "Kepemilikan"
+              ? CustomDropdown.search(
+                  fillColor: Color(0xffE3EAEA),
+                  borderSide: BorderSide(
+                    color: Color(0xFF677D81),
                   ),
-                  SizedBox(
-                    width: 4,
+                  hintStyle: TextStyle(
+                    fontFamily: 'Poppins',
+                    fontSize: 11,
+                    fontWeight: FontWeight.w400,
                   ),
-                  Expanded(
-                    child: Text(
-                      'Select Item',
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.yellow,
-                      ),
-                      overflow: TextOverflow.ellipsis,
-                    ),
+                  errorText: _submitted ? _errorText(controller) : null,
+                  items: data,
+                  controller: controller,
+                )
+              : CustomDropdown(
+                  fillColor: Color(0xffE3EAEA),
+                  borderSide: BorderSide(
+                    color: Color(0xFF677D81),
                   ),
-                ],
-              ),
-              items: listBensin
-                  .map(
-                    (item) => DropdownMenuItem<String>(
-                      value: item.value,
-                      child: Text(
-                        item.text,
-                        style: const TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                  )
-                  .toList(),
-              value: selectedValueBensin,
-              onChanged: (value) {
-                setState(() {
-                  selectedValueBensin = value as String;
-                });
-              },
-              icon: const Icon(
-                Icons.arrow_forward_ios_outlined,
-              ),
-              iconSize: 14,
-              iconEnabledColor: Colors.yellow,
-              iconDisabledColor: Colors.grey,
-              buttonHeight: 50,
-              buttonWidth: 160,
-              buttonPadding: const EdgeInsets.only(left: 14, right: 14),
-              buttonDecoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(14),
-                border: Border.all(
-                  color: Colors.black26,
+                  hintStyle: TextStyle(
+                    fontFamily: 'Poppins',
+                    fontSize: 11,
+                    fontWeight: FontWeight.w400,
+                  ),
+                  items: data,
+                  controller: controller,
                 ),
-                color: Colors.redAccent,
-              ),
-              buttonElevation: 2,
-              itemHeight: 40,
-              itemPadding: const EdgeInsets.only(left: 14, right: 14),
-              dropdownMaxHeight: 200,
-              dropdownWidth: 200,
-              dropdownPadding: null,
-              dropdownDecoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(14),
-                color: Colors.redAccent,
-              ),
-              dropdownElevation: 8,
-              scrollbarRadius: const Radius.circular(40),
-              scrollbarThickness: 6,
-              scrollbarAlwaysShow: true,
-              offset: const Offset(-20, 0),
-            ),
-          ),
         ],
       ),
     );
@@ -342,15 +325,35 @@ class _FormKendaraanState extends State<FormKendaraan> {
               fontWeight: FontWeight.w400,
             ),
           ),
-          TextFormField(
+          TextField(
             controller: controller,
             readOnly: typeField == "date" && true,
             keyboardType: typeField != "date" && typeField != "text"
                 ? TextInputType.number
                 : TextInputType.text,
             decoration: InputDecoration(
-              border: OutlineInputBorder(),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.all(
+                  Radius.circular(12),
+                ),
+                borderSide: BorderSide(
+                  color: Color(0xFF677D81),
+                ),
+              ),
+              // border: BoxDecoration(border:),
+              contentPadding: EdgeInsets.only(
+                top: 4,
+                bottom: 4,
+                left: 15,
+                right: 15,
+              ),
               hintText: hint,
+              hintStyle: TextStyle(
+                fontFamily: 'Poppins',
+                color: Color(0xFFAEAEAE),
+                fontSize: 10,
+                fontWeight: FontWeight.w400,
+              ),
               errorText: _submitted ? _errorText(controller) : null,
             ),
             onTap: () async {

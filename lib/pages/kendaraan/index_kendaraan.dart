@@ -1,4 +1,7 @@
+import 'dart:ffi';
+
 import 'package:bbm_tracking/model/Kendaraan_model.dart';
+import 'package:bbm_tracking/pages/Performa/index.dart';
 import 'package:bbm_tracking/pages/home.dart';
 import 'package:bbm_tracking/pages/kendaraan/component/card-kendaraan.dart';
 import 'package:bbm_tracking/pages/kendaraan/form-tambah-kendaraan/form.dart';
@@ -58,6 +61,26 @@ class _IndexKendaraanState extends State<IndexKendaraan> {
     }
   }
 
+  void checkKendaraan() {
+    bool cond = false;
+    for (var i = 0; i < _dataKendaraan.length; i++) {
+      if (_dataKendaraan[i].status == true) {
+        cond = true;
+      }
+    }
+    if (cond == true) {
+      Navigator.of(context).push(MaterialPageRoute(builder: (context) => Performa()));
+      // print("object");
+    } else {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return showNotif();
+        },
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -84,27 +107,50 @@ class _IndexKendaraanState extends State<IndexKendaraan> {
                 padding: EdgeInsets.all(5),
                 child: Column(
                   children: [
-                    Container(
-                      child: InkWell(
-                        onTap: () {},
-                        child: Row(
-                          children: [
-                            Icon(
-                              Icons.arrow_back_ios,
-                              size: 15,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                          child: InkWell(
+                            onTap: () => Navigator.of(context).pushReplacement(
+                              MaterialPageRoute(
+                                builder: (context) => Home("home", ""),
+                              ),
                             ),
-                            Text(
-                              "Kembali",
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.arrow_back_ios,
+                                  size: 15,
+                                ),
+                                Text(
+                                  "Kembali",
+                                  style: TextStyle(
+                                    fontSize: 10,
+                                    fontFamily: 'Poppins',
+                                    color: Color(0xff1A0F0F),
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        Container(
+                          child: InkWell(
+                            onTap: () => checkKendaraan(),
+                            child: Text(
+                              "Performa Kendaraan",
                               style: TextStyle(
                                 fontSize: 10,
                                 fontFamily: 'Poppins',
-                                color: Color(0xff1A0F0F),
-                                fontWeight: FontWeight.w400,
+                                color: Color(0xff25A35A),
+                                fontWeight: FontWeight.w600,
                               ),
-                            )
-                          ],
+                            ),
+                          ),
                         ),
-                      ),
+                      ],
                     ),
                     Container(
                       width: double.infinity,
@@ -145,6 +191,32 @@ class _IndexKendaraanState extends State<IndexKendaraan> {
                   ],
                 ),
               ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Dialog showNotif() {
+    return Dialog(
+      elevation: 1,
+      backgroundColor: Color(0xffE3EAEA),
+      child: Container(
+        height: 200,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              "Silahkan Aktifkan Salah Satu Kendaraan Anda",
+              style: TextStyle(
+                color: Color(0xFF677D81),
+                fontSize: 20,
+                fontFamily: 'Poppins',
+                fontWeight: FontWeight.w700,
+              ),
+              textAlign: TextAlign.center,
             ),
           ],
         ),
@@ -200,7 +272,13 @@ class _IndexKendaraanState extends State<IndexKendaraan> {
               height: 7,
             ),
             InkWell(
-              onTap: () {},
+              onTap: () {
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(
+                    builder: (context) => Home("formKendaraan", "mobil"),
+                  ),
+                );
+              },
               child: chooseKendaraan("assets/images/car.png", "Mobil"),
             ),
           ],

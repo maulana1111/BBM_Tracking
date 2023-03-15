@@ -1,8 +1,11 @@
+import 'package:bbm_tracking/pages/AboutApps/index.dart';
+import 'package:bbm_tracking/pages/form-tambah-data-bensin/index.dart';
 import 'package:bbm_tracking/pages/kendaraan/form-tambah-kendaraan/form.dart';
 import 'package:bbm_tracking/pages/kendaraan/index_kendaraan.dart';
-import 'package:bbm_tracking/pages/mainMenu/component/chart.dart';
+import 'package:bbm_tracking/resource/component-bersama/chart.dart';
 import 'package:bbm_tracking/pages/mainMenu/component/item_bensin.dart';
 import 'package:bbm_tracking/pages/mainMenu/index.dart';
+import 'package:bbm_tracking/pages/riwayat/index.dart';
 import 'package:flutter/material.dart';
 import 'package:pandabar/main.view.dart';
 import 'package:pandabar/model.dart';
@@ -29,7 +32,7 @@ class _HomeState extends State<Home> {
     param = widget.param;
   }
 
-  String page = 'home';
+  // String page = 'home';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,9 +53,9 @@ class _HomeState extends State<Home> {
             title: 'Kendaraan',
           ),
           PandaBarButtonData(
-            id: 'jelajah',
-            icon: Icons.language,
-            title: 'Jelajah',
+            id: 'riwayat',
+            icon: Icons.account_balance_wallet_outlined,
+            title: 'Riwayat',
           ),
           PandaBarButtonData(
             id: 'tentang',
@@ -65,35 +68,42 @@ class _HomeState extends State<Home> {
             screen = id;
           });
         },
-        onFabButtonPressed: () {},
+        onFabButtonPressed: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => FormTamabahDataBensin(),
+            ),
+          );
+        },
       ),
       body: SafeArea(
         child: Padding(
-            padding: EdgeInsets.only(
-              left: 10,
-              right: 10,
-            ),
-            child: Builder(
-              builder: (context) {
-                // print("screen = " + param);
-                switch (screen) {
-                  case 'home':
-                    return IndexMainMenu();
-                  case 'kendaraan':
-                    return IndexKendaraan();
-                  case 'kendaraan':
-                    return IndexMainMenu();
-                  case 'kendaraan':
-                    return IndexMainMenu();
-                  case 'formKendaraan':
-                    return FormKendaraan(
-                      kendaraan: param,
-                    );
-                  default:
-                    return IndexMainMenu();
-                }
-              },
-            )),
+          padding: EdgeInsets.only(
+            left: 10,
+            right: 10,
+          ),
+          child: Builder(
+            builder: (context) {
+              // print("screen = " + param);
+              switch (screen) {
+                case 'home':
+                  return IndexMainMenu();
+                case 'kendaraan':
+                  return IndexKendaraan();
+                case 'riwayat':
+                  return Riwayat();
+                case 'tentang':
+                  return AboutApps();
+                case 'formKendaraan':
+                  return FormKendaraan(
+                    kendaraan: param,
+                  );
+                default:
+                  return IndexMainMenu();
+              }
+            },
+          ),
+        ),
       ),
     );
   }

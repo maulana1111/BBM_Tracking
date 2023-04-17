@@ -1,9 +1,10 @@
 import 'package:bbm_tracking/model/Kendaraan_model.dart';
+import 'package:bbm_tracking/model/kendaraan_m.dart';
 import 'package:bbm_tracking/pages/component/custom_dialog_box.dart';
 import 'package:flutter/material.dart';
 
 class CardKendaraan extends StatefulWidget {
-  final Kendaraan kendaraan;
+  final KendaraanModel kendaraan;
   final Function onChangeStatus;
   CardKendaraan({
     required this.kendaraan,
@@ -15,7 +16,7 @@ class CardKendaraan extends StatefulWidget {
 }
 
 class _CardKendaraanState extends State<CardKendaraan> {
-  late Kendaraan kendaraan;
+  late KendaraanModel kendaraan;
   late Function onChangeStatus;
   @override
   void initState() {
@@ -49,7 +50,7 @@ class _CardKendaraanState extends State<CardKendaraan> {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        !kendaraan.status
+        kendaraan.status == 0
             ? showDialog(
                 context: context,
                 builder: (BuildContext context) {
@@ -66,7 +67,7 @@ class _CardKendaraanState extends State<CardKendaraan> {
           bottom: 8,
         ),
         decoration: BoxDecoration(
-          color: kendaraan.status ? Color(0xFFFC8D05) : Color(0xFFDDB05E),
+          color: kendaraan.status == 1 ? Color(0xFFFC8D05) : Color(0xFFDDB05E),
           borderRadius: BorderRadius.all(
             Radius.circular(8),
           ),
@@ -80,7 +81,7 @@ class _CardKendaraanState extends State<CardKendaraan> {
                   Container(
                     padding: EdgeInsets.all(10),
                     child: Text(
-                      kendaraan.status
+                      kendaraan.status == 1
                           ? "Kendaraan Anda Saat ini"
                           : "Kendaraan Lainnya",
                       style: styleText,
@@ -94,9 +95,9 @@ class _CardKendaraanState extends State<CardKendaraan> {
                       inactiveThumbColor: Color(0xFFE3EAEA),
                       inactiveTrackColor: Colors.white,
                       splashRadius: 50,
-                      value: kendaraan.status,
+                      value: kendaraan.status == 0 ? false : true,
                       onChanged: (value) {
-                        !kendaraan.status
+                        kendaraan.status == 0
                             ? showDialog(
                                 context: context,
                                 builder: (BuildContext context) {
@@ -108,13 +109,12 @@ class _CardKendaraanState extends State<CardKendaraan> {
                                     negativeText: "Batalkan",
                                     screen: "cardKendaraan",
                                     onChangeStatus: () => {
-                                      onChangeStatus(
-                                          kendaraan.id, !kendaraan.status),
+                                      onChangeStatus(kendaraan.id, 1),
                                     },
                                   );
                                 },
                               )
-                            : onChangeStatus(kendaraan.id, !kendaraan.status);
+                            : onChangeStatus(kendaraan.id, 0);
                       },
                     ),
                   ),

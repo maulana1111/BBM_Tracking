@@ -1,18 +1,27 @@
+import 'package:bbm_tracking/model/kendaraan_m.dart';
 import 'package:flutter/material.dart';
 
 class MainCardKendaraan extends StatelessWidget {
-  const MainCardKendaraan({super.key});
+  final KendaraanModel? kendaraanModel;
+
+  MainCardKendaraan(this.kendaraanModel);
 
   @override
   Widget build(BuildContext context) {
     return Container(
       child: Stack(
         children: [
-          Image.asset(
-            "assets/images/card.png",
-            width: double.infinity,
-            fit: BoxFit.fill,
-          ),
+          kendaraanModel != null
+              ? Image.asset(
+                  "assets/images/card.png",
+                  width: double.infinity,
+                  fit: BoxFit.fill,
+                )
+              : Image.asset(
+                  "assets/images/card_empty.png",
+                  width: double.infinity,
+                  fit: BoxFit.fill,
+                ),
           Container(
             child: Padding(
               padding: EdgeInsets.all(20),
@@ -33,11 +42,23 @@ class MainCardKendaraan extends StatelessWidget {
                   Container(
                     child: Row(
                       children: [
-                        Image.asset(
-                          "assets/images/car.png",
-                          width: 120,
-                          height: 120,
-                        ),
+                        kendaraanModel != null
+                            ? kendaraanModel?.jenisKendaraan != "motor"
+                                ? Image.asset(
+                                    "assets/images/car.png",
+                                    width: 120,
+                                    height: 120,
+                                  )
+                                : Image.asset(
+                                    "assets/images/motor.png",
+                                    width: 120,
+                                    height: 120,
+                                  )
+                            : Image.asset(
+                                "assets/images/img_empty.png",
+                                width: 110,
+                                height: 110,
+                              ),
                         SizedBox(
                           width: 10,
                         ),
@@ -65,7 +86,9 @@ class MainCardKendaraan extends StatelessWidget {
                                             height: 5,
                                           ),
                                           Text(
-                                            "Toyota Vitz",
+                                            kendaraanModel != null
+                                                ? kendaraanModel!.namaKendaraan
+                                                : "-",
                                             style: TextStyle(
                                               fontFamily: 'Poppins',
                                               fontSize: 10,
@@ -97,7 +120,9 @@ class MainCardKendaraan extends StatelessWidget {
                                             height: 5,
                                           ),
                                           Text(
-                                            "B 506 WLG ",
+                                            kendaraanModel != null
+                                                ? kendaraanModel!.nomorPlat
+                                                : "-",
                                             style: TextStyle(
                                               fontFamily: 'Poppins',
                                               fontSize: 10,
@@ -132,7 +157,9 @@ class MainCardKendaraan extends StatelessWidget {
                                       height: 5,
                                     ),
                                     Text(
-                                      "Pertalite",
+                                      kendaraanModel != null
+                                          ? kendaraanModel!.bahanBakar
+                                          : "-",
                                       style: TextStyle(
                                         fontFamily: 'Poppins',
                                         fontSize: 10,

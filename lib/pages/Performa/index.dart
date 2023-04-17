@@ -66,7 +66,7 @@ class _PerformaState extends State<Performa> {
                   SizedBox(
                     height: 10,
                   ),
-                  MainCardKendaraan(),
+                  // MainCardKendaraan(),
                   InkWell(
                     onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => SimulationScreen())),
                     child: Align(
@@ -125,7 +125,7 @@ class _PerformaState extends State<Performa> {
                           Container(
                             width: double.infinity,
                             height: 190,
-                            child: BarChartSample3(),
+                            // child: BarChartSample3(),
                           ),
                           SizedBox(
                             height: 10,

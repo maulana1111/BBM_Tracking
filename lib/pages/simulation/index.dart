@@ -1,3 +1,4 @@
+import 'package:bbm_tracking/resource/resource.dart';
 import 'package:flutter/material.dart';
 
 class SimulationScreen extends StatefulWidget {
@@ -8,9 +9,11 @@ class SimulationScreen extends StatefulWidget {
 }
 
 class _SimulationScreenState extends State<SimulationScreen> {
-  List<String> data = ["satu", "Dua", "tiga", "empat"];
+  List<String> tipe_kendaraan = ["Motor", "Mobil"];
+  List<String> merek_kendaraan = ["Beat", "NMax", "PCX", "Ninja"];
 
   bool toogleTipe = false;
+  bool toogleMerek = false;
   bool toogleBBM = false;
   bool tooglePriode = false;
 
@@ -87,49 +90,53 @@ class _SimulationScreenState extends State<SimulationScreen> {
                 SizedBox(
                   height: 10,
                 ),
-                Container(
-                  decoration: BoxDecoration(
-                    color: Color(0xFFBFE5DF),
-                    // border: Border(
-                    //   bottom: BorderSide(width: 1.5, color: Colors.grey.shade300),
-                    // ),
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(10),
-                    ),
-                  ),
-                  padding: EdgeInsets.all(10),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Container(
-                        child: Text(
-                          "-- Pilih Tipe Kendaraan --",
-                          style: TextStyle(
-                            fontFamily: 'Poppins',
-                            fontSize: 10,
-                            color: Color(0xFF677D81),
-                          ),
-                        ),
-                      ),
-                      Container(
-                        child: Icon(
-                          Icons.arrow_circle_down,
-                          color: Color(0xFFAEAEAE),
-                        ),
-                      )
-                    ],
-                  ),
+                FormField("-- Pilih Tipe Kendaraan --", tipe_kendaraan,
+                    toogleTipe, "tipe"),
+                SizedBox(
+                  height: 5,
                 ),
+                FormField("-- Pilih Kendaraan --", merek_kendaraan, toogleMerek,
+                    "merek"),
+                SizedBox(
+                  height: 5,
+                ),
+                FormField("-- Pilih Jenis Bahan Bakar --", listBensin,
+                    toogleBBM, "bbm"),
+                SizedBox(
+                  height: 5,
+                ),
+                FormField("-- Pilih Periode --", null, tooglePriode, "periode"),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget FormField(
+    txtTitle,
+    data,
+    toogle,
+    toogleParam,
+  ) {
+    return Container(
+      child: Column(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              color: Color(0xFFBFE5DF),
+              borderRadius: BorderRadius.all(
+                Radius.circular(10),
+              ),
+            ),
+            padding: EdgeInsets.all(10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
                 Container(
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: Color(0xFFBFE5DF),
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(10),
-                    ),
-                  ),
                   child: Text(
-                    "-- Pilih Tipe Kendaraan --",
+                    txtTitle,
                     style: TextStyle(
                       fontFamily: 'Poppins',
                       fontSize: 10,
@@ -137,9 +144,149 @@ class _SimulationScreenState extends State<SimulationScreen> {
                     ),
                   ),
                 ),
+                InkWell(
+                  onTap: () {
+                    setState(() {
+                      toogleParam == "tipe"
+                          ? toogleTipe = !toogleTipe
+                          : toogleParam == "merek"
+                              ? toogleMerek = !toogleMerek
+                              : toogleParam == "bbm"
+                                  ? toogleBBM = !toogleBBM
+                                  : toogleParam == "peride"
+                                      ? tooglePriode = !tooglePriode
+                                      : null;
+                    });
+                    // print(toogleTipe);
+                  },
+                  child: Container(
+                    child: Icon(
+                      Icons.arrow_circle_down,
+                      color: Color(0xFFAEAEAE),
+                    ),
+                  ),
+                )
               ],
             ),
           ),
+          AnimatedContainer(
+            duration: Duration(seconds: 1),
+            width: double.infinity,
+            height: toogleParam == "tipe"
+                ? toogleTipe == true
+                    ? (36 * data.length).toDouble()
+                    : 0
+                : toogleParam == "merek"
+                    ? toogleMerek == true
+                        ? (36 * data.length).toDouble()
+                        : 0
+                    : toogleParam == "bbm"
+                        ? toogleBBM == true
+                            ? (26 * data.length).toDouble()
+                            : 0
+                        : toogleParam == "periode"
+                            ? tooglePriode == true
+                                ? 30
+                                : 0
+                            : 0,
+            curve: Curves.fastOutSlowIn,
+            child: toogleParam != "periode"
+                ? listBuilderWidget(data, toogleParam)
+                : formPeriode(),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget formPeriode() {
+    return Container(
+      height: 20,
+      width: 20,
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Container(
+                width: 40,
+                padding: EdgeInsets.symmetric(vertical: 8, horizontal: 22),
+                margin: EdgeInsets.symmetric(vertical: 2),
+                decoration: BoxDecoration(
+                  color: Color(0xFFBFE5DF),
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(10),
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    Icon(Icons.calendar_month_outlined),
+                    Text(
+                      "Awal",
+                      style: TextStyle(
+                        fontFamily: 'Poppins',
+                        fontSize: 10,
+                        color: Color(0xFF677D81),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              SizedBox(
+                width: 15,
+              ),
+              Container(
+                width: double.infinity,
+                height: 10,
+                padding: EdgeInsets.symmetric(vertical: 8, horizontal: 22),
+                margin: EdgeInsets.symmetric(vertical: 2),
+                decoration: BoxDecoration(
+                  color: Color(0xFFBFE5DF),
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(10),
+                  ),
+                ),
+              )
+            ],
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget listBuilderWidget(data, toogleParam) {
+    return ListView.builder(
+      padding: EdgeInsets.zero,
+      itemCount: data.length,
+      scrollDirection: Axis.vertical,
+      shrinkWrap: true,
+      itemBuilder: (BuildContext context, int index) {
+        return toogleParam != "bbm"
+            ? itemDropDown(data.elementAt(index))
+            : itemDropDown(listBensin[index].text);
+      },
+    );
+  }
+
+  Widget itemDropDown(key) {
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.symmetric(vertical: 8, horizontal: 22),
+      margin: EdgeInsets.symmetric(vertical: 2),
+      decoration: BoxDecoration(
+        color: Color(0xFFBFE5DF),
+        borderRadius: BorderRadius.all(
+          Radius.circular(10),
+        ),
+      ),
+      child: Text(
+        key,
+        style: TextStyle(
+          fontFamily: 'Poppins',
+          fontSize: 10,
+          color: Color(0xFF677D81),
         ),
       ),
     );

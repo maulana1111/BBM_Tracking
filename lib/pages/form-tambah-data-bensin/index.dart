@@ -31,30 +31,7 @@ class _FormTamabahDataBensinState extends State<FormTamabahDataBensin> {
             padding: EdgeInsets.all(10),
             child: Column(
               children: [
-                InkWell(
-                  onTap: () => Navigator.of(context).pop(MaterialPageRoute(builder: (context) => Home("home", ""))),
-                  child: Container(
-                    child: Container(
-                      child: Row(
-                        children: [
-                          Icon(
-                            Icons.arrow_back_ios,
-                            size: 15,
-                          ),
-                          Text(
-                            "Kembali",
-                            style: TextStyle(
-                              fontSize: 10,
-                              fontFamily: 'Poppins',
-                              color: Color(0xff1A0F0F),
-                              fontWeight: FontWeight.w400,
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
+                BackButton(),
                 SizedBox(
                   height: 10,
                 ),
@@ -208,6 +185,34 @@ class _FormTamabahDataBensinState extends State<FormTamabahDataBensin> {
                 ),
               ],
             ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget BackButton() {
+    return InkWell(
+      onTap: () => Navigator.of(context)
+          .pop(MaterialPageRoute(builder: (context) => Home("home", ""))),
+      child: Container(
+        child: Container(
+          child: Row(
+            children: [
+              Icon(
+                Icons.arrow_back_ios,
+                size: 15,
+              ),
+              Text(
+                "Kembali",
+                style: TextStyle(
+                  fontSize: 10,
+                  fontFamily: 'Poppins',
+                  color: Color(0xff1A0F0F),
+                  fontWeight: FontWeight.w400,
+                ),
+              )
+            ],
           ),
         ),
       ),

@@ -1,7 +1,14 @@
+import 'package:bbm_tracking/model/bensin_m.dart';
+import 'package:bbm_tracking/resource/convert_money/convert_money.dart';
 import 'package:flutter/material.dart';
 
 class ItemBensin extends StatelessWidget {
-  const ItemBensin({super.key});
+  final BensinModel data;
+
+  const ItemBensin({
+    super.key,
+    required this.data,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +32,7 @@ class ItemBensin extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  "Pertalite",
+                  data.text,
                   style: TextStyle(
                     fontSize: 10,
                     fontFamily: 'Poppins',
@@ -64,7 +71,7 @@ class ItemBensin extends StatelessWidget {
                   width: 10,
                 ),
                 Text(
-                  "Rp. 10.000 /Liter",
+                  "${CurrencyFormat.convertToIdr(data.harga,0)} /Liter",
                   style: TextStyle(
                     fontSize: 8,
                     fontFamily: 'Poppins',

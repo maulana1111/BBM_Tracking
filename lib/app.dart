@@ -1,12 +1,11 @@
+import 'package:bbm_tracking/bloc/bbm_bloc.dart';
 import 'package:bbm_tracking/pages/onBoard/on_board_start.dart';
 import 'package:bbm_tracking/pages/onBoard/splash_screen.dart';
+import 'package:bbm_tracking/repository/kendaraan/kendaraan_repository.dart';
+import 'package:bbm_tracking/repository/transaksi/transaksi_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:intl/intl.dart';
-import 'package:month_year_picker/month_year_picker.dart';
-
 
 class App extends StatelessWidget {
   const App({super.key});
@@ -18,14 +17,16 @@ class App extends StatelessWidget {
         statusBarColor: Color(0xffE3EAEA),
       ),
     );
-    return MaterialApp(
-      // debugShowCheckedModeBanner: false,
-      localizationsDelegates: [
-        GlobalWidgetsLocalizations.delegate,
-        GlobalMaterialLocalizations.delegate,
-        MonthYearPickerLocalizations.delegate,
-      ],
-      home: const SplsScreen(),
+    return BlocProvider(
+      create: (context) => BbmBloc(
+        kendaraanRepository: KendaraanRepository(),
+        transaksiRepository: TransaksiRepository(),
+      )..add(
+          BBMStarted(),
+        ),
+      child: MaterialApp(
+        home: const SplsScreen(),
+      ),
     );
   }
 }

@@ -1,11 +1,14 @@
 import 'dart:ffi';
 
+import 'package:bbm_tracking/bloc/bbm_bloc.dart';
 import 'package:bbm_tracking/model/Kendaraan_model.dart';
+import 'package:bbm_tracking/model/kendaraan_m.dart';
 import 'package:bbm_tracking/pages/Performa/index.dart';
 import 'package:bbm_tracking/pages/home.dart';
 import 'package:bbm_tracking/pages/kendaraan/component/card-kendaraan.dart';
 import 'package:bbm_tracking/pages/kendaraan/form-tambah-kendaraan/form.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class IndexKendaraan extends StatefulWidget {
   const IndexKendaraan({super.key});
@@ -15,67 +18,33 @@ class IndexKendaraan extends StatefulWidget {
 }
 
 class _IndexKendaraanState extends State<IndexKendaraan> {
-  bool condSlide = false;
+  List<KendaraanModel> dataKendaraan = [];
+  int counter = 0;
 
-  List<Kendaraan> _dataKendaraan = [
-    new Kendaraan(
-      id: 1,
-      jenisKendaraan: 'motor',
-      namaKendaraan: 'Supra',
-      nomorPlat: 'B 1001 SWW',
-      bahanBakar: 'Pertalite',
-      status: false,
-    ),
-    new Kendaraan(
-      id: 2,
-      jenisKendaraan: 'mobil',
-      namaKendaraan: 'Toyota',
-      nomorPlat: 'B 1001 SWW',
-      bahanBakar: 'Pertamax',
-      status: false,
-    ),
-    new Kendaraan(
-      id: 3,
-      jenisKendaraan: 'motor',
-      namaKendaraan: 'Ninja',
-      nomorPlat: 'B 1001 SWW',
-      bahanBakar: 'Pertamax Plus',
-      status: true,
-    ),
-  ];
-
-  void changeStatuKendaraan(id, status) {
-    for (var i = 0; i < _dataKendaraan.length; i++) {
-      if (_dataKendaraan[i].status == true) {
-        setState(() {
-          _dataKendaraan[i].status = false;
-        });
-      }
-    }
-    for (var i = 0; i < _dataKendaraan.length; i++) {
-      if (_dataKendaraan[i].id == id) {
-        setState(() {
-          _dataKendaraan[i].status = status;
-        });
-      }
-    }
+  void changeStatuKendaraan(int id, int status) {
+    context.read<BbmBloc>().add(BBMChangeStatusKendaraan(id, status));
+    setState(() {
+      counter = counter + 1;
+    });
   }
 
-  void checkKendaraan() {
+  void checkKendaraan(List<KendaraanModel> data) {
     bool cond = false;
-    for (var i = 0; i < _dataKendaraan.length; i++) {
-      if (_dataKendaraan[i].status == true) {
+    for (var i = 0; i < data.length; i++) {
+      if (data[i].status == true) {
         cond = true;
       }
     }
     if (cond == true) {
-      Navigator.of(context).push(MaterialPageRoute(builder: (context) => Performa()));
-      // print("object");
+      Navigator.of(context)
+          .push(MaterialPageRoute(builder: (context) => Performa()));
     } else {
       showDialog(
         context: context,
         builder: (BuildContext context) {
-          return showNotif();
+          return showNotif(data.isEmpty
+              ? "Maaf, belum ada kendaraan yang Anda tambahkan"
+              : "Silahkan Aktifkan Salah Satu Kendaraan Anda");
         },
       );
     }
@@ -99,97 +68,146 @@ class _IndexKendaraanState extends State<IndexKendaraan> {
           Icons.add,
         ),
       ),
-      body: SingleChildScrollView(
-        child: Stack(
-          children: [
-            Container(
-              child: Padding(
-                padding: EdgeInsets.all(5),
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Container(
-                          child: InkWell(
-                            onTap: () => Navigator.of(context).pushReplacement(
-                              MaterialPageRoute(
-                                builder: (context) => Home("home", ""),
+      body: Container(
+        child: BlocBuilder<BbmBloc, BbmState>(
+          builder: (context, state) {
+            if (state is BbmInitial) {
+              return Container(
+                child: Center(child: CircularProgressIndicator()),
+              );
+            }
+            if (state is BBMLoaded) {
+              // dataKendaraan = state.kendaraan;
+              print("hit");
+              return SingleChildScrollView(
+                child: Container(
+                  child: Stack(
+                    children: [
+                      Container(
+                        child: Padding(
+                          padding: EdgeInsets.all(5),
+                          child: Column(
+                            children: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  backButton(),
+                                  Container(
+                                    child: InkWell(
+                                      onTap: () =>
+                                          checkKendaraan(state.kendaraan),
+                                      child: Text(
+                                        "Performa Kendaraan",
+                                        style: TextStyle(
+                                          fontSize: 10,
+                                          fontFamily: 'Poppins',
+                                          color: Color(0xff25A35A),
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ),
-                            child: Row(
-                              children: [
-                                Icon(
-                                  Icons.arrow_back_ios,
-                                  size: 15,
-                                ),
-                                Text(
-                                  "Kembali",
+                              Container(
+                                width: double.infinity,
+                                margin: EdgeInsets.only(top: 10),
+                                child: Text(
+                                  "Data Pribadi Kendaraan Anda",
                                   style: TextStyle(
-                                    fontSize: 10,
                                     fontFamily: 'Poppins',
-                                    color: Color(0xff1A0F0F),
-                                    fontWeight: FontWeight.w400,
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 16,
+                                    color: Color(0xff3B3C48),
                                   ),
                                 ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        Container(
-                          child: InkWell(
-                            onTap: () => checkKendaraan(),
-                            child: Text(
-                              "Performa Kendaraan",
-                              style: TextStyle(
-                                fontSize: 10,
-                                fontFamily: 'Poppins',
-                                color: Color(0xff25A35A),
-                                fontWeight: FontWeight.w600,
                               ),
-                            ),
+                              Divider(
+                                color: Color(0xFF1A0F0F3D),
+                                height: 2,
+                                thickness: 2,
+                              ),
+                              SizedBox(
+                                height: 15,
+                              ),
+                              Container(
+                                child: ListView.builder(
+                                  scrollDirection: Axis.vertical,
+                                  itemCount: state.kendaraan.length,
+                                  shrinkWrap: true,
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    return CardKendaraan(
+                                      kendaraan:
+                                          state.kendaraan.elementAt(index),
+                                      onChangeStatus: (int id, int status) {
+                                        changeStatuKendaraan(id, status);
+                                      },
+                                    );
+                                  },
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                      ],
-                    ),
-                    Container(
-                      width: double.infinity,
-                      margin: EdgeInsets.only(top: 10),
-                      child: Text(
-                        "Data Pribadi Kendaraan Anda",
-                        style: TextStyle(
-                          fontFamily: 'Poppins',
-                          fontWeight: FontWeight.w500,
-                          fontSize: 16,
-                          color: Color(0xff3B3C48),
-                        ),
                       ),
-                    ),
-                    Divider(
-                      color: Color(0xFF1A0F0F3D),
-                      height: 2,
-                      thickness: 2,
-                    ),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    Container(
-                      child: ListView.builder(
-                        scrollDirection: Axis.vertical,
-                        itemCount: _dataKendaraan.length,
-                        shrinkWrap: true,
-                        itemBuilder: (BuildContext context, int index) {
-                          return CardKendaraan(
-                            kendaraan: _dataKendaraan[index],
-                            onChangeStatus: (int id, bool status) {
-                              changeStatuKendaraan(id, status);
-                            },
-                          );
-                        },
-                      ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
+              );
+            }
+            if (state is BBMError) {
+              return Container(
+                child: Center(child: Text(state.message.toString())),
+              );
+            }
+            return Container();
+          },
+        ),
+      ),
+    );
+  }
+
+  // Widget ListDataKendaraan() {
+  //   return Container(
+  //     child: ListView.builder(
+  //       scrollDirection: Axis.vertical,
+  //       itemCount: _dataKendaraan.length,
+  //       shrinkWrap: true,
+  //       itemBuilder: (BuildContext context, int index) {
+  //         return CardKendaraan(
+  //           kendaraan: _dataKendaraan[index],
+  //           onChangeStatus: (int id, bool status) {
+  //             changeStatuKendaraan(id, status);
+  //           },
+  //         );
+  //       },
+  //     ),
+  //   );
+  // }
+
+  Widget backButton() {
+    return Container(
+      child: InkWell(
+        onTap: () => Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (context) => Home("home", ""),
+          ),
+        ),
+        child: Row(
+          children: [
+            Icon(
+              Icons.arrow_back_ios,
+              size: 15,
+            ),
+            Text(
+              "Kembali",
+              style: TextStyle(
+                fontSize: 10,
+                fontFamily: 'Poppins',
+                color: Color(0xff1A0F0F),
+                fontWeight: FontWeight.w400,
               ),
             ),
           ],
@@ -198,7 +216,7 @@ class _IndexKendaraanState extends State<IndexKendaraan> {
     );
   }
 
-  Dialog showNotif() {
+  Dialog showNotif(txt) {
     return Dialog(
       elevation: 1,
       backgroundColor: Color(0xffE3EAEA),
@@ -208,13 +226,20 @@ class _IndexKendaraanState extends State<IndexKendaraan> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            Image.asset(
+              "assets/images/sad_person.png",
+              width: 70,
+            ),
+            SizedBox(
+              height: 10,
+            ),
             Text(
-              "Silahkan Aktifkan Salah Satu Kendaraan Anda",
+              txt,
               style: TextStyle(
                 color: Color(0xFF677D81),
-                fontSize: 20,
+                fontSize: 13,
                 fontFamily: 'Poppins',
-                fontWeight: FontWeight.w700,
+                fontWeight: FontWeight.w600,
               ),
               textAlign: TextAlign.center,
             ),
@@ -251,8 +276,7 @@ class _IndexKendaraanState extends State<IndexKendaraan> {
               onTap: () {
                 Navigator.of(context).pushReplacement(
                   MaterialPageRoute(
-                    builder: (context) => Home("formKendaraan", "motor"),
-                  ),
+                      builder: (context) => FormKendaraan(kendaraan: "motor")),
                 );
               },
               child: chooseKendaraan(
@@ -275,7 +299,7 @@ class _IndexKendaraanState extends State<IndexKendaraan> {
               onTap: () {
                 Navigator.of(context).pushReplacement(
                   MaterialPageRoute(
-                    builder: (context) => Home("formKendaraan", "mobil"),
+                    builder: (context) => FormKendaraan(kendaraan: "mobil"),
                   ),
                 );
               },

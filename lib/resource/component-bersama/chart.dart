@@ -1,199 +1,52 @@
 // import 'package:fl_chart_app/presentation/resources/app_resources.dart';
 // import 'package:fl_chart_app/util/extensions/color_extensions.dart';
+import 'package:bbm_tracking/model/transaksi_m.dart';
 import 'package:syncfusion_flutter_charts/sparkcharts.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
-class _BarChart extends StatelessWidget {
-  const _BarChart();
+class _BarChart2 extends StatefulWidget {
+  List<TransaksiModel> dataTransaksi;
+  String? param;
+  _BarChart2({required this.dataTransaksi, required param});
 
   @override
-  Widget build(BuildContext context) {
-    return BarChart(
-      BarChartData(
-        barTouchData: barTouchData,
-        titlesData: titlesData,
-        borderData: borderData,
-        barGroups: barGroups,
-        gridData: FlGridData(show: false),
-        alignment: BarChartAlignment.spaceAround,
-        maxY: 20,
-      ),
-    );
-  }
-
-  BarTouchData get barTouchData => BarTouchData(
-        enabled: false,
-        touchTooltipData: BarTouchTooltipData(
-          tooltipBgColor: Colors.transparent,
-          tooltipPadding: EdgeInsets.zero,
-          tooltipMargin: 8,
-          getTooltipItem: (
-            BarChartGroupData group,
-            int groupIndex,
-            BarChartRodData rod,
-            int rodIndex,
-          ) {
-            return BarTooltipItem(
-              rod.toY.round().toString(),
-              const TextStyle(
-                color: Color(0xFFDDB05E),
-                fontWeight: FontWeight.bold,
-              ),
-            );
-          },
-        ),
-      );
-
-  Widget getTitles(double value, TitleMeta meta) {
-    final style = TextStyle(
-      color: Color(0xFFFC8D05),
-      fontWeight: FontWeight.bold,
-      fontSize: 14,
-    );
-    String text;
-    switch (value.toInt()) {
-      case 0:
-        text = 'Sen';
-        break;
-      case 1:
-        text = 'Sel';
-        break;
-      case 2:
-        text = 'Rab';
-        break;
-      case 3:
-        text = 'Kam';
-        break;
-      case 4:
-        text = 'Jum';
-        break;
-      case 5:
-        text = 'Sab';
-        break;
-      case 6:
-        text = 'Min';
-        break;
-      default:
-        text = '';
-        break;
-    }
-    return SideTitleWidget(
-      axisSide: meta.axisSide,
-      space: 4,
-      child: Text(text, style: style),
-    );
-  }
-
-  FlTitlesData get titlesData => FlTitlesData(
-        show: true,
-        bottomTitles: AxisTitles(
-          sideTitles: SideTitles(
-            showTitles: true,
-            reservedSize: 30,
-            getTitlesWidget: getTitles,
-          ),
-        ),
-        leftTitles: AxisTitles(
-          sideTitles: SideTitles(showTitles: false),
-        ),
-        topTitles: AxisTitles(
-          sideTitles: SideTitles(showTitles: false),
-        ),
-        rightTitles: AxisTitles(
-          sideTitles: SideTitles(showTitles: false),
-        ),
-      );
-
-  FlBorderData get borderData => FlBorderData(
-        show: false,
-      );
-
-  LinearGradient get _barsGradient => LinearGradient(
-        colors: [
-          Color(0xFFFC8D05),
-          Color(0xFFDDB05E),
-        ],
-        begin: Alignment.bottomCenter,
-        end: Alignment.topCenter,
-      );
-
-  List<BarChartGroupData> get barGroups => [
-        BarChartGroupData(
-          x: 0,
-          barRods: [
-            BarChartRodData(
-              toY: 8,
-              gradient: _barsGradient,
-            )
-          ],
-          showingTooltipIndicators: [0],
-        ),
-        BarChartGroupData(
-          x: 1,
-          barRods: [
-            BarChartRodData(
-              toY: 10,
-              gradient: _barsGradient,
-            )
-          ],
-          showingTooltipIndicators: [0],
-        ),
-        BarChartGroupData(
-          x: 2,
-          barRods: [
-            BarChartRodData(
-              toY: 14,
-              gradient: _barsGradient,
-            )
-          ],
-          showingTooltipIndicators: [0],
-        ),
-        BarChartGroupData(
-          x: 3,
-          barRods: [
-            BarChartRodData(
-              toY: 15,
-              gradient: _barsGradient,
-            )
-          ],
-          showingTooltipIndicators: [0],
-        ),
-        BarChartGroupData(
-          x: 4,
-          barRods: [
-            BarChartRodData(
-              toY: 13,
-              gradient: _barsGradient,
-            )
-          ],
-          showingTooltipIndicators: [0],
-        ),
-        BarChartGroupData(
-          x: 5,
-          barRods: [
-            BarChartRodData(
-              toY: 10,
-              gradient: _barsGradient,
-            )
-          ],
-          showingTooltipIndicators: [0],
-        ),
-        BarChartGroupData(
-          x: 6,
-          barRods: [
-            BarChartRodData(
-              toY: 16,
-              gradient: _barsGradient,
-            )
-          ],
-          showingTooltipIndicators: [0],
-        ),
-      ];
+  State<_BarChart2> createState() => _BarChart2State();
 }
 
-class _BarChart2 extends StatelessWidget {
-  const _BarChart2({super.key});
+class _BarChart2State extends State<_BarChart2> {
+  List<double> dtTotalBayar = [];
+  List<double> dtTotalLiter = [];
+  late List<TransaksiModel> dtTransaksi;
+  String? param;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    param = widget.param;
+    dtTransaksi = widget.dataTransaksi;
+    dtTransaksi.forEach((element) {
+      dtTotalBayar.add(element.totalBayar);
+      dtTotalLiter.add(element.totalLiter);
+    });
+    if(dtTotalBayar.length < 30)
+    {
+      bool cond = true;
+      while(cond == true)
+      {
+        dtTotalBayar.length != 30 ? dtTotalBayar.add(0) : cond = false;
+      }
+    }
+    if(dtTotalLiter.length < 30)
+    {
+      bool cond = true;
+      while(cond == true)
+      {
+        dtTotalLiter.length != 30 ? dtTotalLiter.add(0) : cond = false;
+      }
+    }
+    print(dtTotalBayar);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -211,45 +64,16 @@ class _BarChart2 extends StatelessWidget {
         labelDisplayMode: SparkChartLabelDisplayMode.none,
         color: Color(0xFFFC8D05),
         // dashArray: [],
-        data: <double>[
-          10000,
-          30000,
-          60000,
-          10000,
-          70000,
-          80000,
-          20000,
-          33000,
-          70000,
-          10000,
-          10000,
-          30000,
-          60000,
-          10000,
-          70000,
-          80000,
-          20000,
-          33000,
-          70000,
-          100000,
-          10000,
-          30000,
-          60000,
-          10000,
-          70000,
-          0,
-          0,
-          0,
-          0,
-          0
-        ],
+        data: param == "Harga" ? dtTotalBayar : dtTotalLiter,
       ),
     );
   }
 }
 
 class BarChartSample3 extends StatefulWidget {
-  const BarChartSample3({super.key});
+  List<TransaksiModel> dataTransaksi;
+  String param;
+  BarChartSample3({required this.dataTransaksi, required this.param});
 
   @override
   State<StatefulWidget> createState() => BarChartSample3State();
@@ -258,9 +82,9 @@ class BarChartSample3 extends StatefulWidget {
 class BarChartSample3State extends State<BarChartSample3> {
   @override
   Widget build(BuildContext context) {
-    return const AspectRatio(
+    return AspectRatio(
       aspectRatio: 1.6,
-      child: _BarChart2(),
+      child: _BarChart2(dataTransaksi: widget.dataTransaksi, param: widget.param),
     );
   }
 }

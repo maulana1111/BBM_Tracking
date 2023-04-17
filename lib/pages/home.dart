@@ -94,10 +94,10 @@ class _HomeState extends State<Home> {
                   return Riwayat();
                 case 'tentang':
                   return AboutApps();
-                case 'formKendaraan':
-                  return FormKendaraan(
-                    kendaraan: param,
-                  );
+                // case 'formKendaraan':
+                //   return FormKendaraan(
+                //     kendaraan: param,
+                //   );
                 default:
                   return IndexMainMenu();
               }

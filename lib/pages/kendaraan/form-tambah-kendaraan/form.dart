@@ -1,8 +1,12 @@
 import 'package:animated_custom_dropdown/custom_dropdown.dart';
+import 'package:bbm_tracking/bloc/bbm_bloc.dart';
+import 'package:bbm_tracking/model/kendaraan_m.dart';
 import 'package:bbm_tracking/pages/component/success_dialog_box.dart';
 import 'package:bbm_tracking/pages/home.dart';
+import 'package:bbm_tracking/pages/mainMenu/index.dart';
 import 'package:bbm_tracking/resource/resource.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
 class FormKendaraan extends StatefulWidget {
@@ -16,6 +20,7 @@ class FormKendaraan extends StatefulWidget {
 class _FormKendaraanState extends State<FormKendaraan> {
   late String kendaraan;
   late String selectedValueBensin;
+  late KendaraanModel kendaraanModel;
 
   bool _submitted = false;
 
@@ -25,6 +30,7 @@ class _FormKendaraanState extends State<FormKendaraan> {
   final jenisBBMController = TextEditingController();
   final kepemilikanController = TextEditingController();
   final nomorPlatController = TextEditingController();
+  final ccController = TextEditingController();
 
   @override
   void initState() {
@@ -41,12 +47,28 @@ class _FormKendaraanState extends State<FormKendaraan> {
         kilometerController.value.text != "" &&
         jenisBBMController.value.text != "" &&
         kepemilikanController.value.text != "" &&
-        nomorPlatController.value.text != "") {
+        nomorPlatController.value.text != "" &&
+        ccController.value.text != "") {
       print("success");
+      kendaraanModel = KendaraanModel(
+        id: 0,
+        jenisKendaraan: kendaraan,
+        namaKendaraan: tipeKendaraanController.value.text,
+        nomorPlat: nomorPlatController.value.text,
+        bahanBakar: jenisBBMController.value.text,
+        cc: int.parse(ccController.value.text),
+        odometer: kilometerController.value.text,
+        kepemilikan: kepemilikanController.value.text,
+        status: 0,
+      );
+      context.read<BbmBloc>().add(BBMDataKendaraanAdded(kendaraanModel));
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
+        builder: (context) => Home("kendaraan", ""),
+      ));
       showDialog(
           context: context,
           builder: (BuildContext context) {
-            return SuccessDialogBox(deskripsi: "Berhasil Merubah Data");
+            return SuccessDialogBox(deskripsi: "Berhasil Menambah Data");
           });
     } else {
       print("faield");
@@ -63,6 +85,7 @@ class _FormKendaraanState extends State<FormKendaraan> {
     jenisBBMController.dispose();
     kepemilikanController.dispose();
     nomorPlatController.dispose();
+    ccController.dispose();
   }
 
   List<String> listNamaBensin = List.from(listBensin.map((e) => e.text));
@@ -79,36 +102,15 @@ class _FormKendaraanState extends State<FormKendaraan> {
     return Scaffold(
       backgroundColor: Color(0xffE3EAEA),
       body: SingleChildScrollView(
-        reverse: true,
         child: Container(
           child: Padding(
             padding: EdgeInsets.all(10),
             child: Column(
               children: [
-                Container(
-                  child: InkWell(
-                    onTap: () => Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(
-                            builder: (context) => Home("kendaraan", ""))),
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.arrow_back_ios,
-                          size: 15,
-                        ),
-                        Text(
-                          "Kembali",
-                          style: TextStyle(
-                            fontSize: 10,
-                            fontFamily: 'Poppins',
-                            color: Color(0xff1A0F0F),
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                SizedBox(
+                  height: 55,
                 ),
+                BackButton(),
                 Container(
                   width: double.infinity,
                   margin: EdgeInsets.only(top: 10),
@@ -130,41 +132,7 @@ class _FormKendaraanState extends State<FormKendaraan> {
                 SizedBox(
                   height: 15,
                 ),
-                Container(
-                  height: 75,
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(8),
-                    ),
-                    color: Color(0xFFDDB05E),
-                  ),
-                  child: Row(
-                    children: [
-                      SizedBox(
-                        width: 20,
-                      ),
-                      Image.asset(
-                        kendaraan == "motor"
-                            ? "assets/images/motor.png"
-                            : "assets/images/car.png",
-                        width: 50,
-                        height: 50,
-                      ),
-                      SizedBox(
-                        width: 20,
-                      ),
-                      Text(
-                        kendaraan == "motor" ? "Motor" : "Mobil",
-                        style: TextStyle(
-                          fontFamily: 'Poppins',
-                          fontSize: 15,
-                          color: Color(0xFF1A0F0F),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
+                Card(),
                 SizedBox(
                   height: 15,
                 ),
@@ -195,10 +163,16 @@ class _FormKendaraanState extends State<FormKendaraan> {
                         dateController,
                       ),
                       inputField(
-                        "Kilometers",
-                        "0 Km/Jam",
+                        "Kilometers Kendaraan",
+                        "0 Km",
                         "number",
                         kilometerController,
+                      ),
+                      inputField(
+                        "CC Kendaraan",
+                        "CC",
+                        "number",
+                        ccController,
                       ),
                       inputField(
                         "Nomor Plat Kendaraan",
@@ -206,35 +180,7 @@ class _FormKendaraanState extends State<FormKendaraan> {
                         "text",
                         nomorPlatController,
                       ),
-                      InkWell(
-                        onTap: _submit,
-                        child: Container(
-                          width: 90,
-                          height: 35,
-                          margin: EdgeInsets.only(
-                            top: 10,
-                          ),
-                          padding: EdgeInsets.only(
-                            top: 5,
-                          ),
-                          decoration: BoxDecoration(
-                            color: Color(0xFF2ECC71),
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(8),
-                            ),
-                          ),
-                          child: Text(
-                            "Save Data",
-                            style: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontWeight: FontWeight.w500,
-                              color: Colors.white,
-                              fontSize: 15,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                      ),
+                      SaveButton(),
                       Padding(
                         padding: EdgeInsets.only(
                           bottom: MediaQuery.of(context).viewInsets.bottom,
@@ -254,6 +200,102 @@ class _FormKendaraanState extends State<FormKendaraan> {
   String? _errorText(TextEditingController controller) {
     var val = controller.value.text.isEmpty ? "Tidak Boleh Kosong" : null;
     return val;
+  }
+
+  Widget Card() {
+    return Container(
+      height: 75,
+      width: double.infinity,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.all(
+          Radius.circular(8),
+        ),
+        color: Color(0xFFDDB05E),
+      ),
+      child: Row(
+        children: [
+          SizedBox(
+            width: 20,
+          ),
+          Image.asset(
+            kendaraan == "motor"
+                ? "assets/images/motor.png"
+                : "assets/images/car.png",
+            width: 50,
+            height: 50,
+          ),
+          SizedBox(
+            width: 20,
+          ),
+          Text(
+            kendaraan == "motor" ? "Motor" : "Mobil",
+            style: TextStyle(
+              fontFamily: 'Poppins',
+              fontSize: 15,
+              color: Color(0xFF1A0F0F),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget SaveButton() {
+    return InkWell(
+      onTap: _submit,
+      child: Container(
+        width: 90,
+        height: 35,
+        margin: EdgeInsets.only(
+          top: 10,
+        ),
+        padding: EdgeInsets.only(
+          top: 5,
+        ),
+        decoration: BoxDecoration(
+          color: Color(0xFF2ECC71),
+          borderRadius: BorderRadius.all(
+            Radius.circular(8),
+          ),
+        ),
+        child: Text(
+          "Save Data",
+          style: TextStyle(
+            fontFamily: 'Poppins',
+            fontWeight: FontWeight.w500,
+            color: Colors.white,
+            fontSize: 15,
+          ),
+          textAlign: TextAlign.center,
+        ),
+      ),
+    );
+  }
+
+  Widget BackButton() {
+    return Container(
+      child: InkWell(
+        onTap: () => Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => Home("kendaraan", ""))),
+        child: Row(
+          children: [
+            Icon(
+              Icons.arrow_back_ios,
+              size: 15,
+            ),
+            Text(
+              "Kembali",
+              style: TextStyle(
+                fontSize: 10,
+                fontFamily: 'Poppins',
+                color: Color(0xff1A0F0F),
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   Widget dropdownField(title, data, TextEditingController controller) {

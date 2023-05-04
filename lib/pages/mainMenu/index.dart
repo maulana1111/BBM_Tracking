@@ -72,7 +72,7 @@ class _IndexMainMenuState extends State<IndexMainMenu> {
 
             state.transaksi.forEach((element) {
               totalPengeluaran += element.totalBayar.toInt();
-              totalBBM += element.totalLiter;
+              totalBBM += int.parse(element.totalLiter);
             });
 
             return SingleChildScrollView(

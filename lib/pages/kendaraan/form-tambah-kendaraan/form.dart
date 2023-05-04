@@ -63,7 +63,7 @@ class _FormKendaraanState extends State<FormKendaraan> {
       );
       context.read<BbmBloc>().add(BBMDataKendaraanAdded(kendaraanModel));
       Navigator.of(context).pushReplacement(MaterialPageRoute(
-        builder: (context) => Home("kendaraan", ""),
+        builder: (context) => Home("", ""),
       ));
       showDialog(
           context: context,

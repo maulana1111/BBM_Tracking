@@ -21,6 +21,26 @@ class BbmBloc extends Bloc<BbmEvent, BbmState> {
     on<BBMStarted>(_onBBMStarted);
     on<BBMDataKendaraanAdded>(_onBBMKendaraanAdded);
     on<BBMChangeStatusKendaraan>(_onBBMChangeStatusKendaraan);
+    on<BBMDataKendaraan>(_onBBMGetDataKendaraan);
+  }
+
+  Future<void> _onBBMGetDataKendaraan(BBMDataKendaraan event, Emitter<BbmState> emit) async {
+    final state = this.state;
+    try{
+      if(state is BBMLoaded)
+      {
+        late KendaraanModel dataKendaraan;
+        state.kendaraan.forEach((element) {
+          if(element.id == event.kendaraanModel.id)
+          {
+            dataKendaraan = element;
+          }
+        });
+        emit(BBMSingleData(kendaraan: dataKendaraan));
+      }
+    }catch (e) {
+      emit(BBMError(message: "Something Error, ${e}, We Will Fix it"));
+    }
   }
 
   Future<void> _onBBMChangeStatusKendaraan(

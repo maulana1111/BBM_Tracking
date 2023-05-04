@@ -7,6 +7,7 @@ import 'package:bbm_tracking/pages/Performa/index.dart';
 import 'package:bbm_tracking/pages/home.dart';
 import 'package:bbm_tracking/pages/kendaraan/component/card-kendaraan.dart';
 import 'package:bbm_tracking/pages/kendaraan/form-tambah-kendaraan/form.dart';
+import 'package:bbm_tracking/resource/popup/popup.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -31,7 +32,7 @@ class _IndexKendaraanState extends State<IndexKendaraan> {
   void checkKendaraan(List<KendaraanModel> data) {
     bool cond = false;
     for (var i = 0; i < data.length; i++) {
-      if (data[i].status == true) {
+      if (data[i].status == 1) {
         cond = true;
       }
     }
@@ -42,9 +43,12 @@ class _IndexKendaraanState extends State<IndexKendaraan> {
       showDialog(
         context: context,
         builder: (BuildContext context) {
-          return showNotif(data.isEmpty
-              ? "Maaf, belum ada kendaraan yang Anda tambahkan"
-              : "Silahkan Aktifkan Salah Satu Kendaraan Anda");
+          return PopUp(
+            text: data.isEmpty
+                ? "Maaf, belum ada kendaraan yang Anda tambahkan"
+                : "Silahkan Aktifkan Salah Satu Kendaraan Anda",
+            param: "negative",
+          );
         },
       );
     }

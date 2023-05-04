@@ -45,6 +45,7 @@ dependencies:
   sqflite:
   path:
   intl: ^0.17.0
+  currency_text_input_formatter: 
   # month_picker_dialog: ^1.0.0
   # month_year_picker: ^0.2.0+2
   # flutter_localizations:
@@ -56,6 +57,8 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
+  google_maps_flutter: ^2.2.6
+  connectivity_plus: ^3.0.6
 
 dev_dependencies:
   bloc_test: ^9.0.0

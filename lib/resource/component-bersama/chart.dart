@@ -5,30 +5,31 @@ import 'package:syncfusion_flutter_charts/sparkcharts.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
-class _BarChart2 extends StatefulWidget {
+
+class BarChartSample3 extends StatefulWidget {
   List<TransaksiModel> dataTransaksi;
-  String? param;
-  _BarChart2({required this.dataTransaksi, required param});
+  String param;
+  BarChartSample3({required this.dataTransaksi, required this.param});
 
   @override
-  State<_BarChart2> createState() => _BarChart2State();
+  State<StatefulWidget> createState() => BarChartSample3State();
 }
 
-class _BarChart2State extends State<_BarChart2> {
-  List<double> dtTotalBayar = [];
-  List<double> dtTotalLiter = [];
+class BarChartSample3State extends State<BarChartSample3> {
+
+  List<num> dtTotalBayar = [];
+  List<int> dtTotalLiter = [];
   late List<TransaksiModel> dtTransaksi;
-  String? param;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    param = widget.param;
     dtTransaksi = widget.dataTransaksi;
     dtTransaksi.forEach((element) {
       dtTotalBayar.add(element.totalBayar);
-      dtTotalLiter.add(element.totalLiter);
+      dtTotalLiter.add(int.parse(element.totalLiter));
     });
+    // dtTotalBayar.add(1);
     if(dtTotalBayar.length < 30)
     {
       bool cond = true;
@@ -37,6 +38,8 @@ class _BarChart2State extends State<_BarChart2> {
         dtTotalBayar.length != 30 ? dtTotalBayar.add(0) : cond = false;
       }
     }
+    dtTotalBayar.add(4);
+    dtTotalLiter.add(1);
     if(dtTotalLiter.length < 30)
     {
       bool cond = true;
@@ -45,13 +48,14 @@ class _BarChart2State extends State<_BarChart2> {
         dtTotalLiter.length != 30 ? dtTotalLiter.add(0) : cond = false;
       }
     }
-    print(dtTotalBayar);
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: SfSparkLineChart(
+    print(widget.param);
+    return AspectRatio(
+      aspectRatio: 1.6,
+      child: widget.param == "Harga" ? SfSparkLineChart(
         //Enable the trackball
         trackball: SparkChartTrackball(
           activationMode: SparkChartActivationMode.tap,
@@ -64,27 +68,22 @@ class _BarChart2State extends State<_BarChart2> {
         labelDisplayMode: SparkChartLabelDisplayMode.none,
         color: Color(0xFFFC8D05),
         // dashArray: [],
-        data: param == "Harga" ? dtTotalBayar : dtTotalLiter,
+        data: dtTotalBayar,
+      ) : SfSparkLineChart(
+        //Enable the trackball
+        trackball: SparkChartTrackball(
+          activationMode: SparkChartActivationMode.tap,
+          color: Colors.black,
+        ),
+        //Enable marker
+        marker: SparkChartMarker(
+            displayMode: SparkChartMarkerDisplayMode.all, color: Colors.black),
+        //Enable data label
+        labelDisplayMode: SparkChartLabelDisplayMode.none,
+        color: Color(0xFFFC8D05),
+        // dashArray: [],
+        data: dtTotalLiter,
       ),
-    );
-  }
-}
-
-class BarChartSample3 extends StatefulWidget {
-  List<TransaksiModel> dataTransaksi;
-  String param;
-  BarChartSample3({required this.dataTransaksi, required this.param});
-
-  @override
-  State<StatefulWidget> createState() => BarChartSample3State();
-}
-
-class BarChartSample3State extends State<BarChartSample3> {
-  @override
-  Widget build(BuildContext context) {
-    return AspectRatio(
-      aspectRatio: 1.6,
-      child: _BarChart2(dataTransaksi: widget.dataTransaksi, param: widget.param),
     );
   }
 }

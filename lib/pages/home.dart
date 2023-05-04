@@ -1,12 +1,18 @@
+import 'package:bbm_tracking/bloc/bbm_bloc.dart';
+import 'package:bbm_tracking/model/kendaraan_m.dart';
 import 'package:bbm_tracking/pages/AboutApps/index.dart';
 import 'package:bbm_tracking/pages/form-tambah-data-bensin/index.dart';
 import 'package:bbm_tracking/pages/kendaraan/form-tambah-kendaraan/form.dart';
 import 'package:bbm_tracking/pages/kendaraan/index_kendaraan.dart';
+import 'package:bbm_tracking/repository/kendaraan/kendaraan_repository.dart';
+import 'package:bbm_tracking/repository/transaksi/transaksi_repository.dart';
 import 'package:bbm_tracking/resource/component-bersama/chart.dart';
 import 'package:bbm_tracking/pages/mainMenu/component/item_bensin.dart';
 import 'package:bbm_tracking/pages/mainMenu/index.dart';
 import 'package:bbm_tracking/pages/riwayat/index.dart';
+import 'package:bbm_tracking/resource/popup/popup.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pandabar/main.view.dart';
 import 'package:pandabar/model.dart';
 
@@ -23,6 +29,50 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   late String screen;
   late String param;
+  late List<KendaraanModel> dataKendaraan;
+  late KendaraanModel dt;
+  late bool paramKendaran = false;
+  late int paramText = 0;
+  late bool cond = false;
+
+  void ButtonAddTransaksi() {
+    if (dataKendaraan != null || dataKendaraan.length != 0) {
+      dataKendaraan.forEach(
+        (element) {
+          if (cond == false) {
+            if (element.status == 1) {
+              paramKendaran = true;
+              dt = element;
+              cond = true;
+              paramText = 2;
+            }
+          }
+          paramText = 1;
+        },
+      );
+    } else {
+      paramKendaran = false;
+      paramText = 0;
+    }
+
+    paramKendaran
+        ? Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => FormTamabahDataBensin(kendaraanModel: dt),
+            ),
+          )
+        : showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return PopUp(
+                text: paramText == 1
+                    ? "Maaf, Silakan aktifkan kendaraan Anda terlebih dahulu"
+                    : "Maaf, Silakan tambahkan kendaraan Anda terlebih dahulu",
+                param: "negative",
+              );
+            },
+          );
+  }
 
   @override
   void initState() {
@@ -69,41 +119,45 @@ class _HomeState extends State<Home> {
           });
         },
         onFabButtonPressed: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => FormTamabahDataBensin(),
-            ),
-          );
+          ButtonAddTransaksi();
         },
       ),
-      body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.only(
-            left: 10,
-            right: 10,
-          ),
-          child: Builder(
-            builder: (context) {
-              // print("screen = " + param);
-              switch (screen) {
-                case 'home':
-                  return IndexMainMenu();
-                case 'kendaraan':
-                  return IndexKendaraan();
-                case 'riwayat':
-                  return Riwayat();
-                case 'tentang':
-                  return AboutApps();
-                // case 'formKendaraan':
-                //   return FormKendaraan(
-                //     kendaraan: param,
-                //   );
-                default:
-                  return IndexMainMenu();
-              }
-            },
-          ),
-        ),
+      body: BlocBuilder<BbmBloc, BbmState>(
+        builder: (context, state) {
+          if (state is BBMLoaded) {
+            dataKendaraan = state.kendaraan;
+            return SafeArea(
+              child: Padding(
+                padding: EdgeInsets.only(
+                  left: 10,
+                  right: 10,
+                ),
+                child: Builder(
+                  builder: (context) {
+                    // print("screen = " + param);
+                    switch (screen) {
+                      case 'home':
+                        return IndexMainMenu();
+                      case 'kendaraan':
+                        return IndexKendaraan();
+                      case 'riwayat':
+                        return Riwayat();
+                      case 'tentang':
+                        return AboutApps();
+                      // case 'formKendaraan':
+                      //   return FormKendaraan(
+                      //     kendaraan: param,
+                      //   );
+                      default:
+                        return IndexMainMenu();
+                    }
+                  },
+                ),
+              ),
+            );
+          }
+          return Container();
+        },
       ),
     );
   }

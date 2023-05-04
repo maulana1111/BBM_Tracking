@@ -5,7 +5,7 @@ class BensinModel {
   String value;
   String text;
   String perusahaan;
-  double harga;
+  int harga;
 
   BensinModel({
     required this.id,

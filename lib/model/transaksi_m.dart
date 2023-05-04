@@ -5,9 +5,9 @@ class TransaksiModel {
   String kodeTransaksi;
   DateTime tanggalTransaksi;
   String lokasiPertamina;
-  double totalLiter;
-  double hargaPerLiter;
-  double totalBayar;
+  String totalLiter;
+  int hargaPerLiter;
+  int totalBayar;
   String odometer;
   String linkGambar;
   String catatan;

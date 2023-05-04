@@ -9,6 +9,10 @@ abstract class BbmState extends Equatable {
 
 class BbmInitial extends BbmState {}
 
+class BBMSingleData extends BbmState{
+  final KendaraanModel kendaraan;
+  BBMSingleData({required this.kendaraan});
+}
 
 class BBMLoaded extends BbmState{
   final List<KendaraanModel> kendaraan;

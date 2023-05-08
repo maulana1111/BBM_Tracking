@@ -8,11 +8,14 @@ import 'package:bbm_tracking/resource/popup/popup.dart';
 import 'package:bbm_tracking/resource/resource.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 // import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
 import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'dart:developer' as developer;
+import 'package:geolocator/geolocator.dart';
+import 'package:location/location.dart';
 
 class FormTamabahDataBensin extends StatefulWidget {
   KendaraanModel kendaraanModel;
@@ -38,6 +41,10 @@ class _FormTamabahDataBensinState extends State<FormTamabahDataBensin>
   late String hargaPerLiterTxt = '';
   late String totalBiayaTxt = '';
 
+  final String wifiOff =
+      "Maps tidak dapat dibuka, Anda saat ini sedang di luar jaringan. Silakan periksa jaringan internet Anda";
+  final String gpsOff = "Maps tidak dapat dibuka, GPS tidak aktif";
+
   final test = TextEditingController();
   final odometerController = TextEditingController();
   final bbmController = TextEditingController();
@@ -49,21 +56,26 @@ class _FormTamabahDataBensinState extends State<FormTamabahDataBensin>
   final catatanController = TextEditingController();
   final hargaPerLiterController = TextEditingController();
 
-  late bool _gpsEnable = false;
+  GoogleMapController? _controllerMap;
+  Location currentLocation = Location();
+  static const CameraPosition initialCameraPosition = CameraPosition(
+      target: LatLng(37.42796133580664, -122.085749655962), zoom: 14);
 
-  // Location location = new Location();
-  // late bool _serviceEnabled;
-  // late PermissionStatus _permissionGranted;
-  // late LocationData _locationData;
+  late bool _gpsEnable;
+  late bool _internetEnable = false;
+
+  Set<Marker> _markers = {};
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     initConnectivity();
+    checkGPS();
 
     _connectivitySubscription =
         _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
+
     dataKendaraan = widget.kendaraanModel;
 
     bbmController.addListener(() {
@@ -91,8 +103,10 @@ class _FormTamabahDataBensinState extends State<FormTamabahDataBensin>
       _counter();
     });
 
-    // checkGPS();
-    print(_gpsEnable);
+    // initialLocation();
+    setState(() {
+      getLocation();
+    });
   }
 
   @override
@@ -104,44 +118,88 @@ class _FormTamabahDataBensinState extends State<FormTamabahDataBensin>
     super.dispose();
   }
 
-  // Future<Position> checkGPS() async {
-  //   bool serviceEnabled;
-  //   LocationPermission permission;
+  void getLocation() async {
+    // var location = await currentLocation.getLocation();
+    var location = await checkGPS();
+    currentLocation.onLocationChanged.listen((LocationData loc) {
+      _controllerMap
+          ?.animateCamera(CameraUpdate.newCameraPosition(new CameraPosition(
+        target: LatLng(loc.latitude ?? 0.0, loc.longitude ?? 0.0),
+        zoom: 12.0,
+      )));
+      print(loc.latitude);
+      print(loc.longitude);
+      setState(() {
+        _markers.add(Marker(
+            markerId: MarkerId('Home'),
+            position: LatLng(loc.latitude ?? 0.0, loc.longitude ?? 0.0)));
+      });
+    });
+  }
 
-  //   // Test if location services are enabled.
-  //   serviceEnabled = await Geolocator.isLocationServiceEnabled();
-  //   if (!serviceEnabled) {
-  //     // Location services are not enabled don't continue
-  //     // accessing the position and request users of the
-  //     // App to enable the location services.
-  //     return Future.error('Location services are disabled.');
-  //   }else{
-  //     _gpsEnable = true;
-  //   }
+  // void initialLocation() async {
+  //   Position position = await checkGPS();
 
-  //   permission = await Geolocator.checkPermission();
-  //   if (permission == LocationPermission.denied) {
-  //     permission = await Geolocator.requestPermission();
-  //     if (permission == LocationPermission.denied) {
-  //       // Permissions are denied, next time you could try
-  //       // requesting permissions again (this is also where
-  //       // Android's shouldShowRequestPermissionRationale
-  //       // returned true. According to Android guidelines
-  //       // your App should show an explanatory UI now.
-  //       return Future.error('Location permissions are denied');
-  //     }
-  //   }
+  //   googleMapController.animateCamera(
+  //     CameraUpdate.newCameraPosition(
+  //       CameraPosition(
+  //         target: LatLng(
+  //           position.latitude,
+  //           position.longitude,
+  //         ),
+  //         zoom: 14,
+  //       ),
+  //     ),
+  //   );
+  //   markers.clear();
 
-  //   if (permission == LocationPermission.deniedForever) {
-  //     // Permissions are denied forever, handle appropriately.
-  //     return Future.error(
-  //         'Location permissions are permanently denied, we cannot request permissions.');
-  //   }
-
-  //   // When we reach here, permissions are granted and we can
-  //   // continue accessing the position of the device.
-  //   return await Geolocator.getCurrentPosition();
+  //   markers.add(
+  //     Marker(
+  //       markerId: const MarkerId('currentLocation'),
+  //       position: LatLng(position.latitude, position.longitude),
+  //     ),
+  //   );
+  //   setState(() {});
   // }
+
+  Future<Position> checkGPS() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    // Test if location services are enabled.
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+
+    if (!serviceEnabled) {
+      // Location services are not enabled don't continue
+      // accessing the position and request users of the
+      // App to enable the location services.
+      return Future.error('Location services are disabled.');
+    } else {
+      _gpsEnable = true;
+    }
+
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        // Permissions are denied, next time you could try
+        // requesting permissions again (this is also where
+        // Android's shouldShowRequestPermissionRationale
+        // returned true. According to Android guidelines
+        // your App should show an explanatory UI now.
+        return Future.error('Location permissions are denied');
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      // Permissions are denied forever, handle appropriately.
+      return Future.error(
+          'Location permissions are permanently denied, we cannot request permissions.');
+    }
+    // When we reach here, permissions are granted and we can
+    // continue accessing the position of the device.
+    return await Geolocator.getCurrentPosition();
+  }
 
   Future<void> initConnectivity() async {
     late ConnectivityResult result;
@@ -165,6 +223,9 @@ class _FormTamabahDataBensinState extends State<FormTamabahDataBensin>
 
   Future<void> _updateConnectionStatus(ConnectivityResult result) async {
     setState(() {
+      if (result != ConnectivityResult.none) {
+        _internetEnable = true;
+      }
       _connectionStatus = result;
     });
   }
@@ -697,7 +758,11 @@ class _FormTamabahDataBensinState extends State<FormTamabahDataBensin>
         SizedBox(
           height: 10,
         ),
-        frameNegativeMaps(),
+        _internetEnable == false
+            ? frameNegativeMaps(wifiOff)
+            : _gpsEnable == false
+                ? frameNegativeMaps(gpsOff)
+                : framePositiveMaps(),
         SizedBox(
           height: 10,
         ),
@@ -754,7 +819,32 @@ class _FormTamabahDataBensinState extends State<FormTamabahDataBensin>
     );
   }
 
-  Widget frameNegativeMaps() {
+  Widget framePositiveMaps() {
+    return Container(
+      height: 150,
+      width: double.infinity,
+      decoration: BoxDecoration(
+        border: Border.all(color: Color(0xFFAEAEAE)),
+        borderRadius: BorderRadius.all(
+          Radius.circular(8),
+        ),
+      ),
+      child: GoogleMap(
+        initialCameraPosition: CameraPosition(
+          target: LatLng(48.8561, 2.2930),
+          zoom: 12.0,
+        ),
+        markers: _markers,
+        zoomControlsEnabled: false,
+        mapType: MapType.normal,
+        onMapCreated: (GoogleMapController controller) {
+          _controllerMap = controller;
+        },
+      ),
+    );
+  }
+
+  Widget frameNegativeMaps(text) {
     return Container(
       height: 150,
       width: double.infinity,
@@ -776,7 +866,7 @@ class _FormTamabahDataBensinState extends State<FormTamabahDataBensin>
           Container(
             width: 250,
             child: Text(
-              "Maps tidak dapat dibuka, Anda saat ini sedang di luar jaringan. Silakan periksa jaringan internet Anda",
+              text,
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontFamily: 'Poppins',

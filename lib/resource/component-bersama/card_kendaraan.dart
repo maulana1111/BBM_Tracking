@@ -64,9 +64,12 @@ class MainCardKendaraan extends StatelessWidget {
                         ),
                         Container(
                           child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Container(
+                                // width: double.infinity,
                                 child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                                   children: [
                                     Container(
                                       child: Column(
@@ -140,7 +143,6 @@ class MainCardKendaraan extends StatelessWidget {
                                 height: 20,
                               ),
                               Container(
-                                width: 180,
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [

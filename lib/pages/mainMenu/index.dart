@@ -352,6 +352,7 @@ class _IndexMainMenuState extends State<IndexMainMenu> {
 
   Widget SecondWidget() {
     return Container(
+      margin: EdgeInsets.symmetric(vertical: 0, horizontal: 4,),
       width: double.infinity,
       height: 58,
       decoration: BoxDecoration(
@@ -385,51 +386,53 @@ class _IndexMainMenuState extends State<IndexMainMenu> {
   }
 
   Widget ItemTotalLiterUang(text, param) {
-    return Container(
-      width: 172,
-      height: 45,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.all(
-          Radius.circular(4),
+    return Expanded(
+      flex: 1,
+      child: Container(
+        height: 45,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.all(
+            Radius.circular(4),
+          ),
         ),
-      ),
-      child: Padding(
-        padding: EdgeInsets.only(
-          left: 7,
-          top: 3,
-          bottom: 3,
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              text,
-              style: TextStyle(
-                fontSize: 10,
-                fontFamily: 'Poppins',
-                color: Color(0xFF1A0F0F),
+        child: Padding(
+          padding: EdgeInsets.only(
+            left: 7,
+            top: 3,
+            bottom: 3,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                text,
+                style: TextStyle(
+                  fontSize: 10,
+                  fontFamily: 'Poppins',
+                  color: Color(0xFF1A0F0F),
+                ),
               ),
-            ),
-            Row(
-              children: [
-                Image.asset(
-                  param == "pengeluaran" ? "assets/images/compass.png" : "assets/images/gas-pump.png",
-                ),
-                SizedBox(
-                  width: 10,
-                ),
-                Text(
-                  param == "pengeluaran" ? "${CurrencyFormat.convertToIdr(totalPengeluaran, 0)}" : "${totalBBM} Liter",
-                  style: TextStyle(
-                    fontSize: 8,
-                    fontFamily: 'Poppins',
-                    color: Color(0xFF1A0F0F),
+              Row(
+                children: [
+                  Image.asset(
+                    param == "pengeluaran" ? "assets/images/compass.png" : "assets/images/gas-pump.png",
                   ),
-                )
-              ],
-            ),
-          ],
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Text(
+                    param == "pengeluaran" ? "${CurrencyFormat.convertToIdr(totalPengeluaran, 0)}" : "${totalBBM} Liter",
+                    style: TextStyle(
+                      fontSize: 8,
+                      fontFamily: 'Poppins',
+                      color: Color(0xFF1A0F0F),
+                    ),
+                  )
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -1,14 +1,18 @@
 import 'dart:async';
+import 'dart:ffi';
+import 'dart:io';
 
 import 'package:animated_custom_dropdown/custom_dropdown.dart';
 import 'package:bbm_tracking/model/bensin_m.dart';
 import 'package:bbm_tracking/model/kendaraan_m.dart';
+import 'package:bbm_tracking/pages/form-tambah-data-bensin/displayImage.dart';
 import 'package:bbm_tracking/pages/home.dart';
 import 'package:bbm_tracking/resource/popup/popup.dart';
 import 'package:bbm_tracking/resource/resource.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:image_gallery_saver/image_gallery_saver.dart';
 // import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
 import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
@@ -16,10 +20,14 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'dart:developer' as developer;
 import 'package:geolocator/geolocator.dart';
 import 'package:location/location.dart';
+import 'package:camera/camera.dart';
+import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class FormTamabahDataBensin extends StatefulWidget {
   KendaraanModel kendaraanModel;
-  FormTamabahDataBensin({required this.kendaraanModel});
+  final CameraDescription camera;
+  FormTamabahDataBensin({required this.kendaraanModel, required this.camera});
 
   @override
   State<FormTamabahDataBensin> createState() => _FormTamabahDataBensinState();
@@ -66,6 +74,12 @@ class _FormTamabahDataBensinState extends State<FormTamabahDataBensin>
 
   Set<Marker> _markers = {};
 
+  late CameraController _cameraController;
+  late Future<void> _initializeControllerFuture;
+
+  List<File?> _image = [];
+  File? tryImage;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -103,10 +117,17 @@ class _FormTamabahDataBensinState extends State<FormTamabahDataBensin>
       _counter();
     });
 
-    // initialLocation();
     setState(() {
-      getLocation();
+      initialLocation();
+      // getLocation();
     });
+
+    _cameraController = CameraController(
+      widget.camera,
+      ResolutionPreset.medium,
+    );
+
+    _initializeControllerFuture = _cameraController.initialize();
   }
 
   @override
@@ -115,6 +136,7 @@ class _FormTamabahDataBensinState extends State<FormTamabahDataBensin>
     bbmController.dispose();
     totalBiayaController.dispose();
     literController.dispose();
+    _cameraController.dispose();
     super.dispose();
   }
 
@@ -137,30 +159,31 @@ class _FormTamabahDataBensinState extends State<FormTamabahDataBensin>
     });
   }
 
-  // void initialLocation() async {
-  //   Position position = await checkGPS();
+  void initialLocation() async {
+    Position position = await checkGPS();
 
-  //   googleMapController.animateCamera(
-  //     CameraUpdate.newCameraPosition(
-  //       CameraPosition(
-  //         target: LatLng(
-  //           position.latitude,
-  //           position.longitude,
-  //         ),
-  //         zoom: 14,
-  //       ),
-  //     ),
-  //   );
-  //   markers.clear();
+    _controllerMap?.animateCamera(
+      CameraUpdate.newCameraPosition(
+        CameraPosition(
+          target: LatLng(
+            position.latitude,
+            position.longitude,
+          ),
+          zoom: 16,
+        ),
+      ),
+    );
+    _markers.clear();
 
-  //   markers.add(
-  //     Marker(
-  //       markerId: const MarkerId('currentLocation'),
-  //       position: LatLng(position.latitude, position.longitude),
-  //     ),
-  //   );
-  //   setState(() {});
-  // }
+    setState(() {
+      _markers.add(
+        Marker(
+          markerId: const MarkerId('currentLocation'),
+          position: LatLng(position.latitude, position.longitude),
+        ),
+      );
+    });
+  }
 
   Future<Position> checkGPS() async {
     bool serviceEnabled;
@@ -348,6 +371,44 @@ class _FormTamabahDataBensinState extends State<FormTamabahDataBensin>
     return CurrencyFormat.convertToIdr(data, 0);
   }
 
+  Future<void> _navigateAndDisplayImage(
+    BuildContext context,
+    File file,
+  ) async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => DisplayImage(imagePath: file),
+      ),
+    );
+    if (!mounted) return;
+
+    if (result != null) {
+      // var v = "File: '${result}'";
+      // print("hit = "+v);
+      setState(() {
+        _image.remove(result);
+      });
+      print(_image);
+    }
+  }
+
+  void _submitted()
+  {
+    _image.forEach((element) async{
+      final result = await ImageGallerySaver.saveImage(
+        Uint8List.fromList(element!.readAsBytesSync()),
+        quality: 60,
+        name: "testing"
+      );
+      print(result['filePath']);
+      // setState(() {
+        
+      // });
+    });
+  }
+  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -446,6 +507,7 @@ class _FormTamabahDataBensinState extends State<FormTamabahDataBensin>
 
   Widget ButtonSave() {
     return InkWell(
+      onTap: () => _submitted(),
       child: Container(
         alignment: Alignment.topRight,
         child: Container(
@@ -677,7 +739,7 @@ class _FormTamabahDataBensinState extends State<FormTamabahDataBensin>
             children: [
               Container(
                 child: Image.asset(
-                  "assets/images/frmImage.png",
+                  "assets/images/frmImage1.png",
                   width: 34,
                   height: 34,
                 ),
@@ -685,21 +747,74 @@ class _FormTamabahDataBensinState extends State<FormTamabahDataBensin>
               SizedBox(
                 width: 10,
               ),
-              Container(
-                child: Image.asset(
-                  "assets/images/frmAdd.png",
-                  width: 34,
-                  height: 34,
-                ),
-              ),
-              SizedBox(
-                width: 10,
-              ),
-              Container(
-                child: Image.asset(
-                  "assets/images/frmAdd.png",
-                  width: 34,
-                  height: 34,
+              Expanded(
+                child: Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Color(0xFF677D81),
+                      width: 1,
+                    ),
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(4),
+                    ),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      children: [
+                        InkWell(
+                          onTap: () async {
+                            try {
+                              final pickedImage = await ImagePicker()
+                                  .pickImage(source: ImageSource.camera);
+
+                              setState(() {
+                                _image.add(File(pickedImage!.path));
+                              });
+                            } catch (e) {
+                              // If an error occurs, log the error to the console.
+                              print(e);
+                            }
+                          },
+                          child: Container(
+                            child: Image.asset(
+                              "assets/images/frmAdd.png",
+                              width: 34,
+                              height: 34,
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Expanded(
+                          child: Container(
+                            height: 34,
+                            child: ListView.builder(
+                              itemCount: _image.length,
+                              scrollDirection: Axis.horizontal,
+                              itemBuilder: (BuildContext context, int index) {
+                                return Container(
+                                  margin: EdgeInsets.symmetric(horizontal: 5),
+                                  child: InkWell(
+                                    onTap: () {
+                                      _navigateAndDisplayImage(
+                                          context, _image[index]!);
+                                    },
+                                    child: Container(
+                                      child: Image.file(
+                                        File(_image[index]!.path),
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               ),
             ],
@@ -832,7 +947,7 @@ class _FormTamabahDataBensinState extends State<FormTamabahDataBensin>
       child: GoogleMap(
         initialCameraPosition: CameraPosition(
           target: LatLng(48.8561, 2.2930),
-          zoom: 12.0,
+          zoom: 15,
         ),
         markers: _markers,
         zoomControlsEnabled: false,

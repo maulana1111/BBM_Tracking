@@ -11,6 +11,7 @@ import 'package:bbm_tracking/pages/mainMenu/component/item_bensin.dart';
 import 'package:bbm_tracking/pages/mainMenu/index.dart';
 import 'package:bbm_tracking/pages/riwayat/index.dart';
 import 'package:bbm_tracking/resource/popup/popup.dart';
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pandabar/main.view.dart';
@@ -34,6 +35,7 @@ class _HomeState extends State<Home> {
   late bool paramKendaran = false;
   late int paramText = 0;
   late bool cond = false;
+  var firstCamera;
 
   void ButtonAddTransaksi() {
     if (dataKendaraan != null || dataKendaraan.length != 0) {
@@ -58,7 +60,7 @@ class _HomeState extends State<Home> {
     paramKendaran
         ? Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (context) => FormTamabahDataBensin(kendaraanModel: dt),
+              builder: (context) => FormTamabahDataBensin(kendaraanModel: dt, camera: firstCamera),
             ),
           )
         : showDialog(
@@ -80,6 +82,19 @@ class _HomeState extends State<Home> {
     super.initState();
     screen = widget.screen;
     param = widget.param;
+    initilizeCamera();
+  }
+
+  Future<void> initilizeCamera() async {
+    WidgetsFlutterBinding.ensureInitialized();
+
+    // Obtain a list of the available cameras on the device.
+    final cameras = await availableCameras();
+
+    // Get a specific camera from the list of available cameras.
+    setState(() {
+      firstCamera = cameras.first;
+    });
   }
 
   // String page = 'home';

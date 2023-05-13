@@ -56,6 +56,15 @@ class DatabasesMain {
       """);
   }
 
+  Future<void> createTableMapPhotoTransaction(sql.Database database) async {
+    await database.execute("""CREATE TABLE photo(
+      id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+      transaksi_id INTEGER
+      linkPhoto TEXT,
+      namePhoto TEXT
+    )""");
+  }
+
   Future<sql.Database> dbs() async {
     return sql.openDatabase(
       join(await sql.getDatabasesPath(), 'bbmtracking.db'),
@@ -64,6 +73,7 @@ class DatabasesMain {
         await createTablesBensin(database);
         await createTablesTransaksi(database);
         await createTablesKendaraan(database);
+        await createTableMapPhotoTransaction(database);
       },
     );
   }

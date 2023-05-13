@@ -61,6 +61,11 @@ dependencies:
   geolocator: ^9.0.2
   connectivity_plus: ^3.0.6
   location: ^4.3.0
+  camera:
+  path_provider:
+  image_picker:
+  image_gallery_saver: '^1.7.1'
+  # uri_to_file: ^0.2.0
 
 dev_dependencies:
   bloc_test: ^9.0.0

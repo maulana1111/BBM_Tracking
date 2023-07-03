@@ -1,16 +1,22 @@
 import 'dart:async';
 import 'dart:ffi';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:animated_custom_dropdown/custom_dropdown.dart';
+import 'package:bbm_tracking/bloc/bbm_bloc.dart';
 import 'package:bbm_tracking/model/bensin_m.dart';
 import 'package:bbm_tracking/model/kendaraan_m.dart';
+import 'package:bbm_tracking/model/photo_m.dart';
+import 'package:bbm_tracking/model/transaksi_m.dart';
+import 'package:bbm_tracking/pages/component/success_dialog_box.dart';
 import 'package:bbm_tracking/pages/form-tambah-data-bensin/displayImage.dart';
 import 'package:bbm_tracking/pages/home.dart';
 import 'package:bbm_tracking/resource/popup/popup.dart';
 import 'package:bbm_tracking/resource/resource.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 // import 'package:geolocator/geolocator.dart';
@@ -26,8 +32,10 @@ import 'package:image_picker/image_picker.dart';
 
 class FormTamabahDataBensin extends StatefulWidget {
   KendaraanModel kendaraanModel;
+  // TransaksiModel transaksiModel;
   final CameraDescription camera;
   FormTamabahDataBensin({required this.kendaraanModel, required this.camera});
+  // FormTamabahDataBensin(this.transaksiModel, {required this.kendaraanModel, required this.camera});
 
   @override
   State<FormTamabahDataBensin> createState() => _FormTamabahDataBensinState();
@@ -53,7 +61,6 @@ class _FormTamabahDataBensinState extends State<FormTamabahDataBensin>
       "Maps tidak dapat dibuka, Anda saat ini sedang di luar jaringan. Silakan periksa jaringan internet Anda";
   final String gpsOff = "Maps tidak dapat dibuka, GPS tidak aktif";
 
-  final test = TextEditingController();
   final odometerController = TextEditingController();
   final bbmController = TextEditingController();
   final dateController = TextEditingController();
@@ -63,6 +70,7 @@ class _FormTamabahDataBensinState extends State<FormTamabahDataBensin>
   final alamatController = TextEditingController();
   final catatanController = TextEditingController();
   final hargaPerLiterController = TextEditingController();
+  final lokasiController = TextEditingController();
 
   GoogleMapController? _controllerMap;
   Location currentLocation = Location();
@@ -80,13 +88,24 @@ class _FormTamabahDataBensinState extends State<FormTamabahDataBensin>
   List<File?> _image = [];
   File? tryImage;
 
+  bool _submittedForm = false;
+
+  BensinModel? dtBensin;
+
+  String? latitude;
+  String? langitude;
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    Future.delayed(Duration.zero, () {
+      timeController.text = _time.format(context).toString();
+      dateController.text = selectedDate;
+    });
+
     initConnectivity();
     checkGPS();
-
     _connectivitySubscription =
         _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
 
@@ -97,11 +116,11 @@ class _FormTamabahDataBensinState extends State<FormTamabahDataBensin>
         conditionBbm == true;
       } else {
         conditionBbm = false;
-        BensinModel dtBensin = listBensin
+        dtBensin = listBensin
             .firstWhere((element) => element.text == bbmController.text);
         hargaPerLiterController.text =
-            CurrencyFormat.convertToIdr(dtBensin.harga, 0);
-        hargaPerLiterTxt = dtBensin.harga.toString();
+            CurrencyFormat.convertToIdr(dtBensin!.harga, 0);
+        hargaPerLiterTxt = dtBensin!.harga.toString();
       }
     });
 
@@ -132,31 +151,20 @@ class _FormTamabahDataBensinState extends State<FormTamabahDataBensin>
 
   @override
   void dispose() {
-    _connectivitySubscription.cancel();
-    bbmController.dispose();
-    totalBiayaController.dispose();
-    literController.dispose();
-    _cameraController.dispose();
     super.dispose();
-  }
-
-  void getLocation() async {
-    // var location = await currentLocation.getLocation();
-    var location = await checkGPS();
-    currentLocation.onLocationChanged.listen((LocationData loc) {
-      _controllerMap
-          ?.animateCamera(CameraUpdate.newCameraPosition(new CameraPosition(
-        target: LatLng(loc.latitude ?? 0.0, loc.longitude ?? 0.0),
-        zoom: 12.0,
-      )));
-      print(loc.latitude);
-      print(loc.longitude);
-      setState(() {
-        _markers.add(Marker(
-            markerId: MarkerId('Home'),
-            position: LatLng(loc.latitude ?? 0.0, loc.longitude ?? 0.0)));
-      });
-    });
+    _controllerMap!.dispose();
+    _connectivitySubscription.cancel();
+    _cameraController.dispose();
+    odometerController.dispose();
+    bbmController.dispose();
+    dateController.dispose();
+    timeController.dispose();
+    literController.dispose();
+    totalBiayaController.dispose();
+    alamatController.dispose();
+    catatanController.dispose();
+    hargaPerLiterController.dispose();
+    lokasiController.dispose();
   }
 
   void initialLocation() async {
@@ -174,6 +182,8 @@ class _FormTamabahDataBensinState extends State<FormTamabahDataBensin>
       ),
     );
     _markers.clear();
+    latitude = position.latitude.toString();
+    langitude = position.longitude.toString();
 
     setState(() {
       _markers.add(
@@ -347,8 +357,8 @@ class _FormTamabahDataBensinState extends State<FormTamabahDataBensin>
         literController.text = '';
         literTxt = '';
       } else {
-        literController.text = res.toStringAsFixed(1).toString();
-        literTxt = res.toStringAsFixed(1).toString();
+        literController.text = res.toStringAsFixed(2).toString();
+        literTxt = res.toStringAsFixed(2).toString();
       }
     }
   }
@@ -384,8 +394,6 @@ class _FormTamabahDataBensinState extends State<FormTamabahDataBensin>
     if (!mounted) return;
 
     if (result != null) {
-      // var v = "File: '${result}'";
-      // print("hit = "+v);
       setState(() {
         _image.remove(result);
       });
@@ -393,21 +401,62 @@ class _FormTamabahDataBensinState extends State<FormTamabahDataBensin>
     }
   }
 
-  void _submitted()
-  {
-    _image.forEach((element) async{
+  void _submitted() async {
+    var rng = Random();
+    DateTime date = DateTime.parse(dateController.text);
+    String _kodeTransaksi =
+        "BBM-T/F0001/${bbmController.text}/XIII/${rng.nextInt(6)}";
+
+    List<PhotoModel> dataPhoto = [];
+    final dateNow = DateTime.now();
+    _image.forEach((element) async {
       final result = await ImageGallerySaver.saveImage(
         Uint8List.fromList(element!.readAsBytesSync()),
         quality: 60,
-        name: "testing"
+        name: dateNow.toString(),
       );
-      print(result['filePath']);
-      // setState(() {
-        
-      // });
+      // print(result['filePath']);
+      PhotoModel modelPhoto = PhotoModel(
+        id: 0,
+        transaksi_id: _kodeTransaksi,
+        linkPhoto: result['filePath'],
+        namePhoto: dateNow.toString(),
+      );
+      dataPhoto.add(modelPhoto);
     });
+
+    TransaksiModel transaksiModel = TransaksiModel(
+      id: 0,
+      kendaraanId: dataKendaraan.id.toString(),
+      bensinId: dtBensin!.id.toString(),
+      kodeTransaksi: _kodeTransaksi,
+      tanggalTransaksi: date,
+      lokasiPertamina: lokasiController.text,
+      totalLiter: literController.text,
+      hargaPerLiter: int.parse(hargaPerLiterTxt),
+      totalBayar: int.parse(totalBiayaController.text),
+      odometer: odometerController.text,
+      catatan: catatanController.text,
+      lat: latitude!,
+      lang: langitude!,
+      status: 1,
+    );
+    context
+        .read<BbmBloc>()
+        .add(BBMInsertTransaksion(transaksi: transaksiModel, photo: dataPhoto));
+    Navigator.of(context).pop(context);
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return SuccessDialogBox(deskripsi: "Berhasil Menambah Data");
+      },
+    );
   }
-  
+
+  String? _errorText(TextEditingController controller) {
+    var val = controller.value.text.isEmpty ? "Tidak Boleh Kosong" : null;
+    return val;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -667,9 +716,9 @@ class _FormTamabahDataBensinState extends State<FormTamabahDataBensin>
                 Expanded(
                   child: Container(
                     child: TextField(
-                      controller: test,
+                      controller: catatanController,
                       maxLines: 5,
-                      keyboardType: TextInputType.number,
+                      keyboardType: TextInputType.text,
                       decoration: InputDecoration(
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.all(
@@ -899,8 +948,8 @@ class _FormTamabahDataBensinState extends State<FormTamabahDataBensin>
             Expanded(
               child: Container(
                 child: TextField(
-                  controller: test,
-                  keyboardType: TextInputType.number,
+                  controller: lokasiController,
+                  keyboardType: TextInputType.text,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.all(
@@ -1081,6 +1130,8 @@ class _FormTamabahDataBensinState extends State<FormTamabahDataBensin>
                       right: 15,
                     ),
                     hintText: "Odometer (km)",
+                    errorText:
+                        _submittedForm ? _errorText(odometerController) : null,
                     hintStyle: TextStyle(
                       fontFamily: 'Poppins',
                       color: Color(0xFFAEAEAE),
@@ -1120,6 +1171,7 @@ class _FormTamabahDataBensinState extends State<FormTamabahDataBensin>
                   items: listNamaBensin,
                   controller: bbmController,
                   hintText: "Tipe Bahan Bakar",
+                  errorText: _submittedForm ? _errorText(bbmController) : null,
                 ),
                 SizedBox(
                   height: 10,
@@ -1213,9 +1265,9 @@ class _FormTamabahDataBensinState extends State<FormTamabahDataBensin>
                         hintText: selectedDate,
                         hintStyle: TextStyle(
                           fontFamily: 'Poppins',
-                          color: Color(0xFFAEAEAE),
-                          fontSize: 10,
-                          fontWeight: FontWeight.w400,
+                          color: Colors.black,
+                          fontSize: 15,
+                          fontWeight: FontWeight.w500,
                         ),
                       ),
                     ),
@@ -1263,9 +1315,9 @@ class _FormTamabahDataBensinState extends State<FormTamabahDataBensin>
                         hintText: _time.format(context),
                         hintStyle: TextStyle(
                           fontFamily: 'Poppins',
-                          color: Color(0xFFAEAEAE),
-                          fontSize: 10,
-                          fontWeight: FontWeight.w400,
+                          color: Colors.black,
+                          fontSize: 15,
+                          fontWeight: FontWeight.w500,
                         ),
                       ),
                     ),
@@ -1297,7 +1349,7 @@ class _FormTamabahDataBensinState extends State<FormTamabahDataBensin>
             child: Row(
               children: [
                 Flexible(
-                  flex: 1,
+                  flex: 2,
                   child: TextField(
                     controller: literController,
                     keyboardType: TextInputType.number,
@@ -1320,6 +1372,8 @@ class _FormTamabahDataBensinState extends State<FormTamabahDataBensin>
                         right: 15,
                       ),
                       hintText: "Liter",
+                      errorText:
+                          _submittedForm ? _errorText(literController) : null,
                       hintStyle: TextStyle(
                         fontFamily: 'Poppins',
                         color: Color(0xFFAEAEAE),
@@ -1333,7 +1387,7 @@ class _FormTamabahDataBensinState extends State<FormTamabahDataBensin>
                   width: 10,
                 ),
                 Flexible(
-                  flex: 2,
+                  flex: 3,
                   child: TextField(
                     inputFormatters: <TextInputFormatter>[
                       CurrencyTextInputFormatter(
@@ -1360,6 +1414,9 @@ class _FormTamabahDataBensinState extends State<FormTamabahDataBensin>
                         left: 15,
                         right: 15,
                       ),
+                      errorText: _submittedForm
+                          ? _errorText(hargaPerLiterController)
+                          : null,
                       hintText: "Harga/Liter",
                       hintStyle: TextStyle(
                         fontFamily: 'Poppins',
@@ -1404,6 +1461,9 @@ class _FormTamabahDataBensinState extends State<FormTamabahDataBensin>
                         right: 15,
                       ),
                       hintText: "Total Biaya",
+                      errorText: _submittedForm
+                          ? _errorText(totalBiayaController)
+                          : null,
                       hintStyle: TextStyle(
                         fontFamily: 'Poppins',
                         color: Color(0xFFAEAEAE),

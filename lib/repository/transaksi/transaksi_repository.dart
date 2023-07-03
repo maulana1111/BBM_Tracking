@@ -1,3 +1,4 @@
+import 'package:bbm_tracking/model/photo_m.dart';
 import 'package:bbm_tracking/model/transaksi_m.dart';
 import 'package:bbm_tracking/services/databases.dart';
 
@@ -12,6 +13,19 @@ class TransaksiRepository
   Future<List<TransaksiModel>> loadTransaksiThisMonth()
   {
     return service.getAllTransaksiStatusSuccessfullThisMonth();
+  }
+
+  Future<void> insertTransaksi(TransaksiModel model) async 
+  {
+    await service.insertDataTransaksi(model);
+  }
+
+  //photo
+  Future<void> insertPhoto(List<PhotoModel> model) async
+  {
+    model.forEach((element) async{
+      await service.insertDataPhoto(element);
+    });
   }
 
 }

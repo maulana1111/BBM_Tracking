@@ -33,3 +33,12 @@ class BBMChangeStatusKendaraan extends BbmEvent{
   @override
   List<Object> get props => [id, status];
 }
+
+class BBMInsertTransaksion extends BbmEvent{
+  final TransaksiModel transaksi;
+  final List<PhotoModel> photo;
+  const BBMInsertTransaksion({required this.transaksi, required this.photo});
+
+  @override
+  List<Object> get props => [transaksi];
+}

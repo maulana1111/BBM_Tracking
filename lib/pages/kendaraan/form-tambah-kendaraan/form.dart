@@ -66,10 +66,11 @@ class _FormKendaraanState extends State<FormKendaraan> {
         builder: (context) => Home("", ""),
       ));
       showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return SuccessDialogBox(deskripsi: "Berhasil Menambah Data");
-          });
+        context: context,
+        builder: (BuildContext context) {
+          return SuccessDialogBox(deskripsi: "Berhasil Menambah Data");
+        },
+      );
     } else {
       print("faield");
     }

@@ -1,5 +1,6 @@
 import 'package:bbm_tracking/model/bensin_m.dart';
 import 'package:bbm_tracking/model/kendaraan_m.dart';
+import 'package:bbm_tracking/model/photo_m.dart';
 import 'package:bbm_tracking/model/transaksi_m.dart';
 import 'package:bbm_tracking/repository/kendaraan/kendaraan_repository.dart';
 import 'package:bbm_tracking/repository/transaksi/transaksi_repository.dart';
@@ -22,33 +23,37 @@ class BbmBloc extends Bloc<BbmEvent, BbmState> {
     on<BBMDataKendaraanAdded>(_onBBMKendaraanAdded);
     on<BBMChangeStatusKendaraan>(_onBBMChangeStatusKendaraan);
     on<BBMDataKendaraan>(_onBBMGetDataKendaraan);
+    on<BBMInsertTransaksion>(_onBBMInsertTransaksi);
   }
 
-  Future<void> _onBBMGetDataKendaraan(BBMDataKendaraan event, Emitter<BbmState> emit) async {
+  Future<void> _onBBMGetDataKendaraan(
+    BBMDataKendaraan event,
+    Emitter<BbmState> emit,
+  ) async {
     final state = this.state;
-    try{
-      if(state is BBMLoaded)
-      {
+    try {
+      if (state is BBMLoaded) {
         late KendaraanModel dataKendaraan;
         state.kendaraan.forEach((element) {
-          if(element.id == event.kendaraanModel.id)
-          {
+          if (element.id == event.kendaraanModel.id) {
             dataKendaraan = element;
           }
         });
         emit(BBMSingleData(kendaraan: dataKendaraan));
       }
-    }catch (e) {
+    } catch (e) {
       emit(BBMError(message: "Something Error, ${e}, We Will Fix it"));
     }
   }
 
   Future<void> _onBBMChangeStatusKendaraan(
-      BBMChangeStatusKendaraan event, Emitter<BbmState> emit) async {
+    BBMChangeStatusKendaraan event,
+    Emitter<BbmState> emit,
+  ) async {
     final state = this.state;
     try {
       if (state is BBMLoaded) {
-        kendaraanRepository.changeStatuKendaraan(event.id, event.status);
+        await kendaraanRepository.changeStatuKendaraan(event.id, event.status);
         state.kendaraan.forEach((element) {
           element.status = 0;
         });
@@ -65,11 +70,13 @@ class BbmBloc extends Bloc<BbmEvent, BbmState> {
   }
 
   Future<void> _onBBMKendaraanAdded(
-      BBMDataKendaraanAdded event, Emitter<BbmState> emit) async {
+    BBMDataKendaraanAdded event,
+    Emitter<BbmState> emit,
+  ) async {
     final state = this.state;
     try {
       if (state is BBMLoaded) {
-        kendaraanRepository.addedKendaraan(event.kendaraanModel);
+        await kendaraanRepository.addedKendaraan(event.kendaraanModel);
         List<KendaraanModel> dataKendaraan = state.kendaraan;
         dataKendaraan.add(event.kendaraanModel);
         List<TransaksiModel> dataTransaksi = state.transaksi;
@@ -84,7 +91,10 @@ class BbmBloc extends Bloc<BbmEvent, BbmState> {
     }
   }
 
-  Future<void> _onBBMStarted(BBMStarted event, Emitter<BbmState> emit) async {
+  Future<void> _onBBMStarted(
+    BBMStarted event,
+    Emitter<BbmState> emit,
+  ) async {
     try {
       List<KendaraanModel> dataKendaraan =
           await kendaraanRepository.loadKendaraan();
@@ -94,6 +104,32 @@ class BbmBloc extends Bloc<BbmEvent, BbmState> {
           await transaksiRepository.loadTransaksiThisMonth();
 
       emit(BBMLoaded(dataKendaraan, dataTransaksi, dataTransaksiThisMonth));
+    } catch (e) {
+      emit(BBMError(message: "Something Error, ${e}, We Will Fix it"));
+    }
+  }
+
+  Future<void> _onBBMInsertTransaksi(
+    BBMInsertTransaksion event,
+    Emitter<BbmState> emit,
+  ) async {
+    try {
+      final state = this.state;
+
+      if (state is BBMLoaded) {
+        await transaksiRepository.insertTransaksi(event.transaksi);
+
+        await transaksiRepository.insertPhoto(event.photo);
+
+        List<KendaraanModel> dataKendaraan =
+            await kendaraanRepository.loadKendaraan();
+        List<TransaksiModel> dataTransaksi =
+            await transaksiRepository.loadTransaksi();
+        List<TransaksiModel> dataTransaksiThisMonth =
+            await transaksiRepository.loadTransaksiThisMonth();
+
+        emit(BBMLoaded(dataKendaraan, dataTransaksi, dataTransaksiThisMonth));
+      }
     } catch (e) {
       emit(BBMError(message: "Something Error, ${e}, We Will Fix it"));
     }

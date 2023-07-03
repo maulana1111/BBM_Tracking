@@ -1,6 +1,6 @@
 class PhotoModel {
   int id;
-  int transaksi_id;
+  String transaksi_id;
   String linkPhoto;
   String namePhoto;
 

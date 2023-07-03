@@ -15,6 +15,7 @@ class TransaksiModel {
   String lat;
   String lang;
   int status;
+  List<PhotoModel> dataPhoto;
 
   TransaksiModel({
     required this.id,
@@ -31,6 +32,7 @@ class TransaksiModel {
     required this.lat,
     required this.lang,
     required this.status,
+    required this.dataPhoto,
   });
 
   TransaksiModel.fromJson(Map<String, dynamic> json)
@@ -47,7 +49,8 @@ class TransaksiModel {
         catatan = json['catatan'],
         lat = json['lat'],
         lang = json['lang'],
-        status = json['status'];
+        status = json['status'],
+        dataPhoto = json['dataPhoto'];
 
   Map<String, dynamic> toJson() => {
         'id': id,
@@ -64,5 +67,6 @@ class TransaksiModel {
         'lat': lat,
         'lang': lang,
         'status': status,
+        'dataPhoto': dataPhoto,
       };
 }

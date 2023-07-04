@@ -31,6 +31,12 @@ class BBMChangeStatus extends BbmState{
   BBMChangeStatus({required this.kendaraan, required this.transaksi});
 }
 
+class BBMKendaraanLoaded extends BbmState{
+  final List<KendaraanModel> kendaraan;
+
+  BBMKendaraanLoaded({required this.kendaraan});
+}
+
 
 class BBMError extends BbmState{ 
   final String message;

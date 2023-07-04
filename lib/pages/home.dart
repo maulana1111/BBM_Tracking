@@ -155,8 +155,10 @@ class _HomeState extends State<Home> {
                     // print("screen = " + param);
                     switch (screen) {
                       case 'home':
+                        // context.read<BbmBloc>().add(BBMStarted());
                         return IndexMainMenu();
                       case 'kendaraan':
+                        // context.read<BbmBloc>().add(BBMAllDataKendaraan());
                         return IndexKendaraan();
                       case 'riwayat':
                         return Riwayat();

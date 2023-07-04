@@ -24,6 +24,7 @@ class BbmBloc extends Bloc<BbmEvent, BbmState> {
     on<BBMChangeStatusKendaraan>(_onBBMChangeStatusKendaraan);
     on<BBMDataKendaraan>(_onBBMGetDataKendaraan);
     on<BBMInsertTransaksion>(_onBBMInsertTransaksi);
+    on<BBMAllDataKendaraan>(_onBBMGetAllKendaraan);
   }
 
   Future<void> _onBBMGetDataKendaraan(
@@ -46,6 +47,18 @@ class BbmBloc extends Bloc<BbmEvent, BbmState> {
     }
   }
 
+  Future<void> _onBBMGetAllKendaraan(
+    BBMAllDataKendaraan event,
+    Emitter<BbmState> emit,
+  ) async {
+    try {
+      List<KendaraanModel> dataKendaraan = await kendaraanRepository.loadKendaraan();
+      emit(BBMKendaraanLoaded(kendaraan: dataKendaraan));
+    } catch (e) {
+      emit(BBMError(message: "Something Error, ${e}, We Will Fix it"));
+    }
+  }
+
   Future<void> _onBBMChangeStatusKendaraan(
     BBMChangeStatusKendaraan event,
     Emitter<BbmState> emit,
@@ -61,8 +74,8 @@ class BbmBloc extends Bloc<BbmEvent, BbmState> {
             .elementAt(
                 state.kendaraan.indexWhere((element) => element.id == event.id))
             .status = event.status;
-        List<KendaraanModel> dataKendaraan = state.kendaraan;
-        List<TransaksiModel> dataTransaksi = state.transaksi;
+        // List<KendaraanModel> dataKendaraan = state.kendaraan;
+        // List<TransaksiModel> dataTransaksi = state.transaksi;
         // print("data dari bloc = "+dataKendaraan[0].status.toString());
         // emit(BBMLoaded(dataKendaraan, dataTransaksi, dataTransaksi));
       }

@@ -24,7 +24,13 @@ class _IndexKendaraanState extends State<IndexKendaraan> {
 
   void changeStatuKendaraan(int id, int status) {
     context.read<BbmBloc>().add(BBMChangeStatusKendaraan(id, status));
-    print("status = "+status.toString());
+    dataKendaraan.forEach((element) {
+          element.status = 0;
+        });
+        dataKendaraan
+            .elementAt(
+                dataKendaraan.indexWhere((element) => element.id == id))
+            .status = status;
     setState(() {
       counter++;
     });
@@ -57,6 +63,7 @@ class _IndexKendaraanState extends State<IndexKendaraan> {
 
   @override
   Widget build(BuildContext context) {
+    print("rerender parent");
     return Scaffold(
       backgroundColor: Color(0xffE3EAEA),
       floatingActionButton: FloatingActionButton(
@@ -87,8 +94,9 @@ class _IndexKendaraanState extends State<IndexKendaraan> {
               );
             }
             if (state is BBMLoaded) {
-              // dataKendaraan = state.kendaraan;
-              print("data state = "+state.kendaraan[0].status.toString());
+              print("data dari state = "+state.kendaraan[0].status.toString());
+              
+              dataKendaraan = state.kendaraan;
               return SingleChildScrollView(
                 child: Container(
                   child: Stack(
@@ -144,16 +152,17 @@ class _IndexKendaraanState extends State<IndexKendaraan> {
                               Container(
                                 child: ListView.builder(
                                   scrollDirection: Axis.vertical,
-                                  itemCount: state.kendaraan.length,
+                                  itemCount: dataKendaraan.length,
                                   shrinkWrap: true,
                                   itemBuilder:
                                       (BuildContext context, int index) {
                                     return CardKendaraan(
                                       kendaraan:
-                                          state.kendaraan.elementAt(index),
+                                          dataKendaraan.elementAt(index),
                                       onChangeStatus: (int id, int status) {
                                         changeStatuKendaraan(id, status);
                                       },
+                                      key: UniqueKey(),
                                     );
                                   },
                                 ),

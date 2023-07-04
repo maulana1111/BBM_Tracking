@@ -25,6 +25,8 @@ class BBMDataKendaraan extends BbmEvent{
   List<Object> get props => [kendaraanModel];
 }
 
+class BBMAllDataKendaraan extends BbmEvent{}
+
 class BBMChangeStatusKendaraan extends BbmEvent{
   final int id;
   final int status;

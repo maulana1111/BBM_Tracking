@@ -9,7 +9,8 @@ class CardKendaraan extends StatefulWidget {
   CardKendaraan({
     required this.kendaraan,
     required this.onChangeStatus,
-  });
+    Key? key
+  }) : super(key: key);
 
   @override
   State<CardKendaraan> createState() => _CardKendaraanState();
@@ -20,19 +21,26 @@ class _CardKendaraanState extends State<CardKendaraan> {
   late Function onChangeStatus;
   @override
   void initState() {
-    // print("render .... ");
+    print("render init child .... ");
     super.initState();
     kendaraan = widget.kendaraan;
     onChangeStatus = widget.onChangeStatus;
   }
+
+  // @override
+  // void didChangeDependencies() {
+  //   print("render depen .... ");
+  //   // TODO: implement didChangeDependencies
+  //   super.didChangeDependencies();
+  //   kendaraan = widget.kendaraan;
+  //   onChangeStatus = widget.onChangeStatus;
+
+  // }
+
   int count = 0;
   changeStatus(id, status)
   {
     onChangeStatus(id, status);
-  }
-  @override
-  void didUpdateWidget(covariant CardKendaraan oldWidget) {
-    super.didUpdateWidget(oldWidget);
   }
   TextStyle styleText = TextStyle(
     fontFamily: 'Poppins',
@@ -57,8 +65,9 @@ class _CardKendaraanState extends State<CardKendaraan> {
 
   @override
   Widget build(BuildContext context) {
-    print("status kendaran = "+widget.kendaraan.status.toString());
+    print("child rerender = ");
     return InkWell(
+      key: widget.key,
       onTap: () {
         kendaraan.status == 0
             ? showDialog(
@@ -107,7 +116,6 @@ class _CardKendaraanState extends State<CardKendaraan> {
                       splashRadius: 50,
                       value: kendaraan.status == 0 ? false : true,
                       onChanged: (value) {
-                        print("status kendaran tap = "+kendaraan.status.toString());
                         kendaraan.status == 0
                             ? showDialog(
                                 context: context,

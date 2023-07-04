@@ -24,8 +24,9 @@ class _IndexKendaraanState extends State<IndexKendaraan> {
 
   void changeStatuKendaraan(int id, int status) {
     context.read<BbmBloc>().add(BBMChangeStatusKendaraan(id, status));
+    print("status = "+status.toString());
     setState(() {
-      counter = counter + 1;
+      counter++;
     });
   }
 
@@ -80,9 +81,14 @@ class _IndexKendaraanState extends State<IndexKendaraan> {
                 child: Center(child: CircularProgressIndicator()),
               );
             }
+            if (state is BBMError) {
+              return Container(
+                child: Center(child: Text(state.message.toString())),
+              );
+            }
             if (state is BBMLoaded) {
               // dataKendaraan = state.kendaraan;
-              print("hit");
+              print("data state = "+state.kendaraan[0].status.toString());
               return SingleChildScrollView(
                 child: Container(
                   child: Stack(
@@ -159,11 +165,6 @@ class _IndexKendaraanState extends State<IndexKendaraan> {
                     ],
                   ),
                 ),
-              );
-            }
-            if (state is BBMError) {
-              return Container(
-                child: Center(child: Text(state.message.toString())),
               );
             }
             return Container();

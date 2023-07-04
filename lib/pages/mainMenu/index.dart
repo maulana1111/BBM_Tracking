@@ -68,8 +68,13 @@ class _IndexMainMenuState extends State<IndexMainMenu> {
                 }
               }
             }
+            
+
+            print("jumlah data = "+state.transaksi.length.toString());
 
             state.transaksi.forEach((element) {
+              print(element.kodeTransaksi);
+
               totalPengeluaran += element.totalBayar.toInt();
               totalBBM += int.parse(element.totalLiter);
             });

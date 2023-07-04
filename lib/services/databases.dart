@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 
 import 'package:flutter/widgets.dart';
+import 'package:intl/intl.dart';
 import 'package:path/path.dart';
 // import 'package:sqflite/sqflite.dart';
 import 'package:flutter/foundation.dart';
@@ -31,7 +32,7 @@ class DatabasesMain {
         bensinId TEXT,
         tanggalTransaksi TEXT,
         lokasiPertamina TEXT,
-        totalLiter INTEGER,
+        totalLiter TEXT,
         hargaPerLiter INTEGER,
         totalBayar INTEGER,
         odometer TEXT,
@@ -212,9 +213,13 @@ class DatabasesMain {
 
   Future<void> insertDataTransaksi(TransaksiModel model) async {
     final db = await dbs();
-    await db.rawInsert(
-        "INSERT INTO transaksi(kendaraanId,bensinId,tanggalTransaksi,lokasiPertamina,totalLiter,HargaPerliter,totalBayar,odometer,catatan,lat,lang,status) " +
-            "VALUES(${model.kendaraanId},${model.bensinId},${model.tanggalTransaksi},${model.lokasiPertamina},${model.totalLiter},${model.hargaPerLiter},${model.totalBayar},${model.odometer},${model.catatan},${model.lat},${model.lang},${model.status})");
+
+    final DateFormat formatter = DateFormat('yyyy-MM-dd');
+    final String formatted = formatter.format(model.tanggalTransaksi);
+    final qry = "INSERT INTO transaksi(kendaraanId,bensinId,tanggalTransaksi,lokasiPertamina,totalLiter,HargaPerliter,totalBayar,odometer,catatan,lat,lang,status) " +
+            "VALUES(${model.kendaraanId},${model.bensinId},${formatted},${model.lokasiPertamina},${model.totalLiter},${model.hargaPerLiter},${model.totalBayar},${model.odometer},${model.catatan},${model.lat},${model.lang},${model.status})";
+    await db.rawInsert(qry);
+    // print(qry);
   }
 
   // photo

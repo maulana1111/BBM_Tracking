@@ -60,7 +60,8 @@ class _HomeState extends State<Home> {
     paramKendaran
         ? Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (context) => FormTamabahDataBensin(kendaraanModel: dt, camera: firstCamera),
+              builder: (context) => FormTamabahDataBensin(
+                  kendaraanModel: dt, camera: firstCamera),
             ),
           )
         : showDialog(
@@ -80,8 +81,10 @@ class _HomeState extends State<Home> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    screen = widget.screen;
     param = widget.param;
+    setState(() {
+      widget.screen != null ? screen = "${widget.screen}" : screen = "home";
+    });
     initilizeCamera();
   }
 

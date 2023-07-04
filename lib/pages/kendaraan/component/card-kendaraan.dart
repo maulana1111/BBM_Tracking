@@ -20,11 +20,20 @@ class _CardKendaraanState extends State<CardKendaraan> {
   late Function onChangeStatus;
   @override
   void initState() {
+    // print("render .... ");
     super.initState();
     kendaraan = widget.kendaraan;
     onChangeStatus = widget.onChangeStatus;
   }
-
+  int count = 0;
+  changeStatus(id, status)
+  {
+    onChangeStatus(id, status);
+  }
+  @override
+  void didUpdateWidget(covariant CardKendaraan oldWidget) {
+    super.didUpdateWidget(oldWidget);
+  }
   TextStyle styleText = TextStyle(
     fontFamily: 'Poppins',
     fontSize: 12,
@@ -48,6 +57,7 @@ class _CardKendaraanState extends State<CardKendaraan> {
 
   @override
   Widget build(BuildContext context) {
+    print("status kendaran = "+widget.kendaraan.status.toString());
     return InkWell(
       onTap: () {
         kendaraan.status == 0
@@ -97,6 +107,7 @@ class _CardKendaraanState extends State<CardKendaraan> {
                       splashRadius: 50,
                       value: kendaraan.status == 0 ? false : true,
                       onChanged: (value) {
+                        print("status kendaran tap = "+kendaraan.status.toString());
                         kendaraan.status == 0
                             ? showDialog(
                                 context: context,
@@ -109,12 +120,12 @@ class _CardKendaraanState extends State<CardKendaraan> {
                                     negativeText: "Batalkan",
                                     screen: "cardKendaraan",
                                     onChangeStatus: () => {
-                                      onChangeStatus(kendaraan.id, 1),
+                                      changeStatus(kendaraan.id, 1),
                                     },
                                   );
                                 },
                               )
-                            : onChangeStatus(kendaraan.id, 0);
+                            : changeStatus(kendaraan.id, 0);
                       },
                     ),
                   ),

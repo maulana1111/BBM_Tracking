@@ -92,8 +92,8 @@ class _FormTamabahDataBensinState extends State<FormTamabahDataBensin>
 
   BensinModel? dtBensin;
 
-  String? latitude;
-  String? langitude;
+  String latitude = "0";
+  String langitude = "0";
 
   @override
   void initState() {
@@ -434,17 +434,20 @@ class _FormTamabahDataBensinState extends State<FormTamabahDataBensin>
       lokasiPertamina: lokasiController.text,
       totalLiter: literController.text,
       hargaPerLiter: int.parse(hargaPerLiterTxt),
-      totalBayar: int.parse(totalBiayaController.text),
+      totalBayar: int.parse(totalBiayaTxt),
       odometer: odometerController.text,
       catatan: catatanController.text,
-      lat: latitude!,
-      lang: langitude!,
+      lat: latitude,
+      lang: langitude,
       status: 1,
     );
     context
         .read<BbmBloc>()
         .add(BBMInsertTransaksion(transaksi: transaksiModel, photo: dataPhoto));
-    Navigator.of(context).pop(context);
+    // Navigator.of(context).pop(context);
+    Navigator.of(context).pushReplacement(MaterialPageRoute(
+        builder: (context) => Home("", ""),
+      ));
     showDialog(
       context: context,
       builder: (BuildContext context) {

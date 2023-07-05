@@ -34,7 +34,8 @@ class FormTamabahDataBensin extends StatefulWidget {
   KendaraanModel kendaraanModel;
   // TransaksiModel transaksiModel;
   final CameraDescription camera;
-  FormTamabahDataBensin({required this.kendaraanModel, required this.camera});
+
+  FormTamabahDataBensin({required this.kendaraanModel, required this.camera, Key? key}) : super(key: key);
   // FormTamabahDataBensin(this.transaksiModel, {required this.kendaraanModel, required this.camera});
 
   @override
@@ -94,6 +95,8 @@ class _FormTamabahDataBensinState extends State<FormTamabahDataBensin>
 
   String latitude = "0";
   String langitude = "0";
+
+  
 
   @override
   void initState() {
@@ -403,57 +406,70 @@ class _FormTamabahDataBensinState extends State<FormTamabahDataBensin>
 
   void _submitted() async {
     var rng = Random();
-    DateTime date = DateTime.parse(dateController.text);
     String _kodeTransaksi =
         "BBM-T/F0001/${bbmController.text}/XIII/${rng.nextInt(6)}";
 
     List<PhotoModel> dataPhoto = [];
-    final dateNow = DateTime.now();
+    final dateNow = DateTime.now().toString();
     _image.forEach((element) async {
       final result = await ImageGallerySaver.saveImage(
         Uint8List.fromList(element!.readAsBytesSync()),
         quality: 60,
-        name: dateNow.toString(),
+        name: dateNow,
       );
+      print("result = "+result.toString());
       // print(result['filePath']);
       PhotoModel modelPhoto = PhotoModel(
         id: 0,
         transaksi_id: _kodeTransaksi,
         linkPhoto: result['filePath'],
-        namePhoto: dateNow.toString(),
+        namePhoto: dateNow,
       );
+      print("result 1 = "+result.toString());
       dataPhoto.add(modelPhoto);
     });
 
-    TransaksiModel transaksiModel = TransaksiModel(
-      id: 0,
-      kendaraanId: dataKendaraan.id.toString(),
-      bensinId: dtBensin!.id.toString(),
-      kodeTransaksi: _kodeTransaksi,
-      tanggalTransaksi: date,
-      lokasiPertamina: lokasiController.text,
-      totalLiter: literController.text,
-      hargaPerLiter: int.parse(hargaPerLiterTxt),
-      totalBayar: int.parse(totalBiayaTxt),
-      odometer: odometerController.text,
-      catatan: catatanController.text,
-      lat: latitude,
-      lang: langitude,
-      status: 1,
-    );
-    context
-        .read<BbmBloc>()
-        .add(BBMInsertTransaksion(transaksi: transaksiModel, photo: dataPhoto));
-    // Navigator.of(context).pop(context);
-    Navigator.of(context).pushReplacement(MaterialPageRoute(
-        builder: (context) => Home("", ""),
-      ));
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return SuccessDialogBox(deskripsi: "Berhasil Menambah Data");
-      },
-    );
+
+    // print("couting data photo view = "+dataPhoto.length.toString());
+    // print("data photo view = "+dataPhoto[0].transaksi_id);
+
+    String strsub;
+    if(timeController.text.toString()[4] == " "){
+      strsub = timeController.text.substring(0, 4)+":00";
+    }else{
+      strsub = timeController.text.substring(0, 5)+":00";
+    }
+    String datetime = dateController.text + " " + strsub;
+
+    // TransaksiModel transaksiModel = TransaksiModel(
+    //   id: 0,
+    //   kendaraanId: dataKendaraan.id.toString(),
+    //   bensinId: dtBensin!.id.toString(),
+    //   kodeTransaksi: _kodeTransaksi,
+    //   tanggalTransaksi: DateFormat("dd-MM-yyyy HH:mm:ss").parse(datetime),
+    //   lokasiPertamina: lokasiController.text,
+    //   totalLiter: literController.text,
+    //   hargaPerLiter: int.parse(hargaPerLiterTxt),
+    //   totalBayar: int.parse(totalBiayaTxt),
+    //   odometer: odometerController.text,
+    //   catatan: catatanController.text,
+    //   lat: latitude,
+    //   lang: langitude,
+    //   status: 1,
+    // );
+    // context
+    //     .read<BbmBloc>()
+    //     .add(BBMInsertTransaksion(transaksi: transaksiModel, photo: dataPhoto));
+    // // Navigator.of(context).pop(context);
+    // Navigator.of(context).pushReplacement(MaterialPageRoute(
+    //     builder: (context) => Home("", ""),
+    //   ));
+    // showDialog(
+    //   context: context,
+    //   builder: (BuildContext context) {
+    //     return SuccessDialogBox(deskripsi: "Berhasil Menambah Data");
+    //   },
+    // );
   }
 
   String? _errorText(TextEditingController controller) {

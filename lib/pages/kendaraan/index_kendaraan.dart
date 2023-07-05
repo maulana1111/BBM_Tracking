@@ -93,9 +93,7 @@ class _IndexKendaraanState extends State<IndexKendaraan> {
                 child: Center(child: Text(state.message.toString())),
               );
             }
-            if (state is BBMLoaded) {
-              print("data dari state = "+state.kendaraan[0].status.toString());
-              
+            if (state is BBMLoaded) {              
               dataKendaraan = state.kendaraan;
               return SingleChildScrollView(
                 child: Container(

@@ -28,7 +28,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  late String screen;
+  late String screen = 'home';
   late String param;
   late List<KendaraanModel> dataKendaraan;
   late KendaraanModel dt;
@@ -39,19 +39,20 @@ class _HomeState extends State<Home> {
 
   void ButtonAddTransaksi() {
     if (dataKendaraan != null || dataKendaraan.length != 0) {
-      dataKendaraan.forEach(
-        (element) {
-          if (cond == false) {
-            if (element.status == 1) {
-              paramKendaran = true;
-              dt = element;
-              cond = true;
-              paramText = 2;
-            }
+      for (KendaraanModel element in dataKendaraan) {
+        print("STATUS = " + element.status.toString());
+        if (cond == false) {
+          if (element.status == 1) {
+            paramKendaran = true;
+            dt = element;
+            cond = true;
+            paramText = 2;
+            break;
           }
-          paramText = 1;
-        },
-      );
+        }
+        paramKendaran = false;
+        paramText = 1;
+      }
     } else {
       paramKendaran = false;
       paramText = 0;
@@ -61,7 +62,10 @@ class _HomeState extends State<Home> {
         ? Navigator.of(context).push(
             MaterialPageRoute(
               builder: (context) => FormTamabahDataBensin(
-                  kendaraanModel: dt, camera: firstCamera),
+                kendaraanModel: dt,
+                camera: firstCamera,
+                key: UniqueKey(),
+              ),
             ),
           )
         : showDialog(
@@ -81,10 +85,11 @@ class _HomeState extends State<Home> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    screen = widget.screen;
     param = widget.param;
-    setState(() {
-      widget.screen != null ? screen = "${widget.screen}" : screen = "home";
-    });
+    // setState(() {
+    //   widget.screen != null ? screen = "${widget.screen}" : screen = "home";
+    // });
     initilizeCamera();
   }
 

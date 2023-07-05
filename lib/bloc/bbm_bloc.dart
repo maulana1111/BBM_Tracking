@@ -120,6 +120,7 @@ class BbmBloc extends Bloc<BbmEvent, BbmState> {
 
       emit(BBMLoaded(dataKendaraan, dataTransaksi, dataTransaksiThisMonth));
     } catch (e) {
+      print("hit here = "+e.toString());
       emit(BBMError(message: "Something Error, ${e}, We Will Fix it"));
     }
   }
@@ -132,10 +133,13 @@ class BbmBloc extends Bloc<BbmEvent, BbmState> {
       final state = this.state;
 
       if (state is BBMLoaded) {
-        print("hit on bloc here");
         await transaksiRepository.insertTransaksi(event.transaksi);
-
-        await transaksiRepository.insertPhoto(event.photo);
+        print("couting data photo = "+event.photo.length.toString());
+        print("data photo bloc = "+event.photo[0].transaksi_id);
+        for(PhotoModel element in event.photo) {
+          print("inserted data photo = "+element.linkPhoto);
+          await transaksiRepository.insertPhoto(element); 
+        }
 
         List<KendaraanModel> dataKendaraan =
             await kendaraanRepository.loadKendaraan();

@@ -76,7 +76,7 @@ class _IndexMainMenuState extends State<IndexMainMenu> {
               print(element.kodeTransaksi);
 
               totalPengeluaran += element.totalBayar.toInt();
-              totalBBM += int.parse(element.totalLiter);
+              totalBBM += double.parse(element.totalLiter);
             });
 
             return SingleChildScrollView(
@@ -160,7 +160,7 @@ class _IndexMainMenuState extends State<IndexMainMenu> {
               child: Center(child: Text(state.message.toString())),
             );
           }
-          return Container();
+          return Container(child: Center(child: Text("something error")));
         },
       ),
     );

@@ -21,11 +21,9 @@ class TransaksiRepository
   }
 
   //photo
-  Future<void> insertPhoto(List<PhotoModel> model) async
+  Future<void> insertPhoto(PhotoModel model) async
   {
-    model.forEach((element) async{
-      await service.insertDataPhoto(element);
-    });
+      await service.insertDataPhoto(model);
   }
 
 }

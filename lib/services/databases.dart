@@ -30,16 +30,16 @@ class DatabasesMain {
         id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
         kendaraanId TEXT,
         bensinId TEXT,
+        kodeTransaksi TEXT,
         tanggalTransaksi TEXT,
         lokasiPertamina TEXT,
         totalLiter TEXT,
         hargaPerLiter INTEGER,
         totalBayar INTEGER,
         odometer TEXT,
-        linkGambar TEXT,
         catatan TEXT,
-        lat TEXT,
-        lang TEXT,
+        latitude TEXT,
+        longitude TEXT,
         status INTEGER
       )
       """);
@@ -144,15 +144,15 @@ class DatabasesMain {
         kendaraanId: maps[index]['kendaraanId'],
         bensinId: maps[index]['bensinId'],
         kodeTransaksi: maps[index]['kodeTransaksi'],
-        tanggalTransaksi: maps[index]['tanggalTransaksi'],
-        lokasiPertamina: maps[index]['lokasiPertamina'],
-        totalLiter: maps[index]['totalLiter'],
-        hargaPerLiter: maps[index]['hargaPerLiter'],
-        totalBayar: maps[index]['totalBayar'],
-        odometer: maps[index]['odometer'],
-        catatan: maps[index]['catatan'],
-        lat: maps[index]['lat'],
-        lang: maps[index]['lang'],
+        tanggalTransaksi: maps[index]['tanggalTransaksi'] != null ? DateTime.parse(maps[index]['tanggalTransaksi']) : DateTime.now(),
+        lokasiPertamina: maps[index]['lokasiPertamina'] != null ? maps[index]['lokasiPertamina'] : "-",
+        totalLiter: maps[index]['totalLiter'] != null ? maps[index]['totalLiter'] : "0",
+        hargaPerLiter: maps[index]['hargaPerLiter'] != null ? maps[index]['hargaPerLiter'] : 0,
+        totalBayar: maps[index]['totalBayar'] != null ? maps[index]['totalBayar'] : 0,
+        odometer: maps[index]['odometer'] != null ? maps[index]['odometer'] : "0",
+        catatan: maps[index]['catatan'] != null ? maps[index]['catatan'] : "-",
+        lat: maps[index]['latitude'] != null ? maps[index]['latitude'] : "0",
+        lang: maps[index]['longitude'] != null ? maps[index]['longitude'] : "0",
         status: maps[index]['status'],
       );
     });
@@ -171,15 +171,15 @@ class DatabasesMain {
         kendaraanId: maps[index]['kendaraanId'],
         bensinId: maps[index]['bensinId'],
         kodeTransaksi: maps[index]['kodeTransaksi'],
-        tanggalTransaksi: maps[index]['tanggalTransaksi'],
-        lokasiPertamina: maps[index]['lokasiPertamina'],
-        totalLiter: maps[index]['totalLiter'],
-        hargaPerLiter: maps[index]['hargaPerLiter'],
-        totalBayar: maps[index]['totalBayar'],
-        odometer: maps[index]['odometer'],
-        catatan: maps[index]['catatan'],
-        lat: maps[index]['lat'],
-        lang: maps[index]['lang'],
+        tanggalTransaksi: maps[index]['tanggalTransaksi'] != null ? DateTime.parse(maps[index]['tanggalTransaksi']) : DateTime.now(),
+        lokasiPertamina: maps[index]['lokasiPertamina'] != null ? maps[index]['lokasiPertamina'] : "-",
+        totalLiter: maps[index]['totalLiter'] != null ? maps[index]['totalLiter'] : "0",
+        hargaPerLiter: maps[index]['hargaPerLiter'] != null ? maps[index]['hargaPerLiter'] : 0,
+        totalBayar: maps[index]['totalBayar'] != null ? maps[index]['totalBayar'] : 0,
+        odometer: maps[index]['odometer'] != null ? maps[index]['odometer'] : "0",
+        catatan: maps[index]['catatan'] != null ? maps[index]['catatan'] : "-",
+        lat: maps[index]['latitude'] != null ? maps[index]['latitude'] : "0",
+        lang: maps[index]['longitude'] != null ? maps[index]['longitude'] : "0",
         status: maps[index]['status'],
       );
     });
@@ -216,8 +216,8 @@ class DatabasesMain {
 
     final DateFormat formatter = DateFormat('yyyy-MM-dd');
     final String formatted = formatter.format(model.tanggalTransaksi);
-    final qry = "INSERT INTO transaksi(kendaraanId,bensinId,tanggalTransaksi,lokasiPertamina,totalLiter,HargaPerliter,totalBayar,odometer,catatan,lat,lang,status) " +
-            "VALUES(${model.kendaraanId},${model.bensinId},${formatted},${model.lokasiPertamina},${model.totalLiter},${model.hargaPerLiter},${model.totalBayar},${model.odometer},${model.catatan},${model.lat},${model.lang},${model.status})";
+    final qry = "INSERT INTO transaksi(kendaraanId,bensinId,kodeTransaksi,tanggalTransaksi,lokasiPertamina,totalLiter,HargaPerliter,totalBayar,odometer,catatan,latitude,longitude,status) " +
+            "VALUES('${model.kendaraanId}','${model.bensinId}','${model.kodeTransaksi}','${formatted}','${model.lokasiPertamina}','${model.totalLiter}','${model.hargaPerLiter}','${model.totalBayar}','${model.odometer}','${model.catatan}','${model.lat}','${model.lang}','${model.status}')";
     await db.rawInsert(qry);
     // print(qry);
   }

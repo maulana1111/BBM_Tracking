@@ -1,5 +1,6 @@
 import 'package:bbm_tracking/bloc/bbm_bloc.dart';
 import 'package:bbm_tracking/model/kendaraan_m.dart';
+import 'package:bbm_tracking/model/transaksi_m.dart';
 import 'package:bbm_tracking/pages/AboutApps/index.dart';
 import 'package:bbm_tracking/pages/form-tambah-data-bensin/index.dart';
 import 'package:bbm_tracking/pages/kendaraan/form-tambah-kendaraan/form.dart';
@@ -40,15 +41,12 @@ class _HomeState extends State<Home> {
   void ButtonAddTransaksi() {
     if (dataKendaraan != null || dataKendaraan.length != 0) {
       for (KendaraanModel element in dataKendaraan) {
-        print("STATUS = " + element.status.toString());
-        if (cond == false) {
-          if (element.status == 1) {
-            paramKendaran = true;
-            dt = element;
-            cond = true;
-            paramText = 2;
-            break;
-          }
+        if (element.status == 1) {
+          paramKendaran = true;
+          dt = element;
+          cond = true;
+          paramText = 2;
+          break;
         }
         paramKendaran = false;
         paramText = 1;
@@ -58,27 +56,27 @@ class _HomeState extends State<Home> {
       paramText = 0;
     }
 
-    paramKendaran
-        ? Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => FormTamabahDataBensin(
-                kendaraanModel: dt,
-                camera: firstCamera,
-                key: UniqueKey(),
-              ),
-            ),
-          )
-        : showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return PopUp(
-                text: paramText == 1
-                    ? "Maaf, Silakan aktifkan kendaraan Anda terlebih dahulu"
-                    : "Maaf, Silakan tambahkan kendaraan Anda terlebih dahulu",
-                param: "negative",
-              );
-            },
-          );
+    // paramKendaran
+    //     ? Navigator.of(context).push(
+    //         MaterialPageRoute(
+    //           builder: (context) => FormTamabahDataBensin(
+    //             kendaraanModel: dt,
+    //             camera: firstCamera,
+    //             key: UniqueKey(),
+    //           ),
+    //         ),
+    //       )
+    //     : showDialog(
+    //         context: context,
+    //         builder: (BuildContext context) {
+    //           return PopUp(
+    //             text: paramText == 1
+    //                 ? "Maaf, Silakan aktifkan kendaraan Anda terlebih dahulu"
+    //                 : "Maaf, Silakan tambahkan kendaraan Anda terlebih dahulu",
+    //             param: "negative",
+    //           );
+    //         },
+    //       );
   }
 
   @override
@@ -169,10 +167,6 @@ class _HomeState extends State<Home> {
                         return Riwayat();
                       case 'tentang':
                         return AboutApps();
-                      // case 'formKendaraan':
-                      //   return FormKendaraan(
-                      //     kendaraan: param,
-                      //   );
                       default:
                         return IndexMainMenu();
                     }

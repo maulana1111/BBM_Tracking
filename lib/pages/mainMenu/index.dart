@@ -1,4 +1,3 @@
-
 import 'package:bbm_tracking/bloc/bbm_bloc.dart';
 import 'package:bbm_tracking/model/bensin_m.dart';
 import 'package:bbm_tracking/model/kendaraan_m.dart';
@@ -27,6 +26,8 @@ class _IndexMainMenuState extends State<IndexMainMenu> {
   DateTime? _selected = DateTime.now();
   int totalPengeluaran = 0;
   double totalBBM = 0;
+
+  List<TransaksiModel>? dataTransaksiThisMonth;
 
   TextStyle styleData = TextStyle(
     fontFamily: 'Poppins',
@@ -68,15 +69,21 @@ class _IndexMainMenuState extends State<IndexMainMenu> {
                 }
               }
             }
-            
 
-            print("jumlah data = "+state.transaksi.length.toString());
+            List<TransaksiModel> dt = state.transaksiThisMonth;
+            dt.forEach((element) {
+              if (element.kendaraanId == dataKendaraan?.id.toString()) {
+                dataTransaksiThisMonth!.add(element);
+              }
+            });
+            // print("data kendaraan = " + dataKendaraan!.id.toString());
 
             state.transaksi.forEach((element) {
-              print(element.kodeTransaksi);
-
-              totalPengeluaran += element.totalBayar.toInt();
-              totalBBM += double.parse(element.totalLiter);
+              print("kendaraan id = " + element.kendaraanId);
+              if (dataKendaraan!.status == 1) {
+                totalPengeluaran += element.totalBayar.toInt();
+                totalBBM += double.parse(element.totalLiter);
+              }
             });
 
             return SingleChildScrollView(
@@ -143,7 +150,7 @@ class _IndexMainMenuState extends State<IndexMainMenu> {
                           SizedBox(
                             height: 15,
                           ),
-                          DatePerforma(state.transaksiThisMonth),
+                          DatePerforma(dataTransaksiThisMonth),
                           SizedBox(
                             height: 10,
                           ),
@@ -333,7 +340,8 @@ class _IndexMainMenuState extends State<IndexMainMenu> {
             Container(
               width: double.infinity,
               height: 190,
-              child: BarChartSample3(dataTransaksi: dataTransaksiThisMonth, param: _toggle),
+              child: BarChartSample3(
+                  dataTransaksi: dataTransaksiThisMonth, param: _toggle),
             ),
             SizedBox(
               height: 10,
@@ -356,7 +364,10 @@ class _IndexMainMenuState extends State<IndexMainMenu> {
 
   Widget SecondWidget() {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 0, horizontal: 4,),
+      margin: EdgeInsets.symmetric(
+        vertical: 0,
+        horizontal: 4,
+      ),
       width: double.infinity,
       height: 58,
       decoration: BoxDecoration(
@@ -420,13 +431,17 @@ class _IndexMainMenuState extends State<IndexMainMenu> {
               Row(
                 children: [
                   Image.asset(
-                    param == "pengeluaran" ? "assets/images/compass.png" : "assets/images/gas-pump.png",
+                    param == "pengeluaran"
+                        ? "assets/images/compass.png"
+                        : "assets/images/gas-pump.png",
                   ),
                   SizedBox(
                     width: 10,
                   ),
                   Text(
-                    param == "pengeluaran" ? "${CurrencyFormat.convertToIdr(totalPengeluaran, 0)}" : "${totalBBM} Liter",
+                    param == "pengeluaran"
+                        ? "${CurrencyFormat.convertToIdr(totalPengeluaran, 0)}"
+                        : "${totalBBM} Liter",
                     style: TextStyle(
                       fontSize: 8,
                       fontFamily: 'Poppins',

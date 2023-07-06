@@ -134,10 +134,7 @@ class BbmBloc extends Bloc<BbmEvent, BbmState> {
 
       if (state is BBMLoaded) {
         await transaksiRepository.insertTransaksi(event.transaksi);
-        print("couting data photo = "+event.photo.length.toString());
-        print("data photo bloc = "+event.photo[0].transaksi_id);
         for(PhotoModel element in event.photo) {
-          print("inserted data photo = "+element.linkPhoto);
           await transaksiRepository.insertPhoto(element); 
         }
 

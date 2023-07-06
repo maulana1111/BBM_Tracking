@@ -35,7 +35,9 @@ class FormTamabahDataBensin extends StatefulWidget {
   // TransaksiModel transaksiModel;
   final CameraDescription camera;
 
-  FormTamabahDataBensin({required this.kendaraanModel, required this.camera, Key? key}) : super(key: key);
+  FormTamabahDataBensin(
+      {required this.kendaraanModel, required this.camera, Key? key})
+      : super(key: key);
   // FormTamabahDataBensin(this.transaksiModel, {required this.kendaraanModel, required this.camera});
 
   @override
@@ -96,7 +98,7 @@ class _FormTamabahDataBensinState extends State<FormTamabahDataBensin>
   String latitude = "0";
   String langitude = "0";
 
-  
+  List<PhotoModel> dataPhoto = <PhotoModel>[];
 
   @override
   void initState() {
@@ -407,17 +409,67 @@ class _FormTamabahDataBensinState extends State<FormTamabahDataBensin>
   void _submitted() async {
     var rng = Random();
     String _kodeTransaksi =
-        "BBM-T/F0001/${bbmController.text}/XIII/${rng.nextInt(6)}";
+        "BBM-T/F0001/${bbmController.text}/XIII/${rng.nextInt(999999)}";
 
-    List<PhotoModel> dataPhoto = [];
     final dateNow = DateTime.now().toString();
+    print("printing");
+    await insertedImageToGallery(dateNow, _kodeTransaksi);
+
+    Future.delayed(Duration(seconds: 2), () {
+      insertedTransaksi(_kodeTransaksi);
+    });
+
+  }
+
+  Future<void> insertedTransaksi(String _kodeTransaksi) async {
+    String strsub;
+    if (timeController.text.toString()[4] == " ") {
+      strsub = timeController.text.substring(0, 4) + ":00";
+    } else {
+      strsub = timeController.text.substring(0, 5) + ":00";
+    }
+    String datetime = dateController.text + " " + strsub;
+
+    TransaksiModel transaksiModel = TransaksiModel(
+      id: 0,
+      kendaraanId: dataKendaraan.id.toString(),
+      bensinId: dtBensin!.id.toString(),
+      kodeTransaksi: _kodeTransaksi,
+      tanggalTransaksi: DateFormat("dd-MM-yyyy HH:mm:ss").parse(datetime),
+      lokasiPertamina: lokasiController.text,
+      totalLiter: literController.text,
+      hargaPerLiter: int.parse(hargaPerLiterTxt),
+      totalBayar: int.parse(totalBiayaTxt),
+      odometer: odometerController.text,
+      catatan: catatanController.text,
+      lat: latitude,
+      lang: langitude,
+      status: 1,
+    );
+    context
+        .read<BbmBloc>()
+        .add(BBMInsertTransaksion(transaksi: transaksiModel, photo: dataPhoto));
+    // Navigator.of(context).pop(context);
+    Navigator.of(context).pushReplacement(MaterialPageRoute(
+      builder: (context) => Home("", ""),
+    ));
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return SuccessDialogBox(deskripsi: "Berhasil Menambah Data");
+      },
+    );
+  }
+
+  Future<void> insertedImageToGallery(
+      String dateNow, String _kodeTransaksi) async {
     _image.forEach((element) async {
       final result = await ImageGallerySaver.saveImage(
         Uint8List.fromList(element!.readAsBytesSync()),
         quality: 60,
         name: dateNow,
       );
-      print("result = "+result.toString());
+      print("result = " + result.toString());
       // print(result['filePath']);
       PhotoModel modelPhoto = PhotoModel(
         id: 0,
@@ -425,51 +477,15 @@ class _FormTamabahDataBensinState extends State<FormTamabahDataBensin>
         linkPhoto: result['filePath'],
         namePhoto: dateNow,
       );
-      print("result 1 = "+result.toString());
-      dataPhoto.add(modelPhoto);
+      print("result 1 = " +
+          modelPhoto.transaksi_id.toString() +
+          ", link Photo = " +
+          modelPhoto.linkPhoto.toString());
+      setState(() {
+        dataPhoto.add(modelPhoto);
+      });
+      print("couting inside = " + dataPhoto.length.toString());
     });
-
-
-    // print("couting data photo view = "+dataPhoto.length.toString());
-    // print("data photo view = "+dataPhoto[0].transaksi_id);
-
-    String strsub;
-    if(timeController.text.toString()[4] == " "){
-      strsub = timeController.text.substring(0, 4)+":00";
-    }else{
-      strsub = timeController.text.substring(0, 5)+":00";
-    }
-    String datetime = dateController.text + " " + strsub;
-
-    // TransaksiModel transaksiModel = TransaksiModel(
-    //   id: 0,
-    //   kendaraanId: dataKendaraan.id.toString(),
-    //   bensinId: dtBensin!.id.toString(),
-    //   kodeTransaksi: _kodeTransaksi,
-    //   tanggalTransaksi: DateFormat("dd-MM-yyyy HH:mm:ss").parse(datetime),
-    //   lokasiPertamina: lokasiController.text,
-    //   totalLiter: literController.text,
-    //   hargaPerLiter: int.parse(hargaPerLiterTxt),
-    //   totalBayar: int.parse(totalBiayaTxt),
-    //   odometer: odometerController.text,
-    //   catatan: catatanController.text,
-    //   lat: latitude,
-    //   lang: langitude,
-    //   status: 1,
-    // );
-    // context
-    //     .read<BbmBloc>()
-    //     .add(BBMInsertTransaksion(transaksi: transaksiModel, photo: dataPhoto));
-    // // Navigator.of(context).pop(context);
-    // Navigator.of(context).pushReplacement(MaterialPageRoute(
-    //     builder: (context) => Home("", ""),
-    //   ));
-    // showDialog(
-    //   context: context,
-    //   builder: (BuildContext context) {
-    //     return SuccessDialogBox(deskripsi: "Berhasil Menambah Data");
-    //   },
-    // );
   }
 
   String? _errorText(TextEditingController controller) {

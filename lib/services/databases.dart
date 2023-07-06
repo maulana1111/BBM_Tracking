@@ -63,7 +63,7 @@ class DatabasesMain {
   Future<void> createTableMapPhotoTransaction(sql.Database database) async {
     await database.execute("""CREATE TABLE photo(
       id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-      transaksi_id TEXT
+      transaksi_id TEXT,
       linkPhoto TEXT,
       namePhoto TEXT
     )""");
@@ -226,6 +226,6 @@ class DatabasesMain {
   Future<void> insertDataPhoto(PhotoModel model) async {
     final db = await dbs();
     await db.rawInsert(
-        "INSERT INTO photo(transaksi_id,linkPhoto,namePhoto) VALUES(${model.transaksi_id},${model.linkPhoto},${model.namePhoto})");
+        "INSERT INTO photo(transaksi_id,linkPhoto,namePhoto) VALUES('${model.transaksi_id}','${model.linkPhoto}','${model.namePhoto}')");
   }
 }

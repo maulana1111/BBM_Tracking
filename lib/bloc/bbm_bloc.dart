@@ -8,6 +8,7 @@ import 'package:bbm_tracking/resource/data-bensin/data-bensin.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 part 'bbm_event.dart';
 part 'bbm_state.dart';
@@ -25,6 +26,25 @@ class BbmBloc extends Bloc<BbmEvent, BbmState> {
     on<BBMDataKendaraan>(_onBBMGetDataKendaraan);
     on<BBMInsertTransaksion>(_onBBMInsertTransaksi);
     on<BBMAllDataKendaraan>(_onBBMGetAllKendaraan);
+    on<BBMChangeDataTransaction>(_onBBMChangeDataTransaction);
+  }
+
+  Future<void> _onBBMChangeDataTransaction(
+    BBMChangeDataTransaction event,
+    Emitter<BbmState> emit,
+  ) async {
+    try {
+      List<KendaraanModel> dataKendaraan =
+          await kendaraanRepository.loadKendaraan();
+      List<TransaksiModel> dataTransaksi =
+          await transaksiRepository.loadTransaksi();
+      List<TransaksiModel> dataTransaksiThisMonth =
+          await transaksiRepository.loadTransaksiThisMonth(event.selectedDate);
+
+      emit(BBMLoaded(dataKendaraan, dataTransaksi, dataTransaksiThisMonth));
+    } catch (e) {
+      emit(BBMError(message: "Something Error, ${e}, We Will Fix it"));
+    }
   }
 
   Future<void> _onBBMGetDataKendaraan(
@@ -52,7 +72,8 @@ class BbmBloc extends Bloc<BbmEvent, BbmState> {
     Emitter<BbmState> emit,
   ) async {
     try {
-      List<KendaraanModel> dataKendaraan = await kendaraanRepository.loadKendaraan();
+      List<KendaraanModel> dataKendaraan =
+          await kendaraanRepository.loadKendaraan();
       emit(BBMKendaraanLoaded(kendaraan: dataKendaraan));
     } catch (e) {
       emit(BBMError(message: "Something Error, ${e}, We Will Fix it"));
@@ -92,11 +113,10 @@ class BbmBloc extends Bloc<BbmEvent, BbmState> {
     try {
       if (state is BBMLoaded) {
         await kendaraanRepository.addedKendaraan(event.kendaraanModel);
-        List<KendaraanModel> dataKendaraan = state.kendaraan;
-        dataKendaraan.add(event.kendaraanModel);
+        List<KendaraanModel> dataKendaraan = await kendaraanRepository.loadKendaraan();
         List<TransaksiModel> dataTransaksi = state.transaksi;
         List<TransaksiModel> dataTransaksiThisMonth =
-            await transaksiRepository.loadTransaksiThisMonth();
+            await transaksiRepository.loadTransaksiThisMonth(DateFormat("yyyy-MM-dd").parse(DateTime.now().toString()).toString());
         emit(
           BBMLoaded(dataKendaraan, dataTransaksi, dataTransaksiThisMonth),
         );
@@ -116,11 +136,11 @@ class BbmBloc extends Bloc<BbmEvent, BbmState> {
       List<TransaksiModel> dataTransaksi =
           await transaksiRepository.loadTransaksi();
       List<TransaksiModel> dataTransaksiThisMonth =
-          await transaksiRepository.loadTransaksiThisMonth();
+          await transaksiRepository.loadTransaksiThisMonth(DateFormat("yyyy-MM-dd").parse(DateTime.now().toString()).toString());
 
       emit(BBMLoaded(dataKendaraan, dataTransaksi, dataTransaksiThisMonth));
     } catch (e) {
-      print("hit here = "+e.toString());
+      print("hit here = " + e.toString());
       emit(BBMError(message: "Something Error, ${e}, We Will Fix it"));
     }
   }
@@ -134,8 +154,8 @@ class BbmBloc extends Bloc<BbmEvent, BbmState> {
 
       if (state is BBMLoaded) {
         await transaksiRepository.insertTransaksi(event.transaksi);
-        for(PhotoModel element in event.photo) {
-          await transaksiRepository.insertPhoto(element); 
+        for (PhotoModel element in event.photo) {
+          await transaksiRepository.insertPhoto(element);
         }
 
         List<KendaraanModel> dataKendaraan =
@@ -143,7 +163,7 @@ class BbmBloc extends Bloc<BbmEvent, BbmState> {
         List<TransaksiModel> dataTransaksi =
             await transaksiRepository.loadTransaksi();
         List<TransaksiModel> dataTransaksiThisMonth =
-            await transaksiRepository.loadTransaksiThisMonth();
+            await transaksiRepository.loadTransaksiThisMonth(DateFormat("yyyy-MM-dd").parse(DateTime.now().toString()).toString());
 
         emit(BBMLoaded(dataKendaraan, dataTransaksi, dataTransaksiThisMonth));
       }

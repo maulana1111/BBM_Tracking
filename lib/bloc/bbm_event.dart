@@ -44,3 +44,12 @@ class BBMInsertTransaksion extends BbmEvent{
   @override
   List<Object> get props => [transaksi];
 }
+
+class BBMChangeDataTransaction extends BbmEvent{
+  final String selectedDate;
+
+  const BBMChangeDataTransaction({required this.selectedDate});
+
+  @override
+  List<Object> get props => [selectedDate];
+}

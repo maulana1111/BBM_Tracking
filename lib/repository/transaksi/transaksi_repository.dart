@@ -10,9 +10,9 @@ class TransaksiRepository
     return service.getAllTransaksiStatusSuccessfull();
   }
 
-  Future<List<TransaksiModel>> loadTransaksiThisMonth()
+  Future<List<TransaksiModel>> loadTransaksiThisMonth(String datetime)
   {
-    return service.getAllTransaksiStatusSuccessfullThisMonth();
+    return service.getAllTransaksiStatusSuccessfullThisMonth(datetime);
   }
 
   Future<void> insertTransaksi(TransaksiModel model) async 

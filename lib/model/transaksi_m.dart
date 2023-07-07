@@ -6,6 +6,7 @@ class TransaksiModel {
   String bensinId;
   String kodeTransaksi;
   DateTime tanggalTransaksi;
+  DateTime waktuTransaksi;
   String lokasiPertamina;
   String totalLiter;
   int hargaPerLiter;
@@ -22,6 +23,7 @@ class TransaksiModel {
     required this.bensinId,
     required this.kodeTransaksi,
     required this.tanggalTransaksi,
+    required this.waktuTransaksi,
     required this.lokasiPertamina,
     required this.totalLiter,
     required this.hargaPerLiter,
@@ -39,6 +41,7 @@ class TransaksiModel {
         bensinId = json['bensinId'],
         kodeTransaksi = json['kodeTransaksi'],
         tanggalTransaksi = json['tanggalTransaksi'],
+        waktuTransaksi = json['waktuTransaksi'],
         lokasiPertamina = json['lokasiPertamina'],
         totalLiter = json['totalLiter'],
         hargaPerLiter = json['hargaPerLiter'],
@@ -55,6 +58,7 @@ class TransaksiModel {
         'bensinId': bensinId,
         'kodeTransaksi': kodeTransaksi,
         'tanggalTransaksi': tanggalTransaksi,
+        'waktuTransaksi': waktuTransaksi,
         'lokasiPertamina': lokasiPertamina,
         'totalLiter': totalLiter,
         'hargaPerLiter': hargaPerLiter,

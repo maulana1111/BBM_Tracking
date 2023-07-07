@@ -27,7 +27,7 @@ class _IndexMainMenuState extends State<IndexMainMenu> {
   int totalPengeluaran = 0;
   double totalBBM = 0;
 
-  List<TransaksiModel>? dataTransaksiThisMonth;
+  late List<TransaksiModel> dataTransaksiThisMonth = [];
 
   TextStyle styleData = TextStyle(
     fontFamily: 'Poppins',
@@ -36,6 +36,21 @@ class _IndexMainMenuState extends State<IndexMainMenu> {
     fontWeight: FontWeight.w500,
   );
   late KendaraanModel? dataKendaraan = null;
+
+  void selectedDate(DateTime time) {
+    setState(() {
+      _selected = time;
+    });
+    context
+        .read<BbmBloc>()
+        .add(BBMChangeDataTransaction(selectedDate: _selected.toString()));
+  }
+
+  void selectedToggle(String toogle) {
+    setState(() {
+      _toggle = toogle;
+    });
+  }
 
   // String _month = 0;
   // int _year = 0;
@@ -73,7 +88,7 @@ class _IndexMainMenuState extends State<IndexMainMenu> {
             List<TransaksiModel> dt = state.transaksiThisMonth;
             dt.forEach((element) {
               if (element.kendaraanId == dataKendaraan?.id.toString()) {
-                dataTransaksiThisMonth!.add(element);
+                dataTransaksiThisMonth.add(element);
               }
             });
             // print("data kendaraan = " + dataKendaraan!.id.toString());
@@ -208,7 +223,6 @@ class _IndexMainMenuState extends State<IndexMainMenu> {
                         builder: (BuildContext context) {
                           return MonthPicker(
                             onChangeDate: (bulan, tahun) {
-                              print(bulan);
                               setState(() {
                                 _selected =
                                     DateTime.parse("${tahun}-${bulan}-01");

@@ -428,14 +428,14 @@ class _FormTamabahDataBensinState extends State<FormTamabahDataBensin>
     } else {
       strsub = timeController.text.substring(0, 5) + ":00";
     }
-    String datetime = dateController.text + " " + strsub;
 
     TransaksiModel transaksiModel = TransaksiModel(
       id: 0,
       kendaraanId: dataKendaraan.id.toString(),
       bensinId: dtBensin!.id.toString(),
       kodeTransaksi: _kodeTransaksi,
-      tanggalTransaksi: DateFormat("dd-MM-yyyy HH:mm:ss").parse(datetime),
+      tanggalTransaksi: DateFormat("yyyy-MM-dd").parse(dateController.text),
+      waktuTransaksi: DateFormat("HH:mm:ss").parse(strsub),
       lokasiPertamina: lokasiController.text,
       totalLiter: literController.text,
       hargaPerLiter: int.parse(hargaPerLiterTxt),

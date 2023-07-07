@@ -62,7 +62,6 @@ class _IndexKendaraanState extends State<IndexKendaraan> {
 
   @override
   Widget build(BuildContext context) {
-    print("rerender parent");
     return Scaffold(
       backgroundColor: Color(0xffE3EAEA),
       floatingActionButton: FloatingActionButton(

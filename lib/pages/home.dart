@@ -32,7 +32,7 @@ class _HomeState extends State<Home> {
   late String screen = 'home';
   late String param;
   late List<KendaraanModel> dataKendaraan;
-  late KendaraanModel dt;
+  KendaraanModel? dt;
   late bool paramKendaran = false;
   late int paramText = 0;
   late bool cond = false;
@@ -55,7 +55,9 @@ class _HomeState extends State<Home> {
       paramKendaran = false;
       paramText = 0;
     }
-
+    if (paramKendaran == true) {
+      print("object kendaraan = " + dt!.id.toString());
+    }
     // paramKendaran
     //     ? Navigator.of(context).push(
     //         MaterialPageRoute(
@@ -140,6 +142,9 @@ class _HomeState extends State<Home> {
           });
         },
         onFabButtonPressed: () {
+          setState(() {
+            context.read<BbmBloc>().add(BBMStarted());
+          });
           ButtonAddTransaksi();
         },
       ),

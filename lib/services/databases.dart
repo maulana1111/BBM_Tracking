@@ -1,6 +1,7 @@
 import 'package:bbm_tracking/model/bensin_m.dart';
 import 'package:bbm_tracking/model/kendaraan_m.dart';
 import 'package:bbm_tracking/model/photo_m.dart';
+import 'package:bbm_tracking/model/transaksiPerMonth_m.dart';
 import 'package:bbm_tracking/model/transaksi_m.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
@@ -160,30 +161,19 @@ class DatabasesMain {
     });
   }
 
-  Future<List<TransaksiModel>>
+  Future<List<TransaksiPerMonthModel>>
       getAllTransaksiStatusSuccessfullThisMonth(String datetime) async {
     final db = await dbs();
 
     final List<Map<String, dynamic>> maps = await db.rawQuery(
-        "SELECT * FROM transaksi WHERE (strftime('%W', tanggalTransaksi) = strftime('%W', 'now')) AND status = 1");
+        "SELECT kendaraanId, SUM(totalLiter), SUM(totalBayar), tanggalTransaksi FROM transaksi WHERE (strftime('%m', tanggalTransaksi) = strftime('%m', 'now')) AND status = 1 GROUP BY tanggalTransaksi ORDER BY tanggalTransaksi ASC");
 
     return List.generate(maps.length, (index) {
-      return TransaksiModel(
-        id: maps[index]['id'],
+      return TransaksiPerMonthModel(
         kendaraanId: maps[index]['kendaraanId'],
-        bensinId: maps[index]['bensinId'],
-        kodeTransaksi: maps[index]['kodeTransaksi'],
-        tanggalTransaksi: maps[index]['tanggalTransaksi'] != null ? DateTime.parse(maps[index]['tanggalTransaksi']) : DateTime.now(),
-        waktuTransaksi: maps[index]['waktuTransaksi'] != null ? DateTime.parse(maps[index]['waktuTransaksi']) : DateTime.now(),
-        lokasiPertamina: maps[index]['lokasiPertamina'] != null ? maps[index]['lokasiPertamina'] : "-",
-        totalLiter: maps[index]['totalLiter'] != null ? maps[index]['totalLiter'] : "0",
-        hargaPerLiter: maps[index]['hargaPerLiter'] != null ? maps[index]['hargaPerLiter'] : 0,
+        totalLiter: maps[index]['totalLiter'] != null ? maps[index]['totalLiter'] : 0,
         totalBayar: maps[index]['totalBayar'] != null ? maps[index]['totalBayar'] : 0,
-        odometer: maps[index]['odometer'] != null ? maps[index]['odometer'] : "0",
-        catatan: maps[index]['catatan'] != null ? maps[index]['catatan'] : "-",
-        lat: maps[index]['latitude'] != null ? maps[index]['latitude'] : "0",
-        lang: maps[index]['longitude'] != null ? maps[index]['longitude'] : "0",
-        status: maps[index]['status'],
+        tanggalTransaksi: maps[index]['tanggalTransaksi'] != null ? DateTime.parse(maps[index]['tanggalTransaksi']) : DateTime.now(),
       );
     });
   }

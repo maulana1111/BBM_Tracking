@@ -32,7 +32,7 @@ class _HomeState extends State<Home> {
   late String screen = 'home';
   late String param;
   late List<KendaraanModel> dataKendaraan;
-  KendaraanModel? dt;
+  late KendaraanModel dt;
   late bool paramKendaran = false;
   late int paramText = 0;
   late bool cond = false;
@@ -58,27 +58,27 @@ class _HomeState extends State<Home> {
     if (paramKendaran == true) {
       print("object kendaraan = " + dt!.id.toString());
     }
-    // paramKendaran
-    //     ? Navigator.of(context).push(
-    //         MaterialPageRoute(
-    //           builder: (context) => FormTamabahDataBensin(
-    //             kendaraanModel: dt,
-    //             camera: firstCamera,
-    //             key: UniqueKey(),
-    //           ),
-    //         ),
-    //       )
-    //     : showDialog(
-    //         context: context,
-    //         builder: (BuildContext context) {
-    //           return PopUp(
-    //             text: paramText == 1
-    //                 ? "Maaf, Silakan aktifkan kendaraan Anda terlebih dahulu"
-    //                 : "Maaf, Silakan tambahkan kendaraan Anda terlebih dahulu",
-    //             param: "negative",
-    //           );
-    //         },
-    //       );
+    paramKendaran
+        ? Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => FormTamabahDataBensin(
+                kendaraanModel: dt,
+                camera: firstCamera,
+                key: UniqueKey(),
+              ),
+            ),
+          )
+        : showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return PopUp(
+                text: paramText == 1
+                    ? "Maaf, Silakan aktifkan kendaraan Anda terlebih dahulu"
+                    : "Maaf, Silakan tambahkan kendaraan Anda terlebih dahulu",
+                param: "negative",
+              );
+            },
+          );
   }
 
   @override

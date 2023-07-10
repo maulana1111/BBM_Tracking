@@ -1,6 +1,7 @@
 import 'package:bbm_tracking/bloc/bbm_bloc.dart';
 import 'package:bbm_tracking/model/bensin_m.dart';
 import 'package:bbm_tracking/model/kendaraan_m.dart';
+import 'package:bbm_tracking/model/transaksiPerMonth_m.dart';
 import 'package:bbm_tracking/model/transaksi_m.dart';
 import 'package:bbm_tracking/resource/component-bersama/chart.dart';
 import 'package:bbm_tracking/pages/mainMenu/component/item_bensin.dart';
@@ -27,7 +28,7 @@ class _IndexMainMenuState extends State<IndexMainMenu> {
   int totalPengeluaran = 0;
   double totalBBM = 0;
 
-  late List<TransaksiModel> dataTransaksiThisMonth = [];
+  late List<TransaksiPerMonthModel> dataTransaksiThisMonth = [];
 
   TextStyle styleData = TextStyle(
     fontFamily: 'Poppins',
@@ -85,7 +86,7 @@ class _IndexMainMenuState extends State<IndexMainMenu> {
               }
             }
 
-            List<TransaksiModel> dt = state.transaksiThisMonth;
+            List<TransaksiPerMonthModel> dt = state.transaksiThisMonth;
             dt.forEach((element) {
               if (element.kendaraanId == dataKendaraan?.id.toString()) {
                 dataTransaksiThisMonth.add(element);
@@ -94,7 +95,6 @@ class _IndexMainMenuState extends State<IndexMainMenu> {
             // print("data kendaraan = " + dataKendaraan!.id.toString());
 
             state.transaksi.forEach((element) {
-              print("kendaraan id = " + element.kendaraanId);
               if (dataKendaraan!.status == 1) {
                 totalPengeluaran += element.totalBayar.toInt();
                 totalBBM += double.parse(element.totalLiter);
@@ -355,7 +355,9 @@ class _IndexMainMenuState extends State<IndexMainMenu> {
               width: double.infinity,
               height: 190,
               child: BarChartSample3(
-                  dataTransaksi: dataTransaksiThisMonth, param: _toggle),
+                dataTransaksi: dataTransaksiThisMonth,
+                param: _toggle,
+              ),
             ),
             SizedBox(
               height: 10,

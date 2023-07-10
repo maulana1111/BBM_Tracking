@@ -1,6 +1,7 @@
 import 'package:bbm_tracking/model/bensin_m.dart';
 import 'package:bbm_tracking/model/kendaraan_m.dart';
 import 'package:bbm_tracking/model/photo_m.dart';
+import 'package:bbm_tracking/model/transaksiPerMonth_m.dart';
 import 'package:bbm_tracking/model/transaksi_m.dart';
 import 'package:bbm_tracking/repository/kendaraan/kendaraan_repository.dart';
 import 'package:bbm_tracking/repository/transaksi/transaksi_repository.dart';
@@ -38,7 +39,7 @@ class BbmBloc extends Bloc<BbmEvent, BbmState> {
           await kendaraanRepository.loadKendaraan();
       List<TransaksiModel> dataTransaksi =
           await transaksiRepository.loadTransaksi();
-      List<TransaksiModel> dataTransaksiThisMonth =
+      List<TransaksiPerMonthModel> dataTransaksiThisMonth =
           await transaksiRepository.loadTransaksiThisMonth(event.selectedDate);
 
       emit(BBMLoaded(dataKendaraan, dataTransaksi, dataTransaksiThisMonth));
@@ -113,9 +114,11 @@ class BbmBloc extends Bloc<BbmEvent, BbmState> {
     try {
       if (state is BBMLoaded) {
         await kendaraanRepository.addedKendaraan(event.kendaraanModel);
-        List<KendaraanModel> dataKendaraan = await kendaraanRepository.loadKendaraan();
+        List<KendaraanModel> dataKendaraan = state.kendaraan;
+        event.kendaraanModel.id = state.kendaraan.length + 1;
+        dataKendaraan.add(event.kendaraanModel);
         List<TransaksiModel> dataTransaksi = state.transaksi;
-        List<TransaksiModel> dataTransaksiThisMonth =
+        List<TransaksiPerMonthModel> dataTransaksiThisMonth =
             await transaksiRepository.loadTransaksiThisMonth(DateFormat("yyyy-MM-dd").parse(DateTime.now().toString()).toString());
         emit(
           BBMLoaded(dataKendaraan, dataTransaksi, dataTransaksiThisMonth),
@@ -135,7 +138,7 @@ class BbmBloc extends Bloc<BbmEvent, BbmState> {
           await kendaraanRepository.loadKendaraan();
       List<TransaksiModel> dataTransaksi =
           await transaksiRepository.loadTransaksi();
-      List<TransaksiModel> dataTransaksiThisMonth =
+      List<TransaksiPerMonthModel> dataTransaksiThisMonth =
           await transaksiRepository.loadTransaksiThisMonth(DateFormat("yyyy-MM-dd").parse(DateTime.now().toString()).toString());
 
       emit(BBMLoaded(dataKendaraan, dataTransaksi, dataTransaksiThisMonth));
@@ -162,7 +165,7 @@ class BbmBloc extends Bloc<BbmEvent, BbmState> {
             await kendaraanRepository.loadKendaraan();
         List<TransaksiModel> dataTransaksi =
             await transaksiRepository.loadTransaksi();
-        List<TransaksiModel> dataTransaksiThisMonth =
+        List<TransaksiPerMonthModel> dataTransaksiThisMonth =
             await transaksiRepository.loadTransaksiThisMonth(DateFormat("yyyy-MM-dd").parse(DateTime.now().toString()).toString());
 
         emit(BBMLoaded(dataKendaraan, dataTransaksi, dataTransaksiThisMonth));

@@ -1,5 +1,3 @@
-import 'package:bbm_tracking/model/photo_m.dart';
-
 class TransaksiModel {
   int id;
   String kendaraanId;

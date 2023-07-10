@@ -17,7 +17,7 @@ class BBMSingleData extends BbmState{
 class BBMLoaded extends BbmState{
   final List<KendaraanModel> kendaraan;
   final List<TransaksiModel> transaksi;
-  final List<TransaksiModel> transaksiThisMonth;
+  final List<TransaksiPerMonthModel> transaksiThisMonth;
   late List<BensinModel> bensin = listBensin;
 
   BBMLoaded(this.kendaraan, this.transaksi, this.transaksiThisMonth);

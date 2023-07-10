@@ -1,4 +1,5 @@
 import 'package:bbm_tracking/model/photo_m.dart';
+import 'package:bbm_tracking/model/transaksiPerMonth_m.dart';
 import 'package:bbm_tracking/model/transaksi_m.dart';
 import 'package:bbm_tracking/services/databases.dart';
 
@@ -10,7 +11,7 @@ class TransaksiRepository
     return service.getAllTransaksiStatusSuccessfull();
   }
 
-  Future<List<TransaksiModel>> loadTransaksiThisMonth(String datetime)
+  Future<List<TransaksiPerMonthModel>> loadTransaksiThisMonth(String datetime)
   {
     return service.getAllTransaksiStatusSuccessfullThisMonth(datetime);
   }

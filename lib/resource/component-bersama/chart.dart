@@ -1,13 +1,13 @@
 // import 'package:fl_chart_app/presentation/resources/app_resources.dart';
 // import 'package:fl_chart_app/util/extensions/color_extensions.dart';
+import 'package:bbm_tracking/model/transaksiPerMonth_m.dart';
 import 'package:bbm_tracking/model/transaksi_m.dart';
 import 'package:syncfusion_flutter_charts/sparkcharts.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
-
 class BarChartSample3 extends StatefulWidget {
-  List<TransaksiModel> dataTransaksi;
+  List<TransaksiPerMonthModel> dataTransaksi;
   String param;
   BarChartSample3({required this.dataTransaksi, required this.param});
 
@@ -16,38 +16,42 @@ class BarChartSample3 extends StatefulWidget {
 }
 
 class BarChartSample3State extends State<BarChartSample3> {
-
-  List<num> dtTotalBayar = [];
-  List<int> dtTotalLiter = [];
-  late List<TransaksiModel> dtTransaksi;
+  List<double> dtTotalBayar = [];
+  List<double> dtTotalLiter = [];
+  late List<TransaksiPerMonthModel> dtTransaksi;
+  DateTime today = DateTime.now();
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     dtTransaksi = widget.dataTransaksi;
-    dtTransaksi.forEach((element) {
-      dtTotalBayar.add(element.totalBayar);
-      dtTotalLiter.add(int.parse(element.totalLiter));
-    });
-    // dtTotalBayar.add(1);
-    if(dtTotalBayar.length < 30)
-    {
-      bool cond = true;
-      while(cond == true)
-      {
-        dtTotalBayar.length != 30 ? dtTotalBayar.add(0) : cond = false;
+    final daysInMonth = DateTime(today.year, today.month + 1, 0).day;
+
+    for (var i = 0; i < daysInMonth; i++) {
+      if (!dtTransaksi.isEmpty) {
+        dtTransaksi.forEach((element) {
+          if (i == element.tanggalTransaksi.day) {
+            setState(() {
+              dtTotalBayar.add(element.totalBayar.toDouble());
+              dtTotalLiter.add(element.totalLiter);
+            });
+          } else {
+            setState(() {
+              dtTotalBayar.add(0);
+              dtTotalLiter.add(0);
+            });
+          }
+        });
+      } else {
+        setState(() {
+          dtTotalBayar.add(0);
+          dtTotalLiter.add(0);
+        });
       }
     }
-    dtTotalBayar.add(4);
-    dtTotalLiter.add(1);
-    if(dtTotalLiter.length < 30)
-    {
-      bool cond = true;
-      while(cond == true)
-      {
-        dtTotalLiter.length != 30 ? dtTotalLiter.add(0) : cond = false;
-      }
-    }
+    
+    print("counting = "+dtTransaksi.length.toString());
+    print("counting 1 = "+dtTotalBayar.length.toString());
   }
 
   @override
@@ -55,35 +59,39 @@ class BarChartSample3State extends State<BarChartSample3> {
     print(widget.param);
     return AspectRatio(
       aspectRatio: 1.6,
-      child: widget.param == "Harga" ? SfSparkLineChart(
-        //Enable the trackball
-        trackball: SparkChartTrackball(
-          activationMode: SparkChartActivationMode.tap,
-          color: Colors.black,
-        ),
-        //Enable marker
-        marker: SparkChartMarker(
-            displayMode: SparkChartMarkerDisplayMode.all, color: Colors.black),
-        //Enable data label
-        labelDisplayMode: SparkChartLabelDisplayMode.none,
-        color: Color(0xFFFC8D05),
-        // dashArray: [],
-        data: dtTotalBayar,
-      ) : SfSparkLineChart(
-        //Enable the trackball
-        trackball: SparkChartTrackball(
-          activationMode: SparkChartActivationMode.tap,
-          color: Colors.black,
-        ),
-        //Enable marker
-        marker: SparkChartMarker(
-            displayMode: SparkChartMarkerDisplayMode.all, color: Colors.black),
-        //Enable data label
-        labelDisplayMode: SparkChartLabelDisplayMode.none,
-        color: Color(0xFFFC8D05),
-        // dashArray: [],
-        data: dtTotalLiter,
-      ),
+      child: widget.param == "Harga"
+          ? SfSparkLineChart(
+              //Enable the trackball
+              trackball: SparkChartTrackball(
+                activationMode: SparkChartActivationMode.tap,
+                color: Colors.black,
+              ),
+              //Enable marker
+              marker: SparkChartMarker(
+                  displayMode: SparkChartMarkerDisplayMode.all,
+                  color: Colors.black),
+              //Enable data label
+              labelDisplayMode: SparkChartLabelDisplayMode.none,
+              color: Color(0xFFFC8D05),
+              // dashArray: [],
+              data: dtTotalBayar,
+            )
+          : SfSparkLineChart(
+              //Enable the trackball
+              trackball: SparkChartTrackball(
+                activationMode: SparkChartActivationMode.tap,
+                color: Colors.black,
+              ),
+              //Enable marker
+              marker: SparkChartMarker(
+                  displayMode: SparkChartMarkerDisplayMode.all,
+                  color: Colors.black),
+              //Enable data label
+              labelDisplayMode: SparkChartLabelDisplayMode.none,
+              color: Color(0xFFFC8D05),
+              // dashArray: [],
+              data: dtTotalLiter,
+            ),
     );
   }
 }

@@ -3,6 +3,8 @@ import 'package:bbm_tracking/model/bensin_m.dart';
 import 'package:bbm_tracking/model/kendaraan_m.dart';
 import 'package:bbm_tracking/model/transaksiPerMonth_m.dart';
 import 'package:bbm_tracking/model/transaksi_m.dart';
+import 'package:bbm_tracking/repository/kendaraan/kendaraan_repository.dart';
+import 'package:bbm_tracking/repository/transaksi/transaksi_repository.dart';
 import 'package:bbm_tracking/resource/component-bersama/chart.dart';
 import 'package:bbm_tracking/pages/mainMenu/component/item_bensin.dart';
 import 'package:bbm_tracking/resource/component-bersama/card_kendaraan.dart';
@@ -29,7 +31,84 @@ class _IndexMainMenuState extends State<IndexMainMenu> {
   double totalBBM = 0;
   late int count;
 
-  late List<TransaksiPerMonthModel> dataTransaksiThisMonth = [];
+  List<TransaksiPerMonthModel>? dataTransaksiThisMonth;
+  List<KendaraanModel>? dataKendaraan;
+  List<TransaksiModel>? dataTransaksi;
+  KendaraanModel? dataKendaraanObject;
+  @override
+  void initState() {
+    super.initState();
+    context.read<BbmBloc>()..add(BBMStarted());
+    initializeDateFormatting();
+    count = 0;
+    loadDataTransaksiThisMonth();
+    loadDataKendaraan();
+    loadDataTransaksi();
+
+    bool cond = false;
+    int i = 0;
+    var numK = dataKendaraan?.length ?? 0;
+    while (i < numK) {
+      if (cond == false) {
+        if (dataKendaraan![i].status == 1) {
+          dataKendaraanObject = dataKendaraan![i];
+          cond = true;
+        }
+      }
+      i++;
+    }
+    // for (int i = 0; i < dataKendaraan!.length; i++) {
+    //   if (cond == false) {
+    //     if (dataKendaraan![i].status == 1) {
+    //       dataKendaraanObject = dataKendaraan![i];
+    //       cond = true;
+    //     }
+    //   }
+    // }
+
+    // if (count == 0) {
+    //   dataTransaksi!.forEach((element) {
+    //     if (dataKendaraanObject!.status == 1) {
+    //       totalPengeluaran += element.totalBayar.toInt();
+    //       totalBBM += double.parse(element.totalLiter);
+    //     }
+    //   });
+    //   count++;
+    // }
+  }
+
+  void loadDataTransaksiThisMonth() async {
+    List<TransaksiPerMonthModel> dt = await TransaksiRepository()
+        .loadTransaksiThisMonth(DateFormat("yyyy-MM-dd")
+            .parse(DateTime.now().toString())
+            .toString());
+    dt.forEach((element) {
+      if (element.kendaraanId == dataKendaraanObject?.id.toString()) {
+        setState(() {
+          dataTransaksiThisMonth!.add(element);
+        });
+      }
+    });
+  }
+
+  void loadDataTransaksi() async {
+    List<TransaksiModel> dtM = await TransaksiRepository().loadTransaksi();
+    dtM.forEach((element) {
+        if (dataKendaraanObject!.status == 1) {
+          totalPengeluaran += element.totalBayar.toInt();
+          totalBBM += double.parse(element.totalLiter);
+        }
+    });
+    dataTransaksi!.addAll(dtM);
+  }
+
+  void loadDataKendaraan() async {
+    List<KendaraanModel> dtKendaraan =
+        await KendaraanRepository().loadKendaraan();
+    setState(() {
+      dataKendaraan!.addAll(dtKendaraan);
+    });
+  }
 
   TextStyle styleData = TextStyle(
     fontFamily: 'Poppins',
@@ -37,7 +116,6 @@ class _IndexMainMenuState extends State<IndexMainMenu> {
     color: Color(0xFF3B3C48),
     fontWeight: FontWeight.w500,
   );
-  late KendaraanModel? dataKendaraan = null;
 
   void selectedDate(DateTime time) {
     setState(() {
@@ -59,136 +137,82 @@ class _IndexMainMenuState extends State<IndexMainMenu> {
   // int _year = 0;
 
   @override
-  void initState() {
-    super.initState();
-    initializeDateFormatting();
-    count = 0;
-    print("printed again = ");
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Container(
-      child: BlocBuilder<BbmBloc, BbmState>(
-        builder: (context, state) {
-          if (state is BbmInitial) {
-            return Container(
-              child: Center(child: CircularProgressIndicator()),
-            );
-          }
-          if (state is BBMLoaded) {
-            bool cond = false;
-            for (int i = 0; i < state.kendaraan.length; i++) {
-              if (cond == false) {
-                if (state.kendaraan[i].status == 1) {
-                  dataKendaraan = state.kendaraan[i];
-                  cond = true;
-                } else {
-                  dataKendaraan = null;
-                }
-              }
-            }
-
-            List<TransaksiPerMonthModel> dt = state.transaksiThisMonth;
-            dt.forEach((element) {
-              if (element.kendaraanId == dataKendaraan?.id.toString()) {
-                dataTransaksiThisMonth.add(element);
-              }
-            });
-
-            if (count == 0) {
-              state.transaksi.forEach((element) {
-                if (dataKendaraan!.status == 1) {
-                  totalPengeluaran += element.totalBayar.toInt();
-                  totalBBM += double.parse(element.totalLiter);
-                }
-              });
-              count++;
-            }
-
-            return SingleChildScrollView(
-              child: Padding(
-                padding: EdgeInsets.only(bottom: 10),
-                child: Stack(
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.only(bottom: 10),
+          child: Stack(
+            children: [
+              Container(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    Text(
+                      "Hallo,",
+                      style: TextStyle(
+                        fontFamily: 'Poppins',
+                        fontSize: 14,
+                        color: Color(0xFF1A0F0F),
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    Text(
+                      "Selamat datang di Aplikasi BBM-Tracking",
+                      style: TextStyle(
+                        fontFamily: 'Poppins',
+                        fontSize: 12,
+                        color: Color(0xFF1A0F0F),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    MainCardKendaraan(dataKendaraanObject),
+                    SecondWidget(),
+                    SizedBox(
+                      height: 5,
+                    ),
                     Container(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           Text(
-                            "Hallo,",
+                            "Pembaruan,",
                             style: TextStyle(
                               fontFamily: 'Poppins',
-                              fontSize: 14,
-                              color: Color(0xFF1A0F0F),
-                              fontWeight: FontWeight.w600,
+                              fontSize: 8,
+                              fontStyle: FontStyle.italic,
+                              fontWeight: FontWeight.w700,
                             ),
                           ),
                           Text(
-                            "Selamat datang di Aplikasi BBM-Tracking",
+                            "10 Januari 2023",
                             style: TextStyle(
                               fontFamily: 'Poppins',
-                              fontSize: 12,
-                              color: Color(0xFF1A0F0F),
+                              fontSize: 8,
                             ),
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          MainCardKendaraan(dataKendaraan),
-                          SecondWidget(),
-                          SizedBox(
-                            height: 5,
-                          ),
-                          Container(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Text(
-                                  "Pembaruan,",
-                                  style: TextStyle(
-                                    fontFamily: 'Poppins',
-                                    fontSize: 8,
-                                    fontStyle: FontStyle.italic,
-                                    fontWeight: FontWeight.w700,
-                                  ),
-                                ),
-                                Text(
-                                  "10 Januari 2023",
-                                  style: TextStyle(
-                                    fontFamily: 'Poppins',
-                                    fontSize: 8,
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                          SizedBox(
-                            height: 15,
-                          ),
-                          ItemListBensin(state.bensin),
-                          SizedBox(
-                            height: 15,
-                          ),
-                          DatePerforma(dataTransaksiThisMonth),
-                          SizedBox(
-                            height: 10,
-                          ),
+                          )
                         ],
                       ),
+                    ),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    ItemListBensin(listBensin),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    DatePerforma(dataTransaksiThisMonth),
+                    SizedBox(
+                      height: 10,
                     ),
                   ],
                 ),
               ),
-            );
-          }
-          if (state is BBMError) {
-            return Container(
-              child: Center(child: Text(state.message.toString())),
-            );
-          }
-          return Container(child: Center(child: Text("something error")));
-        },
+            ],
+          ),
+        ),
       ),
     );
   }

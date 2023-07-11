@@ -59,7 +59,7 @@ class _HomeState extends State<Home> {
       print("object kendaraan = " + dt!.id.toString());
     }
     paramKendaran
-        ? Navigator.of(context).push(
+        ? Navigator.of(context).pushReplacement(
             MaterialPageRoute(
               builder: (context) => FormTamabahDataBensin(
                 kendaraanModel: dt,
@@ -87,6 +87,8 @@ class _HomeState extends State<Home> {
     super.initState();
     screen = widget.screen;
     param = widget.param;
+
+    context.read<BbmBloc>()..add(BBMStarted());
     // setState(() {
     //   widget.screen != null ? screen = "${widget.screen}" : screen = "home";
     // });
@@ -142,9 +144,6 @@ class _HomeState extends State<Home> {
           });
         },
         onFabButtonPressed: () {
-          setState(() {
-            context.read<BbmBloc>().add(BBMStarted());
-          });
           ButtonAddTransaksi();
         },
       ),
@@ -163,7 +162,6 @@ class _HomeState extends State<Home> {
                     // print("screen = " + param);
                     switch (screen) {
                       case 'home':
-                        context.read<BbmBloc>().add(BBMStarted());
                         return IndexMainMenu();
                       case 'kendaraan':
                         // context.read<BbmBloc>().add(BBMAllDataKendaraan());

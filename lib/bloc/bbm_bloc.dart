@@ -119,7 +119,10 @@ class BbmBloc extends Bloc<BbmEvent, BbmState> {
         dataKendaraan.add(event.kendaraanModel);
         List<TransaksiModel> dataTransaksi = state.transaksi;
         List<TransaksiPerMonthModel> dataTransaksiThisMonth =
-            await transaksiRepository.loadTransaksiThisMonth(DateFormat("yyyy-MM-dd").parse(DateTime.now().toString()).toString());
+            await transaksiRepository.loadTransaksiThisMonth(
+                DateFormat("yyyy-MM-dd")
+                    .parse(DateTime.now().toString())
+                    .toString());
         emit(
           BBMLoaded(dataKendaraan, dataTransaksi, dataTransaksiThisMonth),
         );
@@ -139,7 +142,10 @@ class BbmBloc extends Bloc<BbmEvent, BbmState> {
       List<TransaksiModel> dataTransaksi =
           await transaksiRepository.loadTransaksi();
       List<TransaksiPerMonthModel> dataTransaksiThisMonth =
-          await transaksiRepository.loadTransaksiThisMonth(DateFormat("yyyy-MM-dd").parse(DateTime.now().toString()).toString());
+          await transaksiRepository.loadTransaksiThisMonth(
+              DateFormat("yyyy-MM-dd")
+                  .parse(DateTime.now().toString())
+                  .toString());
 
       emit(BBMLoaded(dataKendaraan, dataTransaksi, dataTransaksiThisMonth));
     } catch (e) {
@@ -161,14 +167,30 @@ class BbmBloc extends Bloc<BbmEvent, BbmState> {
           await transaksiRepository.insertPhoto(element);
         }
 
-        // List<KendaraanModel> dataKendaraan =
-        //     await kendaraanRepository.loadKendaraan();
-        // List<TransaksiModel> dataTransaksi = state.transaksi;
-        //     // await transaksiRepository.loadTransaksi();
-        // List<TransaksiPerMonthModel> dataTransaksiThisMonth =
-        //     await transaksiRepository.loadTransaksiThisMonth(DateFormat("yyyy-MM-dd").parse(DateTime.now().toString()).toString());
+        List<KendaraanModel> dataKendaraan =
+            await kendaraanRepository.loadKendaraan();
+        List<TransaksiModel> dataTransaksi = state.transaksi;
+        event.transaksi.id = dataTransaksi.length + 1;
+        dataTransaksi.add(event.transaksi);
+        // await transaksiRepository.loadTransaksi();
+        List<TransaksiPerMonthModel> dataTransaksiThisMonth = state.transaksiThisMonth;
+        // await transaksiRepository.loadTransaksiThisMonth(
+        //     DateFormat("yyyy-MM-dd")
+        //         .parse(DateTime.now().toString())
+        //         .toString());
+        //     state.transaksiThisMonth;
+        var data = event.transaksi;
+        TransaksiPerMonthModel dtIni = new TransaksiPerMonthModel(
+          totalLiter: double.parse(data.totalLiter),
+          totalBayar: data.totalBayar,
+          kendaraanId: data.kendaraanId,
+          tanggalTransaksi: data.tanggalTransaksi,
+        );
+        if (data.tanggalTransaksi.month == DateTime.now().month) {
+          dataTransaksiThisMonth.add(dtIni);
+        }
 
-        // emit(BBMLoaded(dataKendaraan, dataTransaksi, dataTransaksiThisMonth));
+        emit(BBMLoaded(dataKendaraan, dataTransaksi, dataTransaksiThisMonth));
       }
     } catch (e) {
       emit(BBMError(message: "Something Error, ${e}, We Will Fix it"));

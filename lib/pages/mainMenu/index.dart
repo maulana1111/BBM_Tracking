@@ -27,7 +27,7 @@ class _IndexMainMenuState extends State<IndexMainMenu> {
   DateTime? _selected = DateTime.now();
   int totalPengeluaran = 0;
   double totalBBM = 0;
-  int count = 0;
+  late int count;
 
   late List<TransaksiPerMonthModel> dataTransaksiThisMonth = [];
 
@@ -62,7 +62,8 @@ class _IndexMainMenuState extends State<IndexMainMenu> {
   void initState() {
     super.initState();
     initializeDateFormatting();
-    // print("Date = "+_selected);
+    count = 0;
+    print("printed again = ");
   }
 
   @override
@@ -94,7 +95,6 @@ class _IndexMainMenuState extends State<IndexMainMenu> {
                 dataTransaksiThisMonth.add(element);
               }
             });
-            // print("data kendaraan = " + dataKendaraan!.id.toString());
 
             if (count == 0) {
               state.transaksi.forEach((element) {
@@ -103,6 +103,7 @@ class _IndexMainMenuState extends State<IndexMainMenu> {
                   totalBBM += double.parse(element.totalLiter);
                 }
               });
+              count++;
             }
 
             return SingleChildScrollView(

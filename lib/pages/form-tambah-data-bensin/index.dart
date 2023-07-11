@@ -449,10 +449,7 @@ class _FormTamabahDataBensinState extends State<FormTamabahDataBensin>
     context
         .read<BbmBloc>()
         .add(BBMInsertTransaksion(transaksi: transaksiModel, photo: dataPhoto));
-    // Navigator.of(context).pop(context);
-    Navigator.of(context).pushReplacement(MaterialPageRoute(
-      builder: (context) => Home("", ""),
-    ));
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => Home("", "")));
     showDialog(
       context: context,
       builder: (BuildContext context) {

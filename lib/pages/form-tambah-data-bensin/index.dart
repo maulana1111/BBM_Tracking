@@ -469,7 +469,6 @@ class _FormTamabahDataBensinState extends State<FormTamabahDataBensin>
         quality: 60,
         name: dateNow,
       );
-      print("result = " + result.toString());
       // print(result['filePath']);
       PhotoModel modelPhoto = PhotoModel(
         id: 0,
@@ -477,14 +476,9 @@ class _FormTamabahDataBensinState extends State<FormTamabahDataBensin>
         linkPhoto: result['filePath'],
         namePhoto: dateNow,
       );
-      print("result 1 = " +
-          modelPhoto.transaksi_id.toString() +
-          ", link Photo = " +
-          modelPhoto.linkPhoto.toString());
       setState(() {
         dataPhoto.add(modelPhoto);
       });
-      print("couting inside = " + dataPhoto.length.toString());
     });
   }
 

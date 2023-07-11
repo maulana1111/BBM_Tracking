@@ -161,14 +161,14 @@ class BbmBloc extends Bloc<BbmEvent, BbmState> {
           await transaksiRepository.insertPhoto(element);
         }
 
-        List<KendaraanModel> dataKendaraan =
-            await kendaraanRepository.loadKendaraan();
-        List<TransaksiModel> dataTransaksi =
-            await transaksiRepository.loadTransaksi();
-        List<TransaksiPerMonthModel> dataTransaksiThisMonth =
-            await transaksiRepository.loadTransaksiThisMonth(DateFormat("yyyy-MM-dd").parse(DateTime.now().toString()).toString());
+        // List<KendaraanModel> dataKendaraan =
+        //     await kendaraanRepository.loadKendaraan();
+        // List<TransaksiModel> dataTransaksi = state.transaksi;
+        //     // await transaksiRepository.loadTransaksi();
+        // List<TransaksiPerMonthModel> dataTransaksiThisMonth =
+        //     await transaksiRepository.loadTransaksiThisMonth(DateFormat("yyyy-MM-dd").parse(DateTime.now().toString()).toString());
 
-        emit(BBMLoaded(dataKendaraan, dataTransaksi, dataTransaksiThisMonth));
+        // emit(BBMLoaded(dataKendaraan, dataTransaksi, dataTransaksiThisMonth));
       }
     } catch (e) {
       emit(BBMError(message: "Something Error, ${e}, We Will Fix it"));

@@ -27,7 +27,7 @@ class BarChartSample3State extends State<BarChartSample3> {
     dtTransaksi = widget.dataTransaksi;
     final daysInMonth = DateTime(today.year, today.month + 1, 0).day;
 
-    for (var i = 0; i < daysInMonth; i++) {
+    for (var i = 1; i < daysInMonth; i++) {
       if (!dtTransaksi.isEmpty) {
         dtTransaksi.forEach((element) {
           if (i == element.tanggalTransaksi.day) {
@@ -50,8 +50,6 @@ class BarChartSample3State extends State<BarChartSample3> {
       }
     }
     
-    print("counting = "+dtTransaksi.length.toString());
-    print("counting 1 = "+dtTotalBayar.length.toString());
   }
 
   @override

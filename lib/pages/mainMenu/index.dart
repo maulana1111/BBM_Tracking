@@ -27,6 +27,7 @@ class _IndexMainMenuState extends State<IndexMainMenu> {
   DateTime? _selected = DateTime.now();
   int totalPengeluaran = 0;
   double totalBBM = 0;
+  int count = 0;
 
   late List<TransaksiPerMonthModel> dataTransaksiThisMonth = [];
 
@@ -49,6 +50,7 @@ class _IndexMainMenuState extends State<IndexMainMenu> {
 
   void selectedToggle(String toogle) {
     setState(() {
+      count++;
       _toggle = toogle;
     });
   }
@@ -94,12 +96,14 @@ class _IndexMainMenuState extends State<IndexMainMenu> {
             });
             // print("data kendaraan = " + dataKendaraan!.id.toString());
 
-            state.transaksi.forEach((element) {
-              if (dataKendaraan!.status == 1) {
-                totalPengeluaran += element.totalBayar.toInt();
-                totalBBM += double.parse(element.totalLiter);
-              }
-            });
+            if (count == 0) {
+              state.transaksi.forEach((element) {
+                if (dataKendaraan!.status == 1) {
+                  totalPengeluaran += element.totalBayar.toInt();
+                  totalBBM += double.parse(element.totalLiter);
+                }
+              });
+            }
 
             return SingleChildScrollView(
               child: Padding(
@@ -275,11 +279,7 @@ class _IndexMainMenuState extends State<IndexMainMenu> {
                     child: Row(
                       children: [
                         InkWell(
-                          onTap: () {
-                            setState(() {
-                              _toggle = "Harga";
-                            });
-                          },
+                          onTap: () => selectedToggle("Harga"),
                           child: Container(
                             width: 65,
                             height: 30,
@@ -309,11 +309,7 @@ class _IndexMainMenuState extends State<IndexMainMenu> {
                           ),
                         ),
                         InkWell(
-                          onTap: () {
-                            setState(() {
-                              _toggle = "Liter";
-                            });
-                          },
+                          onTap: () => selectedToggle("Liter"),
                           child: Container(
                             width: 65,
                             height: 30,
@@ -364,7 +360,7 @@ class _IndexMainMenuState extends State<IndexMainMenu> {
             ),
             Container(
               child: Text(
-                "Bulan : Januari 2023",
+                "Bulan : ${DateFormat('MMMM').format(DateTime(0, _selected!.month.toInt()))} ${_selected!.year.toString()}",
                 style: TextStyle(
                   fontFamily: 'Poppins',
                   fontSize: 12,
@@ -457,7 +453,7 @@ class _IndexMainMenuState extends State<IndexMainMenu> {
                   Text(
                     param == "pengeluaran"
                         ? "${CurrencyFormat.convertToIdr(totalPengeluaran, 0)}"
-                        : "${totalBBM} Liter",
+                        : "${totalBBM.toStringAsFixed(2)} Liter",
                     style: TextStyle(
                       fontSize: 8,
                       fontFamily: 'Poppins',

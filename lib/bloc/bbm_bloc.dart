@@ -173,7 +173,8 @@ class BbmBloc extends Bloc<BbmEvent, BbmState> {
         event.transaksi.id = dataTransaksi.length + 1;
         dataTransaksi.add(event.transaksi);
         // await transaksiRepository.loadTransaksi();
-        List<TransaksiPerMonthModel> dataTransaksiThisMonth = state.transaksiThisMonth;
+        List<TransaksiPerMonthModel> dataTransaksiThisMonth =
+            state.transaksiThisMonth;
         // await transaksiRepository.loadTransaksiThisMonth(
         //     DateFormat("yyyy-MM-dd")
         //         .parse(DateTime.now().toString())
@@ -187,7 +188,17 @@ class BbmBloc extends Bloc<BbmEvent, BbmState> {
           tanggalTransaksi: data.tanggalTransaksi,
         );
         if (data.tanggalTransaksi.month == DateTime.now().month) {
-          dataTransaksiThisMonth.add(dtIni);
+          int i = 0;
+          dataTransaksiThisMonth.forEach((element) {
+            if (element.tanggalTransaksi.day == dtIni.tanggalTransaksi.day) {
+              element.totalBayar += dtIni.totalBayar;
+              element.totalLiter += dtIni.totalLiter;
+              state.transaksiThisMonth[i].totalBayar += element.totalBayar;
+              state.transaksiThisMonth[i].totalLiter += element.totalLiter;
+            } else {
+              dataTransaksiThisMonth.add(dtIni);
+            }
+          });
         }
 
         emit(BBMLoaded(dataKendaraan, dataTransaksi, dataTransaksiThisMonth));

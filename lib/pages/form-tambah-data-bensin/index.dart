@@ -52,8 +52,9 @@ class _FormTamabahDataBensinState extends State<FormTamabahDataBensin>
 
   late KendaraanModel dataKendaraan;
   var formatDate = DateFormat("yyyy-MM-dd");
-  late String selectedDate = formatDate.format(DateTime.now()).toString();
-  late TimeOfDay _time = TimeOfDay(hour: 7, minute: 15);
+  DateTime dateNow = DateTime.now();
+  late String selectedDate = formatDate.format(dateNow).toString();
+  late TimeOfDay _time = TimeOfDay(hour: dateNow.hour, minute: dateNow.minute);
   late bool conditionBbm = false;
 
   late String literTxt = '';
@@ -316,7 +317,8 @@ class _FormTamabahDataBensinState extends State<FormTamabahDataBensin>
     if (newSelectedDate != null) {
       setState(() {
         _selectedDate.value = newSelectedDate;
-        selectedDate = formatDate.format(newSelectedDate);
+        dateController.text = DateFormat("yyyy-MM-dd").format(newSelectedDate).toString(); 
+        selectedDate = DateFormat("yyyy-MM-dd").format(newSelectedDate).toString();
       });
     }
   }
@@ -329,6 +331,7 @@ class _FormTamabahDataBensinState extends State<FormTamabahDataBensin>
     if (newTime != null) {
       setState(() {
         _time = newTime;
+        timeController.text = _time.format(context).toString();
       });
     }
   }
@@ -418,7 +421,6 @@ class _FormTamabahDataBensinState extends State<FormTamabahDataBensin>
     Future.delayed(Duration(seconds: 2), () {
       insertedTransaksi(_kodeTransaksi);
     });
-
   }
 
   Future<void> insertedTransaksi(String _kodeTransaksi) async {
@@ -449,7 +451,11 @@ class _FormTamabahDataBensinState extends State<FormTamabahDataBensin>
     context
         .read<BbmBloc>()
         .add(BBMInsertTransaksion(transaksi: transaksiModel, photo: dataPhoto));
-    Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => Home("", "")));
+    setState(() {
+      BlocProvider.of<BbmBloc>(context).add(BBMStarted());
+    });
+    Navigator.pushReplacement(context,
+        MaterialPageRoute(builder: (BuildContext context) => Home("", "")));
     showDialog(
       context: context,
       builder: (BuildContext context) {

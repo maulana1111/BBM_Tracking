@@ -31,32 +31,34 @@ class _IndexMainMenuState extends State<IndexMainMenu> {
   double totalBBM = 0;
   late int count;
 
-  List<TransaksiPerMonthModel>? dataTransaksiThisMonth;
-  List<KendaraanModel>? dataKendaraan;
-  List<TransaksiModel>? dataTransaksi;
+  late List<TransaksiPerMonthModel> dataTransaksiThisMonth = [];
+  late List<KendaraanModel> dataKendaraan = [];
+  late List<TransaksiModel> dataTransaksi = [];
   KendaraanModel? dataKendaraanObject;
+  bool isLoading = false;
   @override
   void initState() {
     super.initState();
     context.read<BbmBloc>()..add(BBMStarted());
     initializeDateFormatting();
     count = 0;
-    loadDataTransaksiThisMonth();
-    loadDataKendaraan();
-    loadDataTransaksi();
+    loadData();
+    // loadDataTransaksiThisMonth();
+    // loadDataKendaraan();
+    // loadDataTransaksi();
 
-    bool cond = false;
-    int i = 0;
-    var numK = dataKendaraan?.length ?? 0;
-    while (i < numK) {
-      if (cond == false) {
-        if (dataKendaraan![i].status == 1) {
-          dataKendaraanObject = dataKendaraan![i];
-          cond = true;
-        }
-      }
-      i++;
-    }
+    // bool cond = false;
+    // int i = 0;
+    // var numK = dataKendaraan.length ?? 0;
+    // while (i < numK) {
+    //   if (cond == false) {
+    //     if (dataKendaraan[i].status == 1) {
+    //       dataKendaraanObject = dataKendaraan[i];
+    //       cond = true;
+    //     }
+    //   }
+    //   i++;
+    // }
     // for (int i = 0; i < dataKendaraan!.length; i++) {
     //   if (cond == false) {
     //     if (dataKendaraan![i].status == 1) {
@@ -77,7 +79,27 @@ class _IndexMainMenuState extends State<IndexMainMenu> {
     // }
   }
 
-  void loadDataTransaksiThisMonth() async {
+  Future<void> loadData() async {
+    List<KendaraanModel> dtKendaraan =
+        await KendaraanRepository().loadKendaraan();
+    setState(() {
+      dataKendaraan.addAll(dtKendaraan);
+    });
+
+    bool cond = false;
+    int i = 0;
+
+    for (int i = 0; i < dtKendaraan.length; i++) {
+      if (cond == false) {
+        if (dataKendaraan[i].status == 1) {
+          setState(() {
+            dataKendaraanObject = dataKendaraan[i];
+          });
+          cond = true;
+        }
+      }
+    }
+
     List<TransaksiPerMonthModel> dt = await TransaksiRepository()
         .loadTransaksiThisMonth(DateFormat("yyyy-MM-dd")
             .parse(DateTime.now().toString())
@@ -85,28 +107,24 @@ class _IndexMainMenuState extends State<IndexMainMenu> {
     dt.forEach((element) {
       if (element.kendaraanId == dataKendaraanObject?.id.toString()) {
         setState(() {
-          dataTransaksiThisMonth!.add(element);
+          dataTransaksiThisMonth.add(element);
         });
       }
     });
-  }
 
-  void loadDataTransaksi() async {
+    
+
     List<TransaksiModel> dtM = await TransaksiRepository().loadTransaksi();
     dtM.forEach((element) {
-        if (dataKendaraanObject!.status == 1) {
-          totalPengeluaran += element.totalBayar.toInt();
-          totalBBM += double.parse(element.totalLiter);
-        }
+      if (dataKendaraanObject!.status == 1) {
+        totalPengeluaran += element.totalBayar.toInt();
+        totalBBM += double.parse(element.totalLiter);
+      }
     });
-    dataTransaksi!.addAll(dtM);
-  }
+    dataTransaksi.addAll(dtM);
 
-  void loadDataKendaraan() async {
-    List<KendaraanModel> dtKendaraan =
-        await KendaraanRepository().loadKendaraan();
     setState(() {
-      dataKendaraan!.addAll(dtKendaraan);
+      isLoading = true;
     });
   }
 
@@ -138,83 +156,85 @@ class _IndexMainMenuState extends State<IndexMainMenu> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.only(bottom: 10),
-          child: Stack(
-            children: [
-              Container(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+    return isLoading
+        ? Container(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsets.only(bottom: 10),
+                child: Stack(
                   children: [
-                    Text(
-                      "Hallo,",
-                      style: TextStyle(
-                        fontFamily: 'Poppins',
-                        fontSize: 14,
-                        color: Color(0xFF1A0F0F),
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    Text(
-                      "Selamat datang di Aplikasi BBM-Tracking",
-                      style: TextStyle(
-                        fontFamily: 'Poppins',
-                        fontSize: 12,
-                        color: Color(0xFF1A0F0F),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    MainCardKendaraan(dataKendaraanObject),
-                    SecondWidget(),
-                    SizedBox(
-                      height: 5,
-                    ),
                     Container(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "Pembaruan,",
+                            "Hallo,",
                             style: TextStyle(
                               fontFamily: 'Poppins',
-                              fontSize: 8,
-                              fontStyle: FontStyle.italic,
-                              fontWeight: FontWeight.w700,
+                              fontSize: 14,
+                              color: Color(0xFF1A0F0F),
+                              fontWeight: FontWeight.w600,
                             ),
                           ),
                           Text(
-                            "10 Januari 2023",
+                            "Selamat datang di Aplikasi BBM-Tracking",
                             style: TextStyle(
                               fontFamily: 'Poppins',
-                              fontSize: 8,
+                              fontSize: 12,
+                              color: Color(0xFF1A0F0F),
                             ),
-                          )
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          MainCardKendaraan(dataKendaraanObject),
+                          SecondWidget(),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          Container(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Text(
+                                  "Pembaruan,",
+                                  style: TextStyle(
+                                    fontFamily: 'Poppins',
+                                    fontSize: 8,
+                                    fontStyle: FontStyle.italic,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                                Text(
+                                  "10 Januari 2023",
+                                  style: TextStyle(
+                                    fontFamily: 'Poppins',
+                                    fontSize: 8,
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                          SizedBox(
+                            height: 15,
+                          ),
+                          ItemListBensin(listBensin),
+                          SizedBox(
+                            height: 15,
+                          ),
+                          DatePerforma(dataTransaksiThisMonth),
+                          SizedBox(
+                            height: 10,
+                          ),
                         ],
                       ),
-                    ),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    ItemListBensin(listBensin),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    DatePerforma(dataTransaksiThisMonth),
-                    SizedBox(
-                      height: 10,
                     ),
                   ],
                 ),
               ),
-            ],
-          ),
-        ),
-      ),
-    );
+            ),
+          )
+        : Container();
   }
 
   Widget DatePerforma(dataTransaksiThisMonth) {

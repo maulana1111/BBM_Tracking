@@ -27,29 +27,26 @@ class BarChartSample3State extends State<BarChartSample3> {
     dtTransaksi = widget.dataTransaksi;
     final daysInMonth = DateTime(today.year, today.month + 1, 0).day;
 
-    for (var i = 1; i < daysInMonth; i++) {
-      if (!dtTransaksi.isEmpty) {
-        dtTransaksi.forEach((element) {
-          if (i == element.tanggalTransaksi.day) {
-            setState(() {
-              dtTotalBayar.add(element.totalBayar.toDouble());
-              dtTotalLiter.add(element.totalLiter);
-            });
-          } else {
-            setState(() {
-              dtTotalBayar.add(0);
-              dtTotalLiter.add(0);
-            });
+    for (var i = 1; i <= daysInMonth; i++) {
+      if (dtTransaksi.length > 0) {
+        for(int j = 0; j < dtTransaksi.length; j++)
+        {
+          if(i == dtTransaksi[j].tanggalTransaksi.day)
+          {
+            dtTotalBayar.add(dtTransaksi[j].totalBayar.toDouble());
+            dtTotalLiter.add(dtTransaksi[j].totalLiter);
+            break;
+          }else{
+            dtTotalBayar.add(0);
+            dtTotalLiter.add(0);
+            break;
           }
-        });
+        }
       } else {
-        setState(() {
-          dtTotalBayar.add(0);
-          dtTotalLiter.add(0);
-        });
+        dtTotalBayar.add(0);
+        dtTotalLiter.add(0);
       }
     }
-    
   }
 
   @override

@@ -1,14 +1,29 @@
+import 'package:bbm_tracking/model/kendaraan_m.dart';
+import 'package:bbm_tracking/model/transaksi_m.dart';
 import 'package:bbm_tracking/pages/home.dart';
 import 'package:flutter/material.dart';
 
 class RiwayatDetail extends StatefulWidget {
-  const RiwayatDetail({super.key});
+  TransaksiModel data;
+  KendaraanModel kendaraan;
+  RiwayatDetail({super.key, required this.data, required this.kendaraan});
 
   @override
   State<RiwayatDetail> createState() => _RiwayatDetailState();
 }
 
 class _RiwayatDetailState extends State<RiwayatDetail> {
+
+  late TransaksiModel data;
+  late KendaraanModel kendaraan;
+
+  @override
+  void initState() {
+    super.initState();
+    data = widget.data;
+    kendaraan = widget.kendaraan;
+  }
+
   TextStyle style = TextStyle(
     fontFamily: 'Poppins',
     fontSize: 9,
@@ -101,7 +116,7 @@ class _RiwayatDetailState extends State<RiwayatDetail> {
                             flex: 1,
                             child: Container(
                               child: Text(
-                                "BBM-T/F001/Pertamina/XIII/012313",
+                                data.kodeTransaksi,
                                 style: style,
                               ),
                             ),
@@ -143,7 +158,7 @@ class _RiwayatDetailState extends State<RiwayatDetail> {
                 SizedBox(
                   height: 10,
                 ),
-                itemDetail("Toyota VITZ", "B 506 WLG"),
+                itemDetail(kendaraan.namaKendaraan, kendaraan.nomorPlat),
                 SizedBox(
                   height: 10,
                 ),

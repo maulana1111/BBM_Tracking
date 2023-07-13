@@ -29,9 +29,7 @@ class _RiwayatDetailState extends State<RiwayatDetail> {
             child: Column(
               children: [
                 InkWell(
-                  onTap: () => Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(
-                          builder: (context) => Home("riwayat", ""))),
+                  onTap: () => Navigator.pop(context),
                   child: Container(
                     child: Container(
                       child: Row(

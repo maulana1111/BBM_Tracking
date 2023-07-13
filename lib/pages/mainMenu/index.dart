@@ -43,40 +43,6 @@ class _IndexMainMenuState extends State<IndexMainMenu> {
     initializeDateFormatting();
     count = 0;
     loadData();
-    // loadDataTransaksiThisMonth();
-    // loadDataKendaraan();
-    // loadDataTransaksi();
-
-    // bool cond = false;
-    // int i = 0;
-    // var numK = dataKendaraan.length ?? 0;
-    // while (i < numK) {
-    //   if (cond == false) {
-    //     if (dataKendaraan[i].status == 1) {
-    //       dataKendaraanObject = dataKendaraan[i];
-    //       cond = true;
-    //     }
-    //   }
-    //   i++;
-    // }
-    // for (int i = 0; i < dataKendaraan!.length; i++) {
-    //   if (cond == false) {
-    //     if (dataKendaraan![i].status == 1) {
-    //       dataKendaraanObject = dataKendaraan![i];
-    //       cond = true;
-    //     }
-    //   }
-    // }
-
-    // if (count == 0) {
-    //   dataTransaksi!.forEach((element) {
-    //     if (dataKendaraanObject!.status == 1) {
-    //       totalPengeluaran += element.totalBayar.toInt();
-    //       totalBBM += double.parse(element.totalLiter);
-    //     }
-    //   });
-    //   count++;
-    // }
   }
 
   Future<void> loadData() async {
@@ -116,7 +82,7 @@ class _IndexMainMenuState extends State<IndexMainMenu> {
 
     List<TransaksiModel> dtM = await TransaksiRepository().loadTransaksi();
     dtM.forEach((element) {
-      if (dataKendaraanObject!.status == 1) {
+      if (dataKendaraanObject?.status == 1) {
         totalPengeluaran += element.totalBayar.toInt();
         totalBBM += double.parse(element.totalLiter);
       }

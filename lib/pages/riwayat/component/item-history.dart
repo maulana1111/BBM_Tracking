@@ -1,21 +1,77 @@
+import 'package:bbm_tracking/model/bensin_m.dart';
+import 'package:bbm_tracking/model/kendaraan_m.dart';
+import 'package:bbm_tracking/model/transaksi_m.dart';
 import 'package:bbm_tracking/pages/home.dart';
 import 'package:bbm_tracking/pages/riwayat/riwayat-detail/riwayat-detail.dart';
+import 'package:bbm_tracking/resource/resource.dart';
 import 'package:flutter/material.dart';
 
 class ItemHistory extends StatefulWidget {
-  const ItemHistory({super.key});
+  TransaksiModel data;
+  KendaraanModel kendaraan;
+  ItemHistory({super.key, required this.data, required this.kendaraan});
 
   @override
   State<ItemHistory> createState() => _ItemHistoryState();
 }
 
 class _ItemHistoryState extends State<ItemHistory> {
+  TransaksiModel? data;
+  List<BensinModel> dataBensin = listBensin;
+  KendaraanModel? kendaraan;
+
+  @override
+  void initState() {
+    super.initState();
+    data = widget.data;
+    kendaraan = widget.kendaraan;
+  }
+
+  String reformatDate(DateTime date) {
+    String data = "";
+    date.month.toString() == "1"
+        ? data += "Jan, ${date.day} ${date.year}"
+        : date.month.toString() == "2"
+            ? data += "Feb, ${date.day} ${date.year}"
+            : date.month.toString() == "3"
+                ? data += "Mar, ${date.day} ${date.year}"
+                : date.month.toString() == "4"
+                    ? data += "Apr, ${date.day} ${date.year}"
+                    : date.month.toString() == "5"
+                        ? data += "Mei, ${date.day} ${date.year}"
+                        : date.month.toString() == "6"
+                            ? data += "Jun, ${date.day} ${date.year}"
+                            : date.month.toString() == "7"
+                                ? data += "Jul, ${date.day} ${date.year}"
+                                : date.month.toString() == "8"
+                                    ? data += "Agu, ${date.day} ${date.year}"
+                                    : date.month.toString() == "9"
+                                        ? data +=
+                                            "Sep, ${date.day} ${date.year}"
+                                        : date.month.toString() == "10"
+                                            ? data +=
+                                                "Okt, ${date.day} ${date.year}"
+                                            : date.month.toString() == "11"
+                                                ? data +=
+                                                    "Nov, ${date.day} ${date.year}"
+                                                : date.month.toString() == "12"
+                                                    ? data +=
+                                                        "Des, ${date.day} ${date.year}"
+                                                    : "-";
+    return data;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 5),
       child: InkWell(
-        onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => RiwayatDetail())),
+        onTap: () => Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => RiwayatDetail(
+                  data: data!,
+                  key: UniqueKey(),
+                  kendaraan: kendaraan!,
+                ))),
         child: Container(
           decoration: BoxDecoration(
             border: Border.all(width: 1, color: Color(0xFF677D81)),
@@ -52,7 +108,9 @@ class _ItemHistoryState extends State<ItemHistory> {
                             Row(
                               children: [
                                 Text(
-                                  "Shell V-Power Nitro+",
+                                  dataBensin[int.parse(data!.bensinId) - 1]
+                                      .text
+                                      .toString(),
                                   style: TextStyle(
                                     fontFamily: 'Poppins',
                                     fontWeight: FontWeight.w500,
@@ -64,7 +122,7 @@ class _ItemHistoryState extends State<ItemHistory> {
                                   width: 5,
                                 ),
                                 Text(
-                                  "Data : Jan, 12 2023",
+                                  "Data : ${reformatDate(data!.tanggalTransaksi)}",
                                   style: TextStyle(
                                     fontFamily: 'Poppins',
                                     fontWeight: FontWeight.w500,
@@ -86,7 +144,8 @@ class _ItemHistoryState extends State<ItemHistory> {
                           children: [
                             Container(
                               padding: EdgeInsets.all(5),
-                              child: Image.asset("assets/images/pertamina.png"),
+                              child: Image.asset(
+                                  "assets/images/${dataBensin[int.parse(data!.bensinId) - 1].perusahaan.toLowerCase()}.png"),
                             ),
                             Container(
                               margin: EdgeInsets.all(5),
@@ -94,14 +153,16 @@ class _ItemHistoryState extends State<ItemHistory> {
                               width: 50,
                               height: 25,
                               decoration: BoxDecoration(
-                                color: Color(0xFF58D68D),
+                                color: data?.status == 1
+                                    ? Color(0xFF58D68D)
+                                    : Color(0XFFFC8D05),
                                 borderRadius: BorderRadius.all(
                                   Radius.circular(5),
                                 ),
                               ),
                               // alignment: Alignment.topRight,
                               child: Text(
-                                "Draft",
+                                data?.status == 1 ? "selesai" : "draft",
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                   fontFamily: 'Poppins',
@@ -143,7 +204,7 @@ class _ItemHistoryState extends State<ItemHistory> {
                               ),
                             ),
                             Text(
-                              "Rp. 100.000",
+                              CurrencyFormat.convertToIdr(data?.totalBayar, 0),
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 fontFamily: 'Poppins',
@@ -167,7 +228,7 @@ class _ItemHistoryState extends State<ItemHistory> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              "Lokasi Harga:",
+                              "Lokasi SPBU:",
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 fontFamily: 'Poppins',
@@ -176,7 +237,7 @@ class _ItemHistoryState extends State<ItemHistory> {
                               ),
                             ),
                             Text(
-                              "Pertamina Gas Stations 34. 16122 Pertamina Gas Stations",
+                              "${data?.lokasiPertamina}",
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
                                 fontFamily: 'Poppins',

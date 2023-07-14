@@ -29,35 +29,13 @@ class _ItemHistoryState extends State<ItemHistory> {
 
   String reformatDate(DateTime date) {
     String data = "";
-    date.month.toString() == "1"
-        ? data += "Jan, ${date.day} ${date.year}"
-        : date.month.toString() == "2"
-            ? data += "Feb, ${date.day} ${date.year}"
-            : date.month.toString() == "3"
-                ? data += "Mar, ${date.day} ${date.year}"
-                : date.month.toString() == "4"
-                    ? data += "Apr, ${date.day} ${date.year}"
-                    : date.month.toString() == "5"
-                        ? data += "Mei, ${date.day} ${date.year}"
-                        : date.month.toString() == "6"
-                            ? data += "Jun, ${date.day} ${date.year}"
-                            : date.month.toString() == "7"
-                                ? data += "Jul, ${date.day} ${date.year}"
-                                : date.month.toString() == "8"
-                                    ? data += "Agu, ${date.day} ${date.year}"
-                                    : date.month.toString() == "9"
-                                        ? data +=
-                                            "Sep, ${date.day} ${date.year}"
-                                        : date.month.toString() == "10"
-                                            ? data +=
-                                                "Okt, ${date.day} ${date.year}"
-                                            : date.month.toString() == "11"
-                                                ? data +=
-                                                    "Nov, ${date.day} ${date.year}"
-                                                : date.month.toString() == "12"
-                                                    ? data +=
-                                                        "Des, ${date.day} ${date.year}"
-                                                    : "-";
+    for(int i = 0; i < bulan.length; i++)
+    {
+      if( i+1 == date.month)
+      {
+        data += "${bulan[i].substring(0, 3)}, ${date.day} ${date.year}";
+      }
+    }
     return data;
   }
 

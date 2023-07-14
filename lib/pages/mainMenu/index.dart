@@ -38,11 +38,11 @@ class _IndexMainMenuState extends State<IndexMainMenu> {
   bool isLoading = false;
   @override
   void initState() {
-    super.initState();
     context.read<BbmBloc>()..add(BBMStarted());
     initializeDateFormatting();
     count = 0;
     loadData();
+    super.initState();
   }
 
   Future<void> loadData() async {

@@ -176,7 +176,7 @@ class DatabasesMain {
     final db = await dbs();
 
     final List<Map<String, dynamic>> maps =
-        await db.query('photo', where: "transaksi_id = ${param}");
+        await db.query('photo', where: "transaksi_id = '${param}'");
 
     return List.generate(maps.length, (index) {
       return PhotoModel(

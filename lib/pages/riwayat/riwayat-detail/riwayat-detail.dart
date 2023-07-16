@@ -42,10 +42,9 @@ class _RiwayatDetailState extends State<RiwayatDetail> {
     List<File> data = [];
     photo.forEach((element) {
       data.add(File(appDocDir.uri.toString() + element.namePhoto + ".jpg"));  
+      // data.add(File(element.linkPhoto));
     });
-
-    print("counting = ${data.length.toString()}");
-    // Navigator.of(context).push(MaterialPageRoute(builder: (context) => ViewImage(imagePath: data)));
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) => ViewImage(imagePath: data)));
   }
 
   String reformatDate(DateTime date) {
@@ -220,7 +219,7 @@ class _RiwayatDetailState extends State<RiwayatDetail> {
                 itemDetail("Total Pembayaran",
                     "${CurrencyFormat.convertToIdr(data.totalBayar, 0)}"),
                 itemDetail("Odometer/km", "${data.odometer} km"),
-                itemDetaill("Gambar", "..........", data.odometer),
+                itemDetaill("Gambar", "..........", data.kodeTransaksi),
                 itemDetail("Catatan Tambahan", data.catatan),
               ],
             ),

@@ -3,6 +3,8 @@ import 'package:bbm_tracking/model/bensin_m.dart';
 import 'package:bbm_tracking/model/kendaraan_m.dart';
 import 'package:bbm_tracking/model/transaksiPerMonth_m.dart';
 import 'package:bbm_tracking/model/transaksi_m.dart';
+import 'package:bbm_tracking/repository/kendaraan/kendaraan_repository.dart';
+import 'package:bbm_tracking/repository/transaksi/transaksi_repository.dart';
 import 'package:bbm_tracking/resource/component-bersama/chart.dart';
 import 'package:bbm_tracking/pages/mainMenu/component/item_bensin.dart';
 import 'package:bbm_tracking/resource/component-bersama/card_kendaraan.dart';
@@ -30,6 +32,67 @@ class _IndexMainMenuState extends State<IndexMainMenu> {
   late int count;
 
   late List<TransaksiPerMonthModel> dataTransaksiThisMonth = [];
+  late List<KendaraanModel> dataKendaraan = [];
+  late List<TransaksiModel> dataTransaksi = [];
+  KendaraanModel? dataKendaraanObject;
+  bool isLoading = false;
+  @override
+  void initState() {
+    context.read<BbmBloc>()..add(BBMStarted());
+    initializeDateFormatting();
+    count = 0;
+    loadData();
+    super.initState();
+  }
+
+  Future<void> loadData() async {
+    List<KendaraanModel> dtKendaraan =
+        await KendaraanRepository().loadKendaraan();
+    setState(() {
+      dataKendaraan.addAll(dtKendaraan);
+    });
+
+    bool cond = false;
+    int i = 0;
+
+    for (int i = 0; i < dtKendaraan.length; i++) {
+      if (cond == false) {
+        if (dataKendaraan[i].status == 1) {
+          setState(() {
+            dataKendaraanObject = dataKendaraan[i];
+          });
+          cond = true;
+        }
+      }
+    }
+
+    List<TransaksiPerMonthModel> dt = await TransaksiRepository()
+        .loadTransaksiThisMonth(DateFormat("yyyy-MM-dd")
+            .parse(DateTime.now().toString())
+            .toString());
+    dt.forEach((element) {
+      if (element.kendaraanId == dataKendaraanObject?.id.toString()) {
+        setState(() {
+          dataTransaksiThisMonth.add(element);
+        });
+      }
+    });
+
+    
+
+    List<TransaksiModel> dtM = await TransaksiRepository().loadTransaksi();
+    dtM.forEach((element) {
+      if (dataKendaraanObject?.status == 1) {
+        totalPengeluaran += element.totalBayar.toInt();
+        totalBBM += double.parse(element.totalLiter);
+      }
+    });
+    dataTransaksi.addAll(dtM);
+
+    setState(() {
+      isLoading = true;
+    });
+  }
 
   TextStyle styleData = TextStyle(
     fontFamily: 'Poppins',
@@ -37,7 +100,6 @@ class _IndexMainMenuState extends State<IndexMainMenu> {
     color: Color(0xFF3B3C48),
     fontWeight: FontWeight.w500,
   );
-  late KendaraanModel? dataKendaraan = null;
 
   void selectedDate(DateTime time) {
     setState(() {
@@ -59,54 +121,10 @@ class _IndexMainMenuState extends State<IndexMainMenu> {
   // int _year = 0;
 
   @override
-  void initState() {
-    super.initState();
-    initializeDateFormatting();
-    count = 0;
-    print("printed again = ");
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return Container(
-      child: BlocBuilder<BbmBloc, BbmState>(
-        builder: (context, state) {
-          if (state is BbmInitial) {
-            return Container(
-              child: Center(child: CircularProgressIndicator()),
-            );
-          }
-          if (state is BBMLoaded) {
-            bool cond = false;
-            for (int i = 0; i < state.kendaraan.length; i++) {
-              if (cond == false) {
-                if (state.kendaraan[i].status == 1) {
-                  dataKendaraan = state.kendaraan[i];
-                  cond = true;
-                } else {
-                  dataKendaraan = null;
-                }
-              }
-            }
-
-            List<TransaksiPerMonthModel> dt = state.transaksiThisMonth;
-            dt.forEach((element) {
-              if (element.kendaraanId == dataKendaraan?.id.toString()) {
-                dataTransaksiThisMonth.add(element);
-              }
-            });
-
-            if (count == 0) {
-              state.transaksi.forEach((element) {
-                if (dataKendaraan!.status == 1) {
-                  totalPengeluaran += element.totalBayar.toInt();
-                  totalBBM += double.parse(element.totalLiter);
-                }
-              });
-              count++;
-            }
-
-            return SingleChildScrollView(
+    return isLoading
+        ? Container(
+            child: SingleChildScrollView(
               child: Padding(
                 padding: EdgeInsets.only(bottom: 10),
                 child: Stack(
@@ -135,7 +153,7 @@ class _IndexMainMenuState extends State<IndexMainMenu> {
                           SizedBox(
                             height: 10,
                           ),
-                          MainCardKendaraan(dataKendaraan),
+                          MainCardKendaraan(dataKendaraanObject),
                           SecondWidget(),
                           SizedBox(
                             height: 5,
@@ -166,7 +184,7 @@ class _IndexMainMenuState extends State<IndexMainMenu> {
                           SizedBox(
                             height: 15,
                           ),
-                          ItemListBensin(state.bensin),
+                          ItemListBensin(listBensin),
                           SizedBox(
                             height: 15,
                           ),
@@ -180,17 +198,9 @@ class _IndexMainMenuState extends State<IndexMainMenu> {
                   ],
                 ),
               ),
-            );
-          }
-          if (state is BBMError) {
-            return Container(
-              child: Center(child: Text(state.message.toString())),
-            );
-          }
-          return Container(child: Center(child: Text("something error")));
-        },
-      ),
-    );
+            ),
+          )
+        : Container();
   }
 
   Widget DatePerforma(dataTransaksiThisMonth) {

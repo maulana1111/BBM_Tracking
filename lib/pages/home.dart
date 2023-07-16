@@ -55,9 +55,7 @@ class _HomeState extends State<Home> {
       paramKendaran = false;
       paramText = 0;
     }
-    if (paramKendaran == true) {
-      print("object kendaraan = " + dt!.id.toString());
-    }
+
     paramKendaran
         ? Navigator.of(context).pushReplacement(
             MaterialPageRoute(
@@ -167,7 +165,11 @@ class _HomeState extends State<Home> {
                         // context.read<BbmBloc>().add(BBMAllDataKendaraan());
                         return IndexKendaraan();
                       case 'riwayat':
-                        return Riwayat();
+                        return Riwayat(
+                          dataKendaraan,
+                          key: UniqueKey(),
+                          data: state.transaksi,
+                        );
                       case 'tentang':
                         return AboutApps();
                       default:

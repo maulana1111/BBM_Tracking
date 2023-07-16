@@ -27,4 +27,8 @@ class TransaksiRepository
       await service.insertDataPhoto(model);
   }
 
+  Future<List<PhotoModel>> getPhoto(String param) async{
+    return service.getAllPhoto(param);
+  }
+
 }

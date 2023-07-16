@@ -1,16 +1,39 @@
+import 'package:bbm_tracking/model/kendaraan_m.dart';
+import 'package:bbm_tracking/model/transaksi_m.dart';
 import 'package:bbm_tracking/pages/riwayat/component/item-history.dart';
 import 'package:flutter/material.dart';
 
 class Riwayat extends StatefulWidget {
-  const Riwayat({super.key});
+  List<TransaksiModel> data;
+  List<KendaraanModel> kendaraan;
+  Riwayat(this.kendaraan, {super.key, required this.data});
 
   @override
   State<Riwayat> createState() => _RiwayatState();
 }
 
 class _RiwayatState extends State<Riwayat> {
-  String kendaraan = 'motor';
+  KendaraanModel? kendaraan;
+  // String kendaraan = 'motor';
   late String _tab = 'selesai';
+  late List<TransaksiModel> data;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    data = widget.data;
+    loadDataKendaraan();
+  }
+
+  void loadDataKendaraan() {
+    for (KendaraanModel element in widget.kendaraan) {
+      if (element.status == 1) {
+        kendaraan = element;
+        break;
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +71,8 @@ class _RiwayatState extends State<Riwayat> {
                   borderRadius: BorderRadius.all(
                     Radius.circular(8),
                   ),
-                  color: Color(0xFFFC8D05),
+                  color:
+                      kendaraan != null ? Color(0xFFFC8D05) : Color(0xFFAEAEAE),
                 ),
                 child: Row(
                   children: [
@@ -56,9 +80,11 @@ class _RiwayatState extends State<Riwayat> {
                       width: 20,
                     ),
                     Image.asset(
-                      kendaraan == "motor"
-                          ? "assets/images/motor.png"
-                          : "assets/images/car.png",
+                      kendaraan != null
+                          ? kendaraan?.jenisKendaraan == "motor"
+                              ? "assets/images/motor.png"
+                              : "assets/images/car.png"
+                          : "assets/images/img_empty.png",
                       width: 50,
                       height: 50,
                     ),
@@ -83,7 +109,9 @@ class _RiwayatState extends State<Riwayat> {
                           height: 5,
                         ),
                         Text(
-                          "Toyota Vitz / B 1000 JAJ",
+                          kendaraan != null
+                              ? "${kendaraan?.namaKendaraan} / ${kendaraan?.nomorPlat}"
+                              : "- / -",
                           style: TextStyle(
                             fontFamily: 'Poppins',
                             fontSize: 11,
@@ -96,19 +124,19 @@ class _RiwayatState extends State<Riwayat> {
                   ],
                 ),
               ),
-              Container(
-                alignment: Alignment.topRight,
-                child: Text(
-                  "Ganti Kendaraan",
-                  style: TextStyle(
-                    fontSize: 11,
-                    color: Color(0xFF1C7A44),
-                    fontFamily: 'Poppins',
-                    fontWeight: FontWeight.w400,
-                    fontStyle: FontStyle.italic,
-                  ),
-                ),
-              ),
+              // Container(
+              //   alignment: Alignment.topRight,
+              //   child: Text(
+              //     "Ganti Kendaraan",
+              //     style: TextStyle(
+              //       fontSize: 11,
+              //       color: Color(0xFF1C7A44),
+              //       fontFamily: 'Poppins',
+              //       fontWeight: FontWeight.w400,
+              //       fontStyle: FontStyle.italic,
+              //     ),
+              //   ),
+              // ),
               SizedBox(
                 height: 15,
               ),
@@ -195,7 +223,7 @@ class _RiwayatState extends State<Riwayat> {
               Container(
                 alignment: Alignment.topLeft,
                 child: Text(
-                  "Anda memiliki 2300 data transaksi",
+                  "Anda memiliki ${data.length.toString()} data transaksi",
                   style: TextStyle(
                     fontFamily: 'Poppins',
                     fontSize: 10,
@@ -210,14 +238,17 @@ class _RiwayatState extends State<Riwayat> {
               // SingleChildScrollView(
               Container(
                 height: MediaQuery.of(context).size.height,
-                width: MediaQuery.of(context).size.width, 
+                width: MediaQuery.of(context).size.width,
                 child: Expanded(
                   child: ListView.builder(
                     padding: EdgeInsets.only(bottom: 400),
                     shrinkWrap: true,
-                    itemCount: 10,
+                    itemCount: data.length,
                     itemBuilder: (BuildContext context, int index) {
-                      return ItemHistory();
+                      return ItemHistory(
+                        data: data.elementAt(index),
+                        kendaraan: kendaraan!,
+                      );
                     },
                   ),
                 ),
@@ -229,5 +260,4 @@ class _RiwayatState extends State<Riwayat> {
       ),
     );
   }
-
 }

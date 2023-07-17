@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 class BarChartSample3 extends StatefulWidget {
   List<TransaksiPerMonthModel> dataTransaksi;
   String param;
-  BarChartSample3({required this.dataTransaksi, required this.param});
+  BarChartSample3({required this.dataTransaksi, required this.param, Key? key}): super(key: key);
 
   @override
   State<StatefulWidget> createState() => BarChartSample3State();

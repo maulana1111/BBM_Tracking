@@ -65,6 +65,8 @@ dependencies:
   path_provider:
   image_picker:
   image_gallery_saver: '^1.7.1'
+  permission_handler:
+  uri_to_file:
   # uri_to_file: ^0.2.0
 
 dev_dependencies:

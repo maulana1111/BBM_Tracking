@@ -26,7 +26,7 @@ class IndexMainMenu extends StatefulWidget {
 
 class _IndexMainMenuState extends State<IndexMainMenu> {
   String _toggle = "Harga";
-  DateTime? _selected = DateTime.now();
+  DateTime _selected = DateTime.now();
   int totalPengeluaran = 0;
   double totalBBM = 0;
   late int count;
@@ -41,11 +41,13 @@ class _IndexMainMenuState extends State<IndexMainMenu> {
     context.read<BbmBloc>()..add(BBMStarted());
     initializeDateFormatting();
     count = 0;
-    loadData();
+    loadData(_selected);
     super.initState();
+    print("hit 1");
   }
 
-  Future<void> loadData() async {
+  Future<void> loadData(DateTime date) async {
+    print("hit 2 ${date}");
     List<KendaraanModel> dtKendaraan =
         await KendaraanRepository().loadKendaraan();
     setState(() {
@@ -68,8 +70,9 @@ class _IndexMainMenuState extends State<IndexMainMenu> {
 
     List<TransaksiPerMonthModel> dt = await TransaksiRepository()
         .loadTransaksiThisMonth(DateFormat("yyyy-MM-dd")
-            .parse(DateTime.now().toString())
+            .parse(date.toString())
             .toString());
+    dataTransaksiThisMonth.clear();
     dt.forEach((element) {
       if (element.kendaraanId == dataKendaraanObject?.id.toString()) {
         setState(() {
@@ -77,8 +80,6 @@ class _IndexMainMenuState extends State<IndexMainMenu> {
         });
       }
     });
-
-    
 
     List<TransaksiModel> dtM = await TransaksiRepository().loadTransaksi();
     dtM.forEach((element) {
@@ -104,10 +105,9 @@ class _IndexMainMenuState extends State<IndexMainMenu> {
   void selectedDate(DateTime time) {
     setState(() {
       _selected = time;
+      loadData(time);
+      print("hit 3 ${time.toString()}");
     });
-    context
-        .read<BbmBloc>()
-        .add(BBMChangeDataTransaction(selectedDate: _selected.toString()));
   }
 
   void selectedToggle(String toogle) {
@@ -241,6 +241,7 @@ class _IndexMainMenuState extends State<IndexMainMenu> {
                               setState(() {
                                 _selected =
                                     DateTime.parse("${tahun}-${bulan}-01");
+                                selectedDate(_selected);
                               });
                             },
                           );
@@ -263,7 +264,7 @@ class _IndexMainMenuState extends State<IndexMainMenu> {
                           DateFormat(
                             "MMMM yyyy",
                             "id_ID",
-                          ).format(_selected!),
+                          ).format(_selected),
                           // _selected.toString(),
                           style: TextStyle(
                             fontFamily: 'Poppins',
@@ -362,6 +363,7 @@ class _IndexMainMenuState extends State<IndexMainMenu> {
               width: double.infinity,
               height: 190,
               child: BarChartSample3(
+                key: UniqueKey(),
                 dataTransaksi: dataTransaksiThisMonth,
                 param: _toggle,
               ),
@@ -371,7 +373,7 @@ class _IndexMainMenuState extends State<IndexMainMenu> {
             ),
             Container(
               child: Text(
-                "Bulan : ${DateFormat('MMMM').format(DateTime(0, _selected!.month.toInt()))} ${_selected!.year.toString()}",
+                "Bulan : ${DateFormat('MMMM').format(DateTime(0, _selected.month.toInt()))} ${_selected.year.toString()}",
                 style: TextStyle(
                   fontFamily: 'Poppins',
                   fontSize: 12,

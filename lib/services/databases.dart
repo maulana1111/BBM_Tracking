@@ -193,7 +193,7 @@ class DatabasesMain {
     final db = await dbs();
 
     final List<Map<String, dynamic>> maps = await db.rawQuery(
-        "SELECT kendaraanId, SUM(totalLiter) as totalLiter, SUM(totalBayar) as totalBayar, tanggalTransaksi FROM transaksi WHERE (strftime('%m', tanggalTransaksi) = strftime('%m', 'now')) AND status = 1 GROUP BY tanggalTransaksi ORDER BY tanggalTransaksi ASC");
+        "SELECT kendaraanId, SUM(totalLiter) as totalLiter, SUM(totalBayar) as totalBayar, tanggalTransaksi FROM transaksi WHERE (strftime('%m', tanggalTransaksi) = strftime('%m', '${datetime}')) AND status = 1 GROUP BY tanggalTransaksi ORDER BY tanggalTransaksi ASC");
 
     return List.generate(maps.length, (index) {
       return TransaksiPerMonthModel(

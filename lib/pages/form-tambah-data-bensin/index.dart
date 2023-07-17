@@ -29,6 +29,7 @@ import 'package:location/location.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:uri_to_file/uri_to_file.dart';
 
 class FormTamabahDataBensin extends StatefulWidget {
   KendaraanModel kendaraanModel;
@@ -101,6 +102,8 @@ class _FormTamabahDataBensinState extends State<FormTamabahDataBensin>
 
   List<PhotoModel> dataPhoto = <PhotoModel>[];
 
+  bool _isButtonDisabled = false;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -111,7 +114,7 @@ class _FormTamabahDataBensinState extends State<FormTamabahDataBensin>
     });
 
     initConnectivity();
-    checkGPS();
+    // checkGPS();
     _connectivitySubscription =
         _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
 
@@ -410,6 +413,9 @@ class _FormTamabahDataBensinState extends State<FormTamabahDataBensin>
   }
 
   void _submitted() async {
+    setState(() {
+      _isButtonDisabled = true;
+    });
     var rng = Random();
     String _kodeTransaksi =
         "BBM-T/F0001/${bbmController.text}/XIII/${rng.nextInt(999999)}";
@@ -472,7 +478,8 @@ class _FormTamabahDataBensinState extends State<FormTamabahDataBensin>
         quality: 60,
         name: dateNow,
       );
-      // print(result['filePath']);
+      // File file = await toFile(Uri.parse(result['filePath']).toString());
+      // print("files = "+file.path.toString());
       PhotoModel modelPhoto = PhotoModel(
         id: 0,
         transaksi_id: _kodeTransaksi,
@@ -588,7 +595,9 @@ class _FormTamabahDataBensinState extends State<FormTamabahDataBensin>
 
   Widget ButtonSave() {
     return InkWell(
-      onTap: () => _submitted(),
+      onTap: () {
+        _isButtonDisabled ? null : _submitted();
+      },
       child: Container(
         alignment: Alignment.topRight,
         child: Container(
@@ -677,7 +686,7 @@ class _FormTamabahDataBensinState extends State<FormTamabahDataBensin>
   Widget BackButton() {
     return InkWell(
       onTap: () => Navigator.of(context)
-          .pop(MaterialPageRoute(builder: (context) => Home("home", ""))),
+          .pushReplacement(MaterialPageRoute(builder: (context) => Home("home", ""))),
       child: Container(
         child: Container(
           child: Row(

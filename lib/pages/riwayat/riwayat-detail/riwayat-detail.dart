@@ -11,6 +11,8 @@ import 'package:bbm_tracking/resource/resource.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 
+import 'package:permission_handler/permission_handler.dart';
+
 class RiwayatDetail extends StatefulWidget {
   TransaksiModel data;
   KendaraanModel kendaraan;
@@ -24,11 +26,23 @@ class _RiwayatDetailState extends State<RiwayatDetail> {
   late TransaksiModel data;
   late KendaraanModel kendaraan;
 
+  late PermissionStatus _permissionStatus;
+
   @override
   void initState() {
     super.initState();
     data = widget.data;
     kendaraan = widget.kendaraan;
+    () async {
+        _permissionStatus = await Permission.storage.status;
+  
+        if (_permissionStatus != PermissionStatus.granted) {
+          PermissionStatus permissionStatus= await Permission.storage.request();
+          setState(() {
+            _permissionStatus = permissionStatus;
+          });
+        }
+      } ();
   }
 
   Future<List<PhotoModel>> loadPhoto(param) async {
@@ -39,12 +53,13 @@ class _RiwayatDetailState extends State<RiwayatDetail> {
   _showImage(path) async {
     Directory appDocDir = await getApplicationDocumentsDirectory();
     List<PhotoModel> photo = await loadPhoto(path);
-    List<File> data = [];
+    List<String> data = [];
     photo.forEach((element) {
-      data.add(File(appDocDir.uri.toString() + element.namePhoto + ".jpg"));  
-      // data.add(File(element.linkPhoto));
+      // data.add(File(appDocDir.uri.toString() + element.namePhoto + ".jpg"));
+      data.add(element.linkPhoto);
     });
-    Navigator.of(context).push(MaterialPageRoute(builder: (context) => ViewImage(imagePath: data)));
+    Navigator.of(context).push(
+        MaterialPageRoute(builder: (context) => ViewImage(imagePath: data)));
   }
 
   String reformatDate(DateTime date) {

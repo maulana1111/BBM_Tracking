@@ -1,9 +1,10 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 
 class ViewImage extends StatefulWidget {
-  final List<File> imagePath;
+  final List<String> imagePath;
   const ViewImage({super.key, required this.imagePath});
 
   @override
@@ -11,7 +12,7 @@ class ViewImage extends StatefulWidget {
 }
 
 class _ViewImageState extends State<ViewImage> {
-  late List<File> dataPhoto;
+  late List<String> dataPhoto;
   bool loading = false;
 
   @override
@@ -23,52 +24,93 @@ class _ViewImageState extends State<ViewImage> {
   }
 
   Future<void> load() async {
-
     dataPhoto = widget.imagePath;
     setState(() {
       loading = true;
     });
   }
 
+  Future<String> get _localPath async {
+    final directory = await getApplicationDocumentsDirectory();
+
+    return directory.path;
+  }
+
+  Future<File> get _localFile async {
+    final path = await _localPath;
+    return File('$path/counter.txt');
+  }
+
+  Future<int> readCounter() async {
+    try {
+      final file = await _localFile;
+
+      // Read the file
+      final contents = await file.readAsString();
+
+      return int.parse(contents);
+    } catch (e) {
+      // If encountering an error, return 0
+      return 0;
+    }
+  }
+
+  Future<File> _getLocalFile(String filename) async {
+    final dir = await getExternalStorageDirectory();
+    final rep = dir.toString().replaceAll(RegExp("'"), '');
+    final rep1 = rep.toString().replaceFirst(
+        RegExp(
+            "/storage/emulated/0/Android/data/com.example.bbm_tracking/files"),
+        '/Images/Pictures');
+    File file = new File("/Images/Pictures/${filename}.jpg");
+    return file;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xffE3EAEA),
-      body: loading ? Container(
-        margin: EdgeInsets.only(
-          top: 50,
-        ),
-        child: Column(
-          children: [
-            Container(
-              child: BackButton(),
+      body: loading
+          ? Container(
               margin: EdgeInsets.only(
-                left: 10,
+                top: 50,
               ),
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            Container(
-              child: Expanded(
-                child: ListView.builder(
-                  // shrinkWrap: true,
-                  itemCount: dataPhoto.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return ScreenImage(
-                      dataPhoto[index],
-                    );
-                  },
-                ),
+              child: Column(
+                children: [
+                  Container(
+                    child: BackButton(),
+                    margin: EdgeInsets.only(
+                      left: 10,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Container(
+                    child: Expanded(
+                      child: ListView.builder(
+                        // shrinkWrap: true,
+                        itemCount: dataPhoto.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          var replace = "/data/user/0/com.example.bbm_tracking/cache/" +
+                              dataPhoto[index].replaceAll(RegExp(':'), '_')+".jpg";
+                          // var replace = dataPhoto[index];
+                          return ScreenImage(
+                            replace,
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ),
-          ],
-        ),
-      ) : Container(),
+            )
+          : Container(),
     );
   }
 
-  Widget ScreenImage(File param) {
+  Widget ScreenImage(param) {
+    print("counting data ${param}");
     return Container(
       child: Column(
         children: [
@@ -83,9 +125,21 @@ class _ViewImageState extends State<ViewImage> {
                   ),
                   color: Colors.amber),
               child: Image.file(
-                File(param.path),
+                File(param),
                 fit: BoxFit.cover,
               ),
+              // child: FutureBuilder(
+              //   future: _getLocalFile(param),
+              //   builder: (BuildContext context, AsyncSnapshot<File> snapshot) {
+              //     print("parh ${snapshot.data.toString()}");
+              //     return snapshot.data != null
+              //         ? Image.file(
+              //             File(snapshot.data.toString()),
+              //             fit: BoxFit.cover,
+              //           )
+              //         : Container();
+              //   },
+              // ),
             ),
           ),
           SizedBox(

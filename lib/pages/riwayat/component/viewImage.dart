@@ -14,6 +14,7 @@ class ViewImage extends StatefulWidget {
 class _ViewImageState extends State<ViewImage> {
   late List<String> dataPhoto;
   bool loading = false;
+  // List<FileModel> _files = new List<FileModel>();
 
   @override
   void initState() {
@@ -92,7 +93,7 @@ class _ViewImageState extends State<ViewImage> {
                         // shrinkWrap: true,
                         itemCount: dataPhoto.length,
                         itemBuilder: (BuildContext context, int index) {
-                          var replace = "/data/user/0/com.example.bbm_tracking/cache/" +
+                          var replace = "/storage/emulated/0/DCIM/Images/Pictures/" +
                               dataPhoto[index].replaceAll(RegExp(':'), '_')+".jpg";
                           // var replace = dataPhoto[index];
                           return ScreenImage(

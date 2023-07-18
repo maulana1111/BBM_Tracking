@@ -859,6 +859,7 @@ class _FormTamabahDataBensinState extends State<FormTamabahDataBensin>
                                   .pickImage(source: ImageSource.camera);
 
                               setState(() {
+                                print("picked = ${pickedImage?.path}");
                                 _image.add(File(pickedImage!.path));
                               });
                             } catch (e) {

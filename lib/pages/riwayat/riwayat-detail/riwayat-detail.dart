@@ -26,6 +26,7 @@ class _RiwayatDetailState extends State<RiwayatDetail> {
   late TransaksiModel data;
   late KendaraanModel kendaraan;
 
+  Future<List<Directory>?>? _externalStorageDirectories;
   late PermissionStatus _permissionStatus;
 
   @override
@@ -34,15 +35,15 @@ class _RiwayatDetailState extends State<RiwayatDetail> {
     data = widget.data;
     kendaraan = widget.kendaraan;
     () async {
-        _permissionStatus = await Permission.storage.status;
-  
-        if (_permissionStatus != PermissionStatus.granted) {
-          PermissionStatus permissionStatus= await Permission.storage.request();
-          setState(() {
-            _permissionStatus = permissionStatus;
-          });
-        }
-      } ();
+      _permissionStatus = await Permission.storage.status;
+
+      if (_permissionStatus != PermissionStatus.granted) {
+        PermissionStatus permissionStatus = await Permission.storage.request();
+        setState(() {
+          _permissionStatus = permissionStatus;
+        });
+      }
+    }();
   }
 
   Future<List<PhotoModel>> loadPhoto(param) async {
@@ -56,10 +57,34 @@ class _RiwayatDetailState extends State<RiwayatDetail> {
     List<String> data = [];
     photo.forEach((element) {
       // data.add(File(appDocDir.uri.toString() + element.namePhoto + ".jpg"));
-      data.add(element.linkPhoto);
+      data.add(element.namePhoto);
     });
     Navigator.of(context).push(
         MaterialPageRoute(builder: (context) => ViewImage(imagePath: data)));
+  }
+
+  Widget _buildDirectories(
+      BuildContext context, AsyncSnapshot<List<Directory>?> snapshot) {
+    Text text = const Text('');
+    if (snapshot.connectionState == ConnectionState.done) {
+      if (snapshot.hasError) {
+        text = Text('Error: ${snapshot.error}');
+      } else if (snapshot.hasData) {
+        final String combined =
+            snapshot.data!.map((Directory d) => d.path).join(', ');
+        text = Text('paths: $combined');
+      } else {
+        text = const Text('path unavailable');
+      }
+    }
+    print("path path = ${text}");
+    return Padding(padding: const EdgeInsets.all(16.0), child: text);
+  }
+
+  void _requestExternalStorageDirectories(StorageDirectory type) {
+    setState(() {
+      _externalStorageDirectories = getExternalStorageDirectories(type: type);
+    });
   }
 
   String reformatDate(DateTime date) {
@@ -236,6 +261,10 @@ class _RiwayatDetailState extends State<RiwayatDetail> {
                 itemDetail("Odometer/km", "${data.odometer} km"),
                 itemDetaill("Gambar", "..........", data.kodeTransaksi),
                 itemDetail("Catatan Tambahan", data.catatan),
+                FutureBuilder<List<Directory>?>(
+                  future: _externalStorageDirectories,
+                  builder: _buildDirectories,
+                ),
               ],
             ),
           ),
@@ -265,7 +294,10 @@ class _RiwayatDetailState extends State<RiwayatDetail> {
               flex: 1,
               child: InkWell(
                 onTap: () {
-                  _showImage(val);
+                  // _showImage(val);
+                  _requestExternalStorageDirectories(
+                    StorageDirectory.pictures,
+                  );
                 },
                 child: Container(
                   child: Text(

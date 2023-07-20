@@ -21,7 +21,6 @@ class _ViewImageState extends State<ViewImage> {
     load();
     // TODO: implement initState
     super.initState();
-    print("counting ${dataPhoto.length.toString()}, path = ${dataPhoto[0]}");
   }
 
   Future<void> load() async {
@@ -29,42 +28,6 @@ class _ViewImageState extends State<ViewImage> {
     setState(() {
       loading = true;
     });
-  }
-
-  Future<String> get _localPath async {
-    final directory = await getApplicationDocumentsDirectory();
-
-    return directory.path;
-  }
-
-  Future<File> get _localFile async {
-    final path = await _localPath;
-    return File('$path/counter.txt');
-  }
-
-  Future<int> readCounter() async {
-    try {
-      final file = await _localFile;
-
-      // Read the file
-      final contents = await file.readAsString();
-
-      return int.parse(contents);
-    } catch (e) {
-      // If encountering an error, return 0
-      return 0;
-    }
-  }
-
-  Future<File> _getLocalFile(String filename) async {
-    final dir = await getExternalStorageDirectory();
-    final rep = dir.toString().replaceAll(RegExp("'"), '');
-    final rep1 = rep.toString().replaceFirst(
-        RegExp(
-            "/storage/emulated/0/Android/data/com.example.bbm_tracking/files"),
-        '/Images/Pictures');
-    File file = new File("/Images/Pictures/${filename}.jpg");
-    return file;
   }
 
   @override
@@ -93,9 +56,9 @@ class _ViewImageState extends State<ViewImage> {
                         // shrinkWrap: true,
                         itemCount: dataPhoto.length,
                         itemBuilder: (BuildContext context, int index) {
-                          var replace = "/storage/emulated/0/DCIM/Images/Pictures/" +
+                          var replace = "/storage/emulated/0/Pictures/" +
                               dataPhoto[index].replaceAll(RegExp(':'), '_')+".jpg";
-                          // var replace = dataPhoto[index];
+                          print("counting ${dataPhoto.length.toString()}, path = ${replace}");
                           return ScreenImage(
                             replace,
                           );
@@ -129,18 +92,6 @@ class _ViewImageState extends State<ViewImage> {
                 File(param),
                 fit: BoxFit.cover,
               ),
-              // child: FutureBuilder(
-              //   future: _getLocalFile(param),
-              //   builder: (BuildContext context, AsyncSnapshot<File> snapshot) {
-              //     print("parh ${snapshot.data.toString()}");
-              //     return snapshot.data != null
-              //         ? Image.file(
-              //             File(snapshot.data.toString()),
-              //             fit: BoxFit.cover,
-              //           )
-              //         : Container();
-              //   },
-              // ),
             ),
           ),
           SizedBox(

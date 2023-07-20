@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:bbm_tracking/resource/resource.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:external_path/external_path.dart';
 
 import 'package:permission_handler/permission_handler.dart';
 
@@ -52,7 +53,13 @@ class _RiwayatDetailState extends State<RiwayatDetail> {
   }
 
   _showImage(path) async {
-    Directory appDocDir = await getApplicationDocumentsDirectory();
+    //  String path;
+
+    // path = await ExternalPath.getExternalStoragePublicDirectory(
+    //     ExternalPath.DIRECTORY_PICTURES);
+    //     print("PATH = ${path}");
+
+    // Directory appDocDir = await getApplicationDocumentsDirectory();
     List<PhotoModel> photo = await loadPhoto(path);
     List<String> data = [];
     photo.forEach((element) {
@@ -294,10 +301,10 @@ class _RiwayatDetailState extends State<RiwayatDetail> {
               flex: 1,
               child: InkWell(
                 onTap: () {
-                  // _showImage(val);
-                  _requestExternalStorageDirectories(
-                    StorageDirectory.pictures,
-                  );
+                  _showImage(val);
+                  // _requestExternalStorageDirectories(
+                  //   StorageDirectory.pictures,
+                  // );
                 },
                 child: Container(
                   child: Text(

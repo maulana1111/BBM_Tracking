@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:ffi';
 import 'dart:io';
 import 'dart:math';
 
@@ -82,7 +81,7 @@ class _FormTamabahDataBensinState extends State<FormTamabahDataBensin>
   static const CameraPosition initialCameraPosition = CameraPosition(
       target: LatLng(37.42796133580664, -122.085749655962), zoom: 14);
 
-  late bool _gpsEnable;
+  late bool _gpsEnable = false;
   late bool _internetEnable = false;
 
   Set<Marker> _markers = {};

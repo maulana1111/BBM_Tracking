@@ -67,7 +67,8 @@ dependencies:
   image_gallery_saver: '^1.7.1'
   permission_handler:
   uri_to_file:
-  external_path: '^1.0.3'
+  pdf:
+  printing:
   # uri_to_file: ^0.2.0
 
 dev_dependencies:

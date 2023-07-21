@@ -4,13 +4,13 @@ import 'package:bbm_tracking/model/kendaraan_m.dart';
 import 'package:bbm_tracking/model/photo_m.dart';
 import 'package:bbm_tracking/model/transaksi_m.dart';
 import 'package:bbm_tracking/pages/home.dart';
+import 'package:bbm_tracking/pages/riwayat/component/makePdf.dart';
 import 'package:bbm_tracking/pages/riwayat/component/viewImage.dart';
 import 'package:bbm_tracking/repository/transaksi/transaksi_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:bbm_tracking/resource/resource.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:external_path/external_path.dart';
 
 import 'package:permission_handler/permission_handler.dart';
 
@@ -27,24 +27,11 @@ class _RiwayatDetailState extends State<RiwayatDetail> {
   late TransaksiModel data;
   late KendaraanModel kendaraan;
 
-  Future<List<Directory>?>? _externalStorageDirectories;
-  late PermissionStatus _permissionStatus;
-
   @override
   void initState() {
     super.initState();
     data = widget.data;
     kendaraan = widget.kendaraan;
-    () async {
-      _permissionStatus = await Permission.storage.status;
-
-      if (_permissionStatus != PermissionStatus.granted) {
-        PermissionStatus permissionStatus = await Permission.storage.request();
-        setState(() {
-          _permissionStatus = permissionStatus;
-        });
-      }
-    }();
   }
 
   Future<List<PhotoModel>> loadPhoto(param) async {
@@ -53,45 +40,16 @@ class _RiwayatDetailState extends State<RiwayatDetail> {
   }
 
   _showImage(path) async {
-    //  String path;
-
-    // path = await ExternalPath.getExternalStoragePublicDirectory(
-    //     ExternalPath.DIRECTORY_PICTURES);
-    //     print("PATH = ${path}");
-
-    // Directory appDocDir = await getApplicationDocumentsDirectory();
     List<PhotoModel> photo = await loadPhoto(path);
     List<String> data = [];
     photo.forEach((element) {
-      // data.add(File(appDocDir.uri.toString() + element.namePhoto + ".jpg"));
       data.add(element.namePhoto);
     });
     Navigator.of(context).push(
-        MaterialPageRoute(builder: (context) => ViewImage(imagePath: data)));
-  }
-
-  Widget _buildDirectories(
-      BuildContext context, AsyncSnapshot<List<Directory>?> snapshot) {
-    Text text = const Text('');
-    if (snapshot.connectionState == ConnectionState.done) {
-      if (snapshot.hasError) {
-        text = Text('Error: ${snapshot.error}');
-      } else if (snapshot.hasData) {
-        final String combined =
-            snapshot.data!.map((Directory d) => d.path).join(', ');
-        text = Text('paths: $combined');
-      } else {
-        text = const Text('path unavailable');
-      }
-    }
-    print("path path = ${text}");
-    return Padding(padding: const EdgeInsets.all(16.0), child: text);
-  }
-
-  void _requestExternalStorageDirectories(StorageDirectory type) {
-    setState(() {
-      _externalStorageDirectories = getExternalStorageDirectories(type: type);
-    });
+      MaterialPageRoute(
+        builder: (context) => ViewImage(imagePath: data),
+      ),
+    );
   }
 
   String reformatDate(DateTime date) {
@@ -203,15 +161,27 @@ class _RiwayatDetailState extends State<RiwayatDetail> {
                           ),
                           Flexible(
                             flex: 1,
-                            child: Container(
-                              child: Text(
-                                "Download",
-                                style: TextStyle(
-                                  fontFamily: 'Poppins',
-                                  fontSize: 9,
-                                  fontWeight: FontWeight.w400,
-                                  color: Color(0xFF1C7A44),
-                                  fontStyle: FontStyle.italic,
+                            child: InkWell(
+                              onTap: () {
+                                print("hit");
+
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => MakePdf(
+                                        transaksi: data, kendaraan: kendaraan),
+                                  ),
+                                );
+                              },
+                              child: Container(
+                                child: Text(
+                                  "Download",
+                                  style: TextStyle(
+                                    fontFamily: 'Poppins',
+                                    fontSize: 9,
+                                    fontWeight: FontWeight.w400,
+                                    color: Color(0xFF1C7A44),
+                                    fontStyle: FontStyle.italic,
+                                  ),
                                 ),
                               ),
                             ),
@@ -266,12 +236,8 @@ class _RiwayatDetailState extends State<RiwayatDetail> {
                 itemDetail("Total Pembayaran",
                     "${CurrencyFormat.convertToIdr(data.totalBayar, 0)}"),
                 itemDetail("Odometer/km", "${data.odometer} km"),
-                itemDetaill("Gambar", "..........", data.kodeTransaksi),
+                itemDetaill("Gambar", "Lihat Gambar", data.kodeTransaksi),
                 itemDetail("Catatan Tambahan", data.catatan),
-                FutureBuilder<List<Directory>?>(
-                  future: _externalStorageDirectories,
-                  builder: _buildDirectories,
-                ),
               ],
             ),
           ),
@@ -302,9 +268,6 @@ class _RiwayatDetailState extends State<RiwayatDetail> {
               child: InkWell(
                 onTap: () {
                   _showImage(val);
-                  // _requestExternalStorageDirectories(
-                  //   StorageDirectory.pictures,
-                  // );
                 },
                 child: Container(
                   child: Text(

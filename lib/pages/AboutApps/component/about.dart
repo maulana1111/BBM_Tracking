@@ -38,9 +38,7 @@ class _AboutState extends State<About> {
                   ),
                   Container(
                     child: InkWell(
-                      onTap: () => Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(
-                            builder: (context) => Home("tentang", ""))),
+                      onTap: () => Navigator.pop(context),
                       child: Row(
                         children: [
                           Icon(

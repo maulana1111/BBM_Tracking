@@ -74,14 +74,14 @@ class _AboutAppsState extends State<AboutApps> {
     return InkWell(
       onTap: () {
         tujuan == "kebijakan"
-            ? Navigator.of(context).pushReplacement(
+            ? Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (context) => Kebijakan(),
                 ),
               )
-            : Navigator.of(context).pushReplacement(
+            : Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (context) => About (),
+                  builder: (context) => About(),
                 ),
               );
       },

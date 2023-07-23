@@ -4,9 +4,11 @@ import 'package:bbm_tracking/model/kendaraan_m.dart';
 import 'package:bbm_tracking/model/photo_m.dart';
 import 'package:bbm_tracking/model/transaksi_m.dart';
 import 'package:bbm_tracking/repository/transaksi/transaksi_repository.dart';
+import 'package:bbm_tracking/resource/convert_money/convert_money.dart';
+import 'package:bbm_tracking/resource/data-bensin/data-bensin.dart';
+import 'package:bbm_tracking/resource/data-tanggal/bulan.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:path/path.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
@@ -29,22 +31,65 @@ class MakePdf extends StatelessWidget {
     );
   }
 
+  List<PhotoModel> photos = [];
+  List<Uint8List> imagesUint8list = [];
+  List<pw.Widget> pdfImagesWidget = [];
+
   Future<List<PhotoModel>> loadPhoto(param) async {
     List<PhotoModel> photo = await TransaksiRepository().getPhoto(param);
     return photo;
   }
 
-  Future<Uint8List> makePdf(
-      TransaksiModel transaksi, KendaraanModel kendaraan) async {
-    final pdf = pw.Document();
-    List<PhotoModel> photo = await loadPhoto(transaksi.kodeTransaksi);
-    List<MemoryImage> image = [];
+  String reformatDate(DateTime date) {
+    String data = "";
+    for (int i = 0; i < bulan.length; i++) {
+      if (i + 1 == date.month) {
+        data += "${date.day} ${bulan[i]} ${date.year}";
+      }
+    }
+    return data;
+  }
 
-    // photo.forEach((element) {
-    //   image.add(pw.MemoryImage(
-    //   File('test.webp').readAsBytesSync(),
-    // ));
-    // });
+  Future<Uint8List> makePdf(
+    TransaksiModel transaksi,
+    KendaraanModel kendaraan,
+  ) async {
+    final pdf = pw.Document();
+    photos = await loadPhoto(transaksi.kodeTransaksi);
+
+    photos.forEach((element) async {
+      var replace = "/storage/emulated/0/Pictures/" +
+          element.namePhoto.replaceAll(RegExp(':'), '_') +
+          ".jpg";
+      Uri myUri = Uri.parse(replace);
+      File imageFile = new File.fromUri(myUri);
+      // final ByteData bytes = await imageFile.readAsBytes();
+      final Uint8List byteList = imageFile.readAsBytesSync();
+      
+      imagesUint8list.add(byteList);
+    });
+
+    pdfImagesWidget = imagesUint8list.map(
+      (image) {
+        return pw.Padding(
+          padding: pw.EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+          child: pw.Column(
+            crossAxisAlignment: pw.CrossAxisAlignment.center,
+            mainAxisSize: pw.MainAxisSize.max,
+            children: [
+              pw.SizedBox(height: 10),
+              pw.Image(
+                  pw.MemoryImage(
+                    image,
+                  ),
+                  height: 400,
+                  fit: pw.BoxFit.fitHeight),
+            ],
+          ),
+        );
+      },
+    ).toList();
+
 
     final fontData = await rootBundle.load("assets/fonts/Poppins-Medium.ttf");
     final ttf = pw.Font.ttf(fontData.buffer.asByteData());
@@ -77,7 +122,7 @@ class MakePdf extends StatelessWidget {
                     ),
                   ),
                   pw.Text(
-                    "Kode Transaksi",
+                    transaksi.kodeTransaksi,
                     style: pw.TextStyle(
                       font: ttf,
                       fontSize: 13,
@@ -99,7 +144,7 @@ class MakePdf extends StatelessWidget {
                 mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                 children: [
                   pw.Text(
-                    "Honda PCX",
+                    kendaraan.namaKendaraan,
                     style: pw.TextStyle(
                       font: ttf,
                       fontSize: 13,
@@ -107,7 +152,7 @@ class MakePdf extends StatelessWidget {
                     ),
                   ),
                   pw.Text(
-                    "B 7783 KKW",
+                    kendaraan.nomorPlat,
                     style: pw.TextStyle(
                       font: ttf,
                       fontSize: 13,
@@ -171,7 +216,7 @@ class MakePdf extends StatelessWidget {
                         pw.Align(
                           alignment: pw.Alignment.topRight,
                           child: pw.Text(
-                            "12 Januari 2020",
+                            reformatDate(transaksi.tanggalTransaksi),
                             style: pw.TextStyle(
                               font: ttf,
                               fontSize: 13,
@@ -193,7 +238,7 @@ class MakePdf extends StatelessWidget {
                           ),
                         ),
                         pw.Text(
-                          "10:30 WIB",
+                          "${transaksi.tanggalTransaksi.hour}:${transaksi.tanggalTransaksi.minute} WIB",
                           style: pw.TextStyle(
                             font: ttf,
                             fontSize: 13,
@@ -214,7 +259,7 @@ class MakePdf extends StatelessWidget {
                           ),
                         ),
                         pw.Text(
-                          "Pertamax",
+                          listBensin[int.parse(transaksi.bensinId) - 1].text,
                           style: pw.TextStyle(
                             font: ttf,
                             fontSize: 13,
@@ -227,7 +272,7 @@ class MakePdf extends StatelessWidget {
                       mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                       children: [
                         pw.Text(
-                          "Nama SPBU",
+                          "Alamat SPBU",
                           style: pw.TextStyle(
                             font: ttf,
                             fontSize: 13,
@@ -235,7 +280,7 @@ class MakePdf extends StatelessWidget {
                           ),
                         ),
                         pw.Text(
-                          "SPBU Kalimalang",
+                          transaksi.lokasiPertamina,
                           style: pw.TextStyle(
                             font: ttf,
                             fontSize: 13,
@@ -256,7 +301,7 @@ class MakePdf extends StatelessWidget {
                           ),
                         ),
                         pw.Text(
-                          "10 L",
+                          "${transaksi.totalLiter} Liter",
                           style: pw.TextStyle(
                             font: ttf,
                             fontSize: 13,
@@ -277,7 +322,7 @@ class MakePdf extends StatelessWidget {
                           ),
                         ),
                         pw.Text(
-                          "Rp. 100.000",
+                          "${CurrencyFormat.convertToIdr(listBensin[int.parse(transaksi.bensinId) - 1].harga, 0)}",
                           style: pw.TextStyle(
                             font: ttf,
                             fontSize: 13,
@@ -298,7 +343,7 @@ class MakePdf extends StatelessWidget {
                           ),
                         ),
                         pw.Text(
-                          "Rp. 110.000",
+                          CurrencyFormat.convertToIdr(transaksi.totalBayar, 0),
                           style: pw.TextStyle(
                             font: ttf,
                             fontSize: 13,
@@ -319,7 +364,7 @@ class MakePdf extends StatelessWidget {
                           ),
                         ),
                         pw.Text(
-                          "111111 KM",
+                          "${transaksi.odometer} KM",
                           style: pw.TextStyle(
                             font: ttf,
                             fontSize: 13,
@@ -340,7 +385,7 @@ class MakePdf extends StatelessWidget {
                           ),
                         ),
                         pw.Text(
-                          "Ketemu Client",
+                          transaksi.catatan,
                           style: pw.TextStyle(
                             font: ttf,
                             fontSize: 13,
@@ -352,6 +397,11 @@ class MakePdf extends StatelessWidget {
                   ],
                 ),
               ),
+              pw.Column(
+                crossAxisAlignment: pw.CrossAxisAlignment.center,
+                mainAxisSize: pw.MainAxisSize.max,
+                children: pdfImagesWidget,
+              )
             ],
           );
         },

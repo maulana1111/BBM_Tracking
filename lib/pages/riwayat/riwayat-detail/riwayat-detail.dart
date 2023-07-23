@@ -163,7 +163,6 @@ class _RiwayatDetailState extends State<RiwayatDetail> {
                             flex: 1,
                             child: InkWell(
                               onTap: () {
-                                print("hit");
 
                                 Navigator.of(context).push(
                                   MaterialPageRoute(

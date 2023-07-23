@@ -68,176 +68,184 @@ class _RiwayatDetailState extends State<RiwayatDetail> {
     fontWeight: FontWeight.w400,
   );
 
+  Future<bool> _onWillPop() async {
+    Navigator.pop(context);
+    return false;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Color(0xffE3EAEA),
-      body: SingleChildScrollView(
-        child: Container(
-          margin: EdgeInsets.only(
-            top: 50,
-          ),
-          child: Padding(
-            padding: EdgeInsets.all(10),
-            child: Column(
-              children: [
-                InkWell(
-                  onTap: () => Navigator.pop(context),
-                  child: Container(
+    return WillPopScope(
+      onWillPop: () => _onWillPop(),
+      child: Scaffold(
+        backgroundColor: Color(0xffE3EAEA),
+        body: SingleChildScrollView(
+          child: Container(
+            margin: EdgeInsets.only(
+              top: 50,
+            ),
+            child: Padding(
+              padding: EdgeInsets.all(10),
+              child: Column(
+                children: [
+                  InkWell(
+                    onTap: () => Navigator.pop(context),
                     child: Container(
-                      child: Row(
-                        children: [
-                          Icon(
-                            Icons.arrow_back_ios,
-                            size: 15,
-                          ),
-                          Text(
-                            "Kembali",
-                            style: TextStyle(
-                              fontSize: 10,
-                              fontFamily: 'Poppins',
-                              color: Color(0xff1A0F0F),
-                              fontWeight: FontWeight.w400,
+                      child: Container(
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.arrow_back_ios,
+                              size: 15,
                             ),
-                          )
-                        ],
+                            Text(
+                              "Kembali",
+                              style: TextStyle(
+                                fontSize: 10,
+                                fontFamily: 'Poppins',
+                                color: Color(0xff1A0F0F),
+                                fontWeight: FontWeight.w400,
+                              ),
+                            )
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Container(
-                  width: double.infinity,
-                  margin: EdgeInsets.only(top: 10),
-                  child: Text(
-                    "Detail Transaksi",
-                    style: TextStyle(
-                      fontFamily: 'Poppins',
-                      fontWeight: FontWeight.w500,
-                      fontSize: 16,
-                      color: Color(0xff3B3C48),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Container(
+                    width: double.infinity,
+                    margin: EdgeInsets.only(top: 10),
+                    child: Text(
+                      "Detail Transaksi",
+                      style: TextStyle(
+                        fontFamily: 'Poppins',
+                        fontWeight: FontWeight.w500,
+                        fontSize: 16,
+                        color: Color(0xff3B3C48),
+                      ),
                     ),
                   ),
-                ),
-                Divider(
-                  color: Color(0xFF1A0F0F3D),
-                  height: 2,
-                  thickness: 2,
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Container(
-                  alignment: Alignment.topLeft,
-                  child: Text(
-                    "Transaksi Berhasil",
-                    style: TextStyle(
-                      fontFamily: 'Poppins',
-                      fontSize: 11,
-                      fontWeight: FontWeight.w500,
-                      color: Color(0xFF25A35A),
+                  Divider(
+                    color: Color(0xFF1A0F0F3D),
+                    height: 2,
+                    thickness: 2,
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Container(
+                    alignment: Alignment.topLeft,
+                    child: Text(
+                      "Transaksi Berhasil",
+                      style: TextStyle(
+                        fontFamily: 'Poppins',
+                        fontSize: 11,
+                        fontWeight: FontWeight.w500,
+                        color: Color(0xFF25A35A),
+                      ),
                     ),
                   ),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Container(
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Flexible(
-                            flex: 2,
-                            child: Container(
-                              child: Text(
-                                data.kodeTransaksi,
-                                style: style,
-                              ),
-                            ),
-                          ),
-                          Flexible(
-                            flex: 1,
-                            child: InkWell(
-                              onTap: () {
-
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) => MakePdf(
-                                        transaksi: data, kendaraan: kendaraan),
-                                  ),
-                                );
-                              },
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Container(
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Flexible(
+                              flex: 2,
                               child: Container(
                                 child: Text(
-                                  "Download",
-                                  style: TextStyle(
-                                    fontFamily: 'Poppins',
-                                    fontSize: 9,
-                                    fontWeight: FontWeight.w400,
-                                    color: Color(0xFF1C7A44),
-                                    fontStyle: FontStyle.italic,
+                                  data.kodeTransaksi,
+                                  style: style,
+                                ),
+                              ),
+                            ),
+                            Flexible(
+                              flex: 1,
+                              child: InkWell(
+                                onTap: () {
+    
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) => MakePdf(
+                                          transaksi: data, kendaraan: kendaraan),
+                                    ),
+                                  );
+                                },
+                                child: Container(
+                                  child: Text(
+                                    "Download",
+                                    style: TextStyle(
+                                      fontFamily: 'Poppins',
+                                      fontSize: 9,
+                                      fontWeight: FontWeight.w400,
+                                      color: Color(0xFF1C7A44),
+                                      fontStyle: FontStyle.italic,
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
-                          ),
-                        ],
-                      )
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Container(
-                  alignment: Alignment.topLeft,
-                  child: Text(
-                    "Tipe Kendaraan",
-                    style: TextStyle(
-                      fontFamily: 'Poppins',
-                      fontSize: 11,
-                      fontWeight: FontWeight.w600,
+                          ],
+                        )
+                      ],
                     ),
                   ),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                itemDetail(kendaraan.namaKendaraan, kendaraan.nomorPlat),
-                SizedBox(
-                  height: 10,
-                ),
-                Container(
-                  alignment: Alignment.topLeft,
-                  child: Text(
-                    "Details",
-                    style: TextStyle(
-                      fontFamily: 'Poppins',
-                      fontSize: 11,
-                      fontWeight: FontWeight.w600,
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Container(
+                    alignment: Alignment.topLeft,
+                    child: Text(
+                      "Tipe Kendaraan",
+                      style: TextStyle(
+                        fontFamily: 'Poppins',
+                        fontSize: 11,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
-                ),
-                itemDetail("Tipe transaksi", "Pengisian Bahan Bakar"),
-                itemDetail(
-                    "Data Transaksi", reformatDate(data.tanggalTransaksi)),
-                itemDetail("Waktu",
-                    "${data.tanggalTransaksi.hour}:${data.tanggalTransaksi.minute} WIB"),
-                itemDetail("Jenis Bahan Bakar",
-                    listBensin[int.parse(data.bensinId) - 1].text),
-                itemDetail("Total Liter", "${data.totalLiter} Liter"),
-                itemDetail("Harga/Liter",
-                    "${CurrencyFormat.convertToIdr(listBensin[int.parse(data.bensinId) - 1].harga, 0)}"),
-                itemDetail("Total Pembayaran",
-                    "${CurrencyFormat.convertToIdr(data.totalBayar, 0)}"),
-                itemDetail("Odometer/km", "${data.odometer} km"),
-                itemDetaill("Gambar", "Lihat Gambar", data.kodeTransaksi),
-                itemDetail("Catatan Tambahan", data.catatan),
-              ],
+                  SizedBox(
+                    height: 10,
+                  ),
+                  itemDetail(kendaraan.namaKendaraan, kendaraan.nomorPlat),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Container(
+                    alignment: Alignment.topLeft,
+                    child: Text(
+                      "Details",
+                      style: TextStyle(
+                        fontFamily: 'Poppins',
+                        fontSize: 11,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                  itemDetail("Tipe transaksi", "Pengisian Bahan Bakar"),
+                  itemDetail(
+                      "Data Transaksi", reformatDate(data.tanggalTransaksi)),
+                  itemDetail("Waktu",
+                      "${data.tanggalTransaksi.hour}:${data.tanggalTransaksi.minute} WIB"),
+                  itemDetail("Jenis Bahan Bakar",
+                      listBensin[int.parse(data.bensinId) - 1].text),
+                  itemDetail("Total Liter", "${data.totalLiter} Liter"),
+                  itemDetail("Harga/Liter",
+                      "${CurrencyFormat.convertToIdr(listBensin[int.parse(data.bensinId) - 1].harga, 0)}"),
+                  itemDetail("Total Pembayaran",
+                      "${CurrencyFormat.convertToIdr(data.totalBayar, 0)}"),
+                  itemDetail("Odometer/km", "${data.odometer} km"),
+                  itemDetaill("Gambar", "Lihat Gambar", data.kodeTransaksi),
+                  itemDetail("Catatan Tambahan", data.catatan),
+                ],
+              ),
             ),
           ),
         ),

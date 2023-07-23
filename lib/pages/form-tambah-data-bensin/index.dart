@@ -319,8 +319,10 @@ class _FormTamabahDataBensinState extends State<FormTamabahDataBensin>
     if (newSelectedDate != null) {
       setState(() {
         _selectedDate.value = newSelectedDate;
-        dateController.text = DateFormat("yyyy-MM-dd").format(newSelectedDate).toString(); 
-        selectedDate = DateFormat("yyyy-MM-dd").format(newSelectedDate).toString();
+        dateController.text =
+            DateFormat("yyyy-MM-dd").format(newSelectedDate).toString();
+        selectedDate =
+            DateFormat("yyyy-MM-dd").format(newSelectedDate).toString();
       });
     }
   }
@@ -459,8 +461,7 @@ class _FormTamabahDataBensinState extends State<FormTamabahDataBensin>
     setState(() {
       BlocProvider.of<BbmBloc>(context).add(BBMStarted());
     });
-    Navigator.pushReplacement(context,
-        MaterialPageRoute(builder: (BuildContext context) => Home("", "")));
+    Navigator.pop(context);
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -496,95 +497,103 @@ class _FormTamabahDataBensinState extends State<FormTamabahDataBensin>
     return val;
   }
 
+  Future<bool> _onWillPop() async {
+    Navigator.pop(context);
+    return false;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Color(0xffE3EAEA),
-      body: SingleChildScrollView(
-        child: Container(
-          margin: EdgeInsets.only(
-            top: 50,
-          ),
-          child: Padding(
-            padding: EdgeInsets.all(10),
-            child: Column(
-              children: [
-                BackButton(),
-                SizedBox(
-                  height: 10,
-                ),
-                Container(
-                  width: double.infinity,
-                  margin: EdgeInsets.only(top: 10),
-                  child: Text(
-                    "Pengisian Bahan Bakar",
-                    style: TextStyle(
-                      fontFamily: 'Poppins',
-                      fontWeight: FontWeight.w500,
-                      fontSize: 16,
-                      color: Color(0xff3B3C48),
+    return WillPopScope(
+      onWillPop: () => _onWillPop(),
+      child: Scaffold(
+        backgroundColor: Color(0xffE3EAEA),
+        body: SingleChildScrollView(
+          child: Container(
+            margin: EdgeInsets.only(
+              top: 50,
+            ),
+            child: Padding(
+              padding: EdgeInsets.all(10),
+              child: Column(
+                children: [
+                  BackButton(),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Container(
+                    width: double.infinity,
+                    margin: EdgeInsets.only(top: 10),
+                    child: Text(
+                      "Pengisian Bahan Bakar",
+                      style: TextStyle(
+                        fontFamily: 'Poppins',
+                        fontWeight: FontWeight.w500,
+                        fontSize: 16,
+                        color: Color(0xff3B3C48),
+                      ),
                     ),
                   ),
-                ),
-                Divider(
-                  color: Color(0xFF1A0F0F3D),
-                  height: 2,
-                  thickness: 2,
-                ),
-                SizedBox(
-                  height: 15,
-                ),
-                Card(dataKendaraan),
-                Container(
-                  alignment: Alignment.topRight,
-                  child: Text(
-                    "Edit Informasi",
-                    style: TextStyle(
-                      fontFamily: 'Poppins',
-                      fontSize: 11,
-                      fontWeight: FontWeight.w500,
-                      fontStyle: FontStyle.italic,
-                      color: Color(0xFF1C7A44),
+                  Divider(
+                    color: Color(0xFF1A0F0F3D),
+                    height: 2,
+                    thickness: 2,
+                  ),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  Card(dataKendaraan),
+                  Container(
+                    alignment: Alignment.topRight,
+                    child: Text(
+                      "Edit Informasi",
+                      style: TextStyle(
+                        fontFamily: 'Poppins',
+                        fontSize: 11,
+                        fontWeight: FontWeight.w500,
+                        fontStyle: FontStyle.italic,
+                        color: Color(0xFF1C7A44),
+                      ),
                     ),
                   ),
-                ),
-                Container(
-                  width: double.infinity,
-                  margin: EdgeInsets.only(top: 10),
-                  child: Text(
-                    "Masukan Data Pengisian Bahan Bakar",
-                    style: TextStyle(
-                      fontFamily: 'Poppins',
-                      fontWeight: FontWeight.w500,
-                      fontSize: 13,
-                      color: Color(0xff1A0F0F),
+                  Container(
+                    width: double.infinity,
+                    margin: EdgeInsets.only(top: 10),
+                    child: Text(
+                      "Masukan Data Pengisian Bahan Bakar",
+                      style: TextStyle(
+                        fontFamily: 'Poppins',
+                        fontWeight: FontWeight.w500,
+                        fontSize: 13,
+                        color: Color(0xff1A0F0F),
+                      ),
                     ),
                   ),
-                ),
-                SizedBox(
-                  height: 5,
-                ),
-                formPengisian(),
-                SizedBox(
-                  height: 10,
-                ),
-                formLokasiSPBU(),
-                SizedBox(
-                  height: 10,
-                ),
-                formGambar(),
-                SizedBox(
-                  height: 10,
-                ),
-                formCatatan(),
-                SizedBox(
-                  height: 15,
-                ),
-                SizedBox(
-                  height: 25,
-                ),
-                ButtonSave(),
-              ],
+                  SizedBox(
+                    height: 5,
+                  ),
+                  formPengisian(),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  formLokasiSPBU(),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  formGambar(),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  formCatatan(),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  SizedBox(
+                    height: 25,
+                  ),
+                  ButtonSave(),
+                ],
+              ),
             ),
           ),
         ),
@@ -684,8 +693,7 @@ class _FormTamabahDataBensinState extends State<FormTamabahDataBensin>
 
   Widget BackButton() {
     return InkWell(
-      onTap: () => Navigator.of(context)
-          .pushReplacement(MaterialPageRoute(builder: (context) => Home("home", ""))),
+      onTap: () => Navigator.pop(context),
       child: Container(
         child: Container(
           child: Row(

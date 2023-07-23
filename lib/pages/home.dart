@@ -59,7 +59,7 @@ class _HomeState extends State<Home> {
     }
 
     paramKendaran
-        ? Navigator.of(context).pushReplacement(
+        ? Navigator.of(context).push(
             MaterialPageRoute(
               builder: (context) => FormTamabahDataBensin(
                 kendaraanModel: dt,
@@ -147,6 +147,29 @@ class _HomeState extends State<Home> {
     });
   }
 
+  Future<bool> _onWillPop() async {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: new Text('Apa Kamu Yakin?'),
+          content: new Text('Kamu ingin Keluar Aplikasi'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: new Text('No'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              child: new Text('Yes'),
+            ),
+          ],
+        );
+      },
+    );
+    return false;
+  }
+
   // String page = 'home';
   @override
   Widget build(BuildContext context) {
@@ -191,33 +214,36 @@ class _HomeState extends State<Home> {
         builder: (context, state) {
           if (state is BBMLoaded) {
             dataKendaraan = state.kendaraan;
-            return SafeArea(
-              child: Padding(
-                padding: EdgeInsets.only(
-                  left: 10,
-                  right: 10,
-                ),
-                child: Builder(
-                  builder: (context) {
-                    // print("screen = " + param);
-                    switch (screen) {
-                      case 'home':
-                        return IndexMainMenu();
-                      case 'kendaraan':
-                        // context.read<BbmBloc>().add(BBMAllDataKendaraan());
-                        return IndexKendaraan();
-                      case 'riwayat':
-                        return Riwayat(
-                          dataKendaraan,
-                          key: UniqueKey(),
-                          data: state.transaksi,
-                        );
-                      case 'tentang':
-                        return AboutApps();
-                      default:
-                        return IndexMainMenu();
-                    }
-                  },
+            return WillPopScope(
+              onWillPop: () => _onWillPop(),
+              child: SafeArea(
+                child: Padding(
+                  padding: EdgeInsets.only(
+                    left: 10,
+                    right: 10,
+                  ),
+                  child: Builder(
+                    builder: (context) {
+                      // print("screen = " + param);
+                      switch (screen) {
+                        case 'home':
+                          return IndexMainMenu();
+                        case 'kendaraan':
+                          // context.read<BbmBloc>().add(BBMAllDataKendaraan());
+                          return IndexKendaraan();
+                        case 'riwayat':
+                          return Riwayat(
+                            dataKendaraan,
+                            key: UniqueKey(),
+                            data: state.transaksi,
+                          );
+                        case 'tentang':
+                          return AboutApps();
+                        default:
+                          return IndexMainMenu();
+                      }
+                    },
+                  ),
                 ),
               ),
             );

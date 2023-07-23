@@ -98,99 +98,107 @@ class _FormKendaraanState extends State<FormKendaraan> {
   ];
   // listBensin.map
 
+  Future<bool> _onWillPop() async {
+    Navigator.pop(context);
+    return false;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Color(0xffE3EAEA),
-      body: SingleChildScrollView(
-        child: Container(
-          child: Padding(
-            padding: EdgeInsets.all(10),
-            child: Column(
-              children: [
-                SizedBox(
-                  height: 55,
-                ),
-                BackButton(),
-                Container(
-                  width: double.infinity,
-                  margin: EdgeInsets.only(top: 10),
-                  child: Text(
-                    "Data Pribadi Kendaraan Anda",
-                    style: TextStyle(
-                      fontFamily: 'Poppins',
-                      fontWeight: FontWeight.w500,
-                      fontSize: 16,
-                      color: Color(0xff3B3C48),
+    return WillPopScope(
+      onWillPop: () => _onWillPop(),
+      child: Scaffold(
+        backgroundColor: Color(0xffE3EAEA),
+        body: SingleChildScrollView(
+          child: Container(
+            child: Padding(
+              padding: EdgeInsets.all(10),
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: 55,
+                  ),
+                  BackButton(),
+                  Container(
+                    width: double.infinity,
+                    margin: EdgeInsets.only(top: 10),
+                    child: Text(
+                      "Data Pribadi Kendaraan Anda",
+                      style: TextStyle(
+                        fontFamily: 'Poppins',
+                        fontWeight: FontWeight.w500,
+                        fontSize: 16,
+                        color: Color(0xff3B3C48),
+                      ),
                     ),
                   ),
-                ),
-                Divider(
-                  color: Color(0xFF1A0F0F3D),
-                  height: 2,
-                  thickness: 2,
-                ),
-                SizedBox(
-                  height: 15,
-                ),
-                Card(),
-                SizedBox(
-                  height: 15,
-                ),
-                Container(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      inputField(
-                        "Tipe Kendaraan",
-                        "Type Of Brand",
-                        "text",
-                        tipeKendaraanController,
-                      ),
-                      dropdownField(
-                        "Jenis Bahan Bakar",
-                        listNamaBensin,
-                        jenisBBMController,
-                      ),
-                      dropdownField(
-                        "Kepemilikan",
-                        listKepemilikan,
-                        kepemilikanController,
-                      ),
-                      inputField(
-                        "Data Penerimaan Kendaraan",
-                        "MM/DD/YYYY",
-                        "date",
-                        dateController,
-                      ),
-                      inputField(
-                        "Kilometers Kendaraan",
-                        "0 Km",
-                        "number",
-                        kilometerController,
-                      ),
-                      inputField(
-                        "CC Kendaraan",
-                        "CC",
-                        "number",
-                        ccController,
-                      ),
-                      inputField(
-                        "Nomor Plat Kendaraan",
-                        "X XXXX XXX",
-                        "text",
-                        nomorPlatController,
-                      ),
-                      SaveButton(),
-                      Padding(
-                        padding: EdgeInsets.only(
-                          bottom: MediaQuery.of(context).viewInsets.bottom,
-                        ),
-                      ),
-                    ],
+                  Divider(
+                    color: Color(0xFF1A0F0F3D),
+                    height: 2,
+                    thickness: 2,
                   ),
-                ),
-              ],
+                  SizedBox(
+                    height: 15,
+                  ),
+                  Card(),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  Container(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        inputField(
+                          "Tipe Kendaraan",
+                          "Type Of Brand",
+                          "text",
+                          tipeKendaraanController,
+                        ),
+                        dropdownField(
+                          "Jenis Bahan Bakar",
+                          listNamaBensin,
+                          jenisBBMController,
+                        ),
+                        dropdownField(
+                          "Kepemilikan",
+                          listKepemilikan,
+                          kepemilikanController,
+                        ),
+                        inputField(
+                          "Data Penerimaan Kendaraan",
+                          "MM/DD/YYYY",
+                          "date",
+                          dateController,
+                        ),
+                        inputField(
+                          "Kilometers Kendaraan",
+                          "0 Km",
+                          "number",
+                          kilometerController,
+                        ),
+                        inputField(
+                          "CC Kendaraan",
+                          "CC",
+                          "number",
+                          ccController,
+                        ),
+                        inputField(
+                          "Nomor Plat Kendaraan",
+                          "X XXXX XXX",
+                          "text",
+                          nomorPlatController,
+                        ),
+                        SaveButton(),
+                        Padding(
+                          padding: EdgeInsets.only(
+                            bottom: MediaQuery.of(context).viewInsets.bottom,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),

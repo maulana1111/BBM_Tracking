@@ -29,47 +29,54 @@ class _ViewImageState extends State<ViewImage> {
       loading = true;
     });
   }
+  Future<bool> _onWillPop() async {
+    Navigator.pop(context);
+    return false;
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Color(0xffE3EAEA),
-      body: loading
-          ? Container(
-              margin: EdgeInsets.only(
-                top: 50,
-              ),
-              child: Column(
-                children: [
-                  Container(
-                    child: BackButton(),
-                    margin: EdgeInsets.only(
-                      left: 10,
-                    ),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Container(
-                    child: Expanded(
-                      child: ListView.builder(
-                        // shrinkWrap: true,
-                        itemCount: dataPhoto.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          var replace = "/storage/emulated/0/Pictures/" +
-                              dataPhoto[index].replaceAll(RegExp(':'), '_')+".jpg";
-                          print("counting ${dataPhoto.length.toString()}, path = ${replace}");
-                          return ScreenImage(
-                            replace,
-                          );
-                        },
+    return WillPopScope(
+      onWillPop: () => _onWillPop(),
+      child: Scaffold(
+        backgroundColor: Color(0xffE3EAEA),
+        body: loading
+            ? Container(
+                margin: EdgeInsets.only(
+                  top: 50,
+                ),
+                child: Column(
+                  children: [
+                    Container(
+                      child: BackButton(),
+                      margin: EdgeInsets.only(
+                        left: 10,
                       ),
                     ),
-                  ),
-                ],
-              ),
-            )
-          : Container(),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Container(
+                      child: Expanded(
+                        child: ListView.builder(
+                          // shrinkWrap: true,
+                          itemCount: dataPhoto.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            var replace = "/storage/emulated/0/Pictures/" +
+                                dataPhoto[index].replaceAll(RegExp(':'), '_')+".jpg";
+                            print("counting ${dataPhoto.length.toString()}, path = ${replace}");
+                            return ScreenImage(
+                              replace,
+                            );
+                          },
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            : Container(),
+      ),
     );
   }
 

@@ -43,8 +43,17 @@ class _IndexKendaraanState extends State<IndexKendaraan> {
       }
     }
     if (cond == true) {
-      Navigator.of(context)
-          .push(MaterialPageRoute(builder: (context) => Performa()));
+      // Navigator.of(context)
+      //     .push(MaterialPageRoute(builder: (context) => Performa()));
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return PopUp(
+            text: "Masih dalam Tahap Pengembangan",
+            param: "negative",
+          );
+        },
+      );
     } else {
       showDialog(
         context: context,
@@ -283,9 +292,10 @@ class _IndexKendaraanState extends State<IndexKendaraan> {
             ),
             InkWell(
               onTap: () {
-                Navigator.of(context).pushReplacement(
+                Navigator.of(context).push(
                   MaterialPageRoute(
-                      builder: (context) => FormKendaraan(kendaraan: "motor")),
+                    builder: (context) => FormKendaraan(kendaraan: "motor"),
+                  ),
                 );
               },
               child: chooseKendaraan(
@@ -306,7 +316,7 @@ class _IndexKendaraanState extends State<IndexKendaraan> {
             ),
             InkWell(
               onTap: () {
-                Navigator.of(context).pushReplacement(
+                Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (context) => FormKendaraan(kendaraan: "mobil"),
                   ),

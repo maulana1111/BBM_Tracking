@@ -120,6 +120,28 @@ class _IndexMainMenuState extends State<IndexMainMenu> {
   // String _month = 0;
   // int _year = 0;
 
+  
+
+   Future<bool> _onWillPop() async {
+    return (await showDialog(
+      context: context,
+      builder: (context) => new AlertDialog(
+        title: new Text('Apa Kamu Yakin?'),
+        content: new Text('Kamu ingin Keluar Aplikasi'),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: new Text('No'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: new Text('Yes'),
+          ),
+        ],
+      ),
+    )) ?? false;
+  }
+
   @override
   Widget build(BuildContext context) {
     return isLoading

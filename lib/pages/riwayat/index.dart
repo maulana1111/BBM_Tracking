@@ -1,6 +1,8 @@
 import 'package:bbm_tracking/model/kendaraan_m.dart';
 import 'package:bbm_tracking/model/transaksi_m.dart';
+import 'package:bbm_tracking/pages/home.dart';
 import 'package:bbm_tracking/pages/riwayat/component/item-history.dart';
+import 'package:bbm_tracking/resource/popup/popup.dart';
 import 'package:flutter/material.dart';
 
 class Riwayat extends StatefulWidget {
@@ -148,9 +150,9 @@ class _RiwayatState extends State<Riwayat> {
                       child: Container(
                         child: InkWell(
                           onTap: () {
-                            setState(() {
-                              _tab = 'selesai';
-                            });
+                            // setState(() {
+                            //   _tab = 'selesai';
+                            // });
                           },
                           child: Column(
                             children: [
@@ -185,9 +187,18 @@ class _RiwayatState extends State<Riwayat> {
                       child: Container(
                         child: InkWell(
                           onTap: () {
-                            setState(() {
-                              _tab = 'draft';
-                            });
+                            // setState(() {
+                            //   _tab = 'draft';
+                            // });
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return PopUp(
+                                  text: "Masih dalam Tahap Pengembangan",
+                                  param: "negative",
+                                );
+                              },
+                            );
                           },
                           child: Column(
                             children: [

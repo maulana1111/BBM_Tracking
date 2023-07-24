@@ -612,7 +612,7 @@ class _FormTamabahDataBensinState extends State<FormTamabahDataBensin>
           width: 80,
           height: 35,
           // alignment: Alignment.topRight,
-          padding: EdgeInsets.only(top: 7, left: 6),
+          padding: EdgeInsets.only(top: 9, left: 9),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.all(
               Radius.circular(8),
@@ -623,7 +623,7 @@ class _FormTamabahDataBensinState extends State<FormTamabahDataBensin>
             "Tambahkan",
             style: TextStyle(
               fontFamily: 'Poppins',
-              fontSize: 11,
+              fontSize: 12,
               fontWeight: FontWeight.w500,
               color: Colors.white,
             ),
@@ -866,7 +866,6 @@ class _FormTamabahDataBensinState extends State<FormTamabahDataBensin>
                                   .pickImage(source: ImageSource.camera);
 
                               setState(() {
-                                print("picked = ${pickedImage?.path}");
                                 _image.add(File(pickedImage!.path));
                               });
                             } catch (e) {
@@ -901,7 +900,11 @@ class _FormTamabahDataBensinState extends State<FormTamabahDataBensin>
                                     },
                                     child: Container(
                                       child: Image.file(
-                                        File(_image[index]!.path),
+                                        File(
+                                          _image[index]!.path,
+                                        ),
+                                        width: 35,
+                                        fit: BoxFit.fill,
                                       ),
                                     ),
                                   ),

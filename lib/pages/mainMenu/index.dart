@@ -194,7 +194,7 @@ class _IndexMainMenuState extends State<IndexMainMenu> {
                                   ),
                                 ),
                                 Text(
-                                  "10 Januari 2023",
+                                  "24 Juli 2023",
                                   style: TextStyle(
                                     fontFamily: 'Poppins',
                                     fontSize: 8,
@@ -470,7 +470,7 @@ class _IndexMainMenuState extends State<IndexMainMenu> {
               Text(
                 text,
                 style: TextStyle(
-                  fontSize: 10,
+                  fontSize: 12,
                   fontFamily: 'Poppins',
                   color: Color(0xFF1A0F0F),
                 ),
@@ -490,7 +490,7 @@ class _IndexMainMenuState extends State<IndexMainMenu> {
                         ? "${CurrencyFormat.convertToIdr(totalPengeluaran, 0)}"
                         : "${totalBBM.toStringAsFixed(2)} Liter",
                     style: TextStyle(
-                      fontSize: 8,
+                      fontSize: 10,
                       fontFamily: 'Poppins',
                       color: Color(0xFF1A0F0F),
                     ),

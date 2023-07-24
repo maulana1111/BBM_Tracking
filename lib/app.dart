@@ -25,6 +25,7 @@ class App extends StatelessWidget {
           BBMStarted(),
         ),
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         home: const SplsScreen(),
       ),
     );

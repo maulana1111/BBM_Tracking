@@ -34,7 +34,7 @@ class ItemBensin extends StatelessWidget {
                 Text(
                   data.text,
                   style: TextStyle(
-                    fontSize: 10,
+                    fontSize: 15,
                     fontFamily: 'Poppins',
                     fontWeight: FontWeight.w500,
                     color: Color(0xFF677D81),
@@ -73,7 +73,7 @@ class ItemBensin extends StatelessWidget {
                 Text(
                   "${CurrencyFormat.convertToIdr(data.harga,0)} /Liter",
                   style: TextStyle(
-                    fontSize: 8,
+                    fontSize: 11,
                     fontFamily: 'Poppins',
                     fontWeight: FontWeight.w700,
                     color: Color(0xFF677D81),
@@ -87,9 +87,9 @@ class ItemBensin extends StatelessWidget {
             Container(
               width: double.maxFinite,
               child: Text(
-                "Update on January 06, 2023",
+                "Update on Juli 24, 2023",
                 style: TextStyle(
-                  fontSize: 8,
+                  fontSize: 9,
                   fontFamily: 'Poppins',
                   fontWeight: FontWeight.w300,
                   color: Color(0xFF677D81),

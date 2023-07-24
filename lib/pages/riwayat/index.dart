@@ -25,6 +25,7 @@ class _RiwayatState extends State<Riwayat> {
     // TODO: implement initState
     super.initState();
     data = widget.data;
+    print("counting ${data.length}");
     loadDataKendaraan();
   }
 
@@ -234,7 +235,7 @@ class _RiwayatState extends State<Riwayat> {
               Container(
                 alignment: Alignment.topLeft,
                 child: Text(
-                  "Anda memiliki ${data.length.toString()} data transaksi",
+                  "Anda memiliki ${kendaraan != null ? data.length.toString() : 0} data transaksi",
                   style: TextStyle(
                     fontFamily: 'Poppins',
                     fontSize: 10,
@@ -246,25 +247,50 @@ class _RiwayatState extends State<Riwayat> {
               SizedBox(
                 height: 7,
               ),
-              // SingleChildScrollView(
-              Container(
-                height: MediaQuery.of(context).size.height,
-                width: MediaQuery.of(context).size.width,
-                child: Expanded(
-                  child: ListView.builder(
-                    padding: EdgeInsets.only(bottom: 400),
-                    shrinkWrap: true,
-                    itemCount: data.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return ItemHistory(
-                        data: data.elementAt(index),
-                        kendaraan: kendaraan!,
-                      );
-                    },
-                  ),
-                ),
-              ),
-              // )
+              kendaraan != null
+                  ? Container(
+                      height: MediaQuery.of(context).size.height,
+                      width: MediaQuery.of(context).size.width,
+                      child: Expanded(
+                        child: ListView.builder(
+                          padding: EdgeInsets.only(bottom: 400),
+                          shrinkWrap: true,
+                          itemCount: data.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return ItemHistory(
+                              data: data.elementAt(index),
+                              kendaraan: kendaraan!,
+                            );
+                          },
+                        ),
+                      ),
+                    )
+                  : Container(
+                      child: Column(
+                        children: [
+                          SizedBox(
+                            height: 80,
+                          ),
+                          Image.asset(
+                            "assets/images/sad_person.png",
+                            width: 70,
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Text(
+                            "Anda masih belum memiliki data",
+                            style: TextStyle(
+                              color: Color(0xFF677D81),
+                              fontSize: 13,
+                              fontFamily: 'Poppins',
+                              fontWeight: FontWeight.w600,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
+                    ),
             ],
           ),
         ),

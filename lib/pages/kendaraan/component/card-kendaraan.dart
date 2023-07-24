@@ -21,21 +21,10 @@ class _CardKendaraanState extends State<CardKendaraan> {
   late Function onChangeStatus;
   @override
   void initState() {
-    print("render init child .... ");
     super.initState();
     kendaraan = widget.kendaraan;
     onChangeStatus = widget.onChangeStatus;
   }
-
-  // @override
-  // void didChangeDependencies() {
-  //   print("render depen .... ");
-  //   // TODO: implement didChangeDependencies
-  //   super.didChangeDependencies();
-  //   kendaraan = widget.kendaraan;
-  //   onChangeStatus = widget.onChangeStatus;
-
-  // }
 
   int count = 0;
   changeStatus(id, status)

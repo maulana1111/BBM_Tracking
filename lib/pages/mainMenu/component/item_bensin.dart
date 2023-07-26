@@ -13,7 +13,7 @@ class ItemBensin extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 153,
+      width: 180,
       height: 75,
       decoration: BoxDecoration(
         border: Border.all(

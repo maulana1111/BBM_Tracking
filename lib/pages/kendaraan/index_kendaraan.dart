@@ -156,13 +156,14 @@ class _IndexKendaraanState extends State<IndexKendaraan> {
                               ),
                               Container(
                                 child: ListView.builder(
-                                  scrollDirection: Axis.vertical,
+                                  physics: NeverScrollableScrollPhysics(),
                                   itemCount: dataKendaraan.length,
                                   shrinkWrap: true,
                                   itemBuilder:
                                       (BuildContext context, int index) {
                                     return CardKendaraan(
-                                      kendaraan: dataKendaraan.elementAt(index),
+                                      kendaraan:
+                                          dataKendaraan.elementAt(index),
                                       onChangeStatus: (int id, int status) {
                                         changeStatuKendaraan(id, status);
                                       },

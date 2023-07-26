@@ -47,7 +47,7 @@ class _CardKendaraanState extends State<CardKendaraan> {
 
   TextStyle cardData = TextStyle(
     fontFamily: 'Poppins',
-    fontSize: 10,
+    fontSize: 14,
     fontWeight: FontWeight.w400,
     color: Color(0xFFFFFFFF),
   );

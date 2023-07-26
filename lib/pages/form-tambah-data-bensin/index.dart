@@ -544,19 +544,6 @@ class _FormTamabahDataBensinState extends State<FormTamabahDataBensin>
                   ),
                   Card(dataKendaraan),
                   Container(
-                    alignment: Alignment.topRight,
-                    child: Text(
-                      "Edit Informasi",
-                      style: TextStyle(
-                        fontFamily: 'Poppins',
-                        fontSize: 11,
-                        fontWeight: FontWeight.w500,
-                        fontStyle: FontStyle.italic,
-                        color: Color(0xFF1C7A44),
-                      ),
-                    ),
-                  ),
-                  Container(
                     width: double.infinity,
                     margin: EdgeInsets.only(top: 10),
                     child: Text(

@@ -80,7 +80,7 @@ class MainCardKendaraan extends StatelessWidget {
                                             "Tipe Kendaraan : ",
                                             style: TextStyle(
                                               fontFamily: 'Poppins',
-                                              fontSize: 10,
+                                              fontSize: 11,
                                               fontWeight: FontWeight.w400,
                                               color: Color(0xFF25235B),
                                             ),
@@ -94,7 +94,7 @@ class MainCardKendaraan extends StatelessWidget {
                                                 : "-",
                                             style: TextStyle(
                                               fontFamily: 'Poppins',
-                                              fontSize: 10,
+                                              fontSize: 14,
                                               fontWeight: FontWeight.w700,
                                               color: Color(0xFFffffff),
                                             ),
@@ -103,7 +103,7 @@ class MainCardKendaraan extends StatelessWidget {
                                       ),
                                     ),
                                     SizedBox(
-                                      width: 30,
+                                      width: 20,
                                     ),
                                     Container(
                                       child: Column(
@@ -114,7 +114,7 @@ class MainCardKendaraan extends StatelessWidget {
                                             "Nomor Plat :",
                                             style: TextStyle(
                                               fontFamily: 'Poppins',
-                                              fontSize: 10,
+                                              fontSize: 11,
                                               fontWeight: FontWeight.w400,
                                               color: Color(0xFF25235B),
                                             ),
@@ -128,7 +128,7 @@ class MainCardKendaraan extends StatelessWidget {
                                                 : "-",
                                             style: TextStyle(
                                               fontFamily: 'Poppins',
-                                              fontSize: 10,
+                                              fontSize: 14,
                                               fontWeight: FontWeight.w700,
                                               color: Color(0xFFffffff),
                                             ),
@@ -150,7 +150,7 @@ class MainCardKendaraan extends StatelessWidget {
                                       "Bahan Bakar saat ini",
                                       style: TextStyle(
                                         fontFamily: 'Poppins',
-                                        fontSize: 10,
+                                        fontSize: 11,
                                         fontWeight: FontWeight.w400,
                                         color: Color(0xFF25235B),
                                       ),
@@ -164,7 +164,7 @@ class MainCardKendaraan extends StatelessWidget {
                                           : "-",
                                       style: TextStyle(
                                         fontFamily: 'Poppins',
-                                        fontSize: 10,
+                                        fontSize: 14,
                                         fontWeight: FontWeight.w700,
                                         color: Color(0xFFffffff),
                                       ),

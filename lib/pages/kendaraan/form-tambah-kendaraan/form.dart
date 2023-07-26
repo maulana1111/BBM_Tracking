@@ -259,7 +259,7 @@ class _FormKendaraanState extends State<FormKendaraan> {
           top: 10,
         ),
         padding: EdgeInsets.only(
-          top: 5,
+          top: 7,
         ),
         decoration: BoxDecoration(
           color: Color(0xFF2ECC71),

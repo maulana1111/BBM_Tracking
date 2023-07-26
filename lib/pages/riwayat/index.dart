@@ -117,7 +117,7 @@ class _RiwayatState extends State<Riwayat> {
                               : "- / -",
                           style: TextStyle(
                             fontFamily: 'Poppins',
-                            fontSize: 11,
+                            fontSize: 15,
                             fontWeight: FontWeight.w700,
                             color: Colors.white,
                           ),

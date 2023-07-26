@@ -135,7 +135,7 @@ class _AboutAppsState extends State<AboutApps> {
                     style: TextStyle(
                       fontFamily: 'Poppins',
                       fontWeight: FontWeight.w400,
-                      fontSize: 11,
+                      fontSize: 13,
                       color: Color(0xFF455A64),
                     ),
                   ),
@@ -146,7 +146,7 @@ class _AboutAppsState extends State<AboutApps> {
                     style: TextStyle(
                       fontFamily: 'Poppins',
                       fontWeight: FontWeight.w700,
-                      fontSize: 9,
+                      fontSize: 11,
                       color: Color(0xFF3B3C48),
                     ),
                   ),

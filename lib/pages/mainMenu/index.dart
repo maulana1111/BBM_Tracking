@@ -194,7 +194,7 @@ class _IndexMainMenuState extends State<IndexMainMenu> {
                                   ),
                                 ),
                                 Text(
-                                  "24 Juli 2023",
+                                  " 24 Juli 2023",
                                   style: TextStyle(
                                     fontFamily: 'Poppins',
                                     fontSize: 8,

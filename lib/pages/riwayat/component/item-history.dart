@@ -92,7 +92,7 @@ class _ItemHistoryState extends State<ItemHistory> {
                                   style: TextStyle(
                                     fontFamily: 'Poppins',
                                     fontWeight: FontWeight.w500,
-                                    fontSize: 8,
+                                    fontSize: 10,
                                     color: Colors.black,
                                   ),
                                 ),
@@ -104,7 +104,7 @@ class _ItemHistoryState extends State<ItemHistory> {
                                   style: TextStyle(
                                     fontFamily: 'Poppins',
                                     fontWeight: FontWeight.w500,
-                                    fontSize: 8,
+                                    fontSize: 10,
                                     color: Colors.black,
                                   ),
                                 ),
@@ -177,7 +177,7 @@ class _ItemHistoryState extends State<ItemHistory> {
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 fontFamily: 'Poppins',
-                                fontSize: 8,
+                                fontSize: 10,
                                 fontWeight: FontWeight.w400,
                               ),
                             ),
@@ -186,7 +186,7 @@ class _ItemHistoryState extends State<ItemHistory> {
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 fontFamily: 'Poppins',
-                                fontSize: 8,
+                                fontSize: 10,
                                 fontWeight: FontWeight.w700,
                               ),
                             ),
@@ -210,7 +210,7 @@ class _ItemHistoryState extends State<ItemHistory> {
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 fontFamily: 'Poppins',
-                                fontSize: 8,
+                                fontSize: 10,
                                 fontWeight: FontWeight.w400,
                               ),
                             ),
@@ -219,7 +219,7 @@ class _ItemHistoryState extends State<ItemHistory> {
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
                                 fontFamily: 'Poppins',
-                                fontSize: 8,
+                                fontSize: 10,
                                 fontWeight: FontWeight.w700,
                                 color: Color(0xFF3B3C48),
                               ),

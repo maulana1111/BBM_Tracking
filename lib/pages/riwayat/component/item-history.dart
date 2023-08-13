@@ -127,7 +127,7 @@ class _ItemHistoryState extends State<ItemHistory> {
                             ),
                             Container(
                               margin: EdgeInsets.all(5),
-                              padding: EdgeInsets.only(top: 4),
+                              padding: EdgeInsets.only(top: 6),
                               width: 50,
                               height: 25,
                               decoration: BoxDecoration(

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:bbm_tracking/bloc/bbm_bloc.dart';
 import 'package:bbm_tracking/model/kendaraan_m.dart';
 import 'package:bbm_tracking/model/transaksi_m.dart';
@@ -14,6 +16,7 @@ import 'package:bbm_tracking/pages/riwayat/index.dart';
 import 'package:bbm_tracking/resource/popup/popup.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:pandabar/main.view.dart';
@@ -160,7 +163,7 @@ class _HomeState extends State<Home> {
               child: new Text('No'),
             ),
             TextButton(
-              onPressed: () => Navigator.of(context).pop(true),
+              onPressed: () => SystemNavigator.pop(),
               child: new Text('Yes'),
             ),
           ],

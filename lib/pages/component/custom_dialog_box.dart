@@ -33,7 +33,7 @@ class _CustomeDialogBoxState extends State<CustomeDialogBox> {
 
   contentBox(context) {
     return Container(
-      height: 160,
+      height: 180,
       padding: EdgeInsets.all(20),
       decoration: BoxDecoration(
         shape: BoxShape.rectangle,

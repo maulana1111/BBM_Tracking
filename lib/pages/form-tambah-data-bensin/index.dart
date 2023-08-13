@@ -103,6 +103,11 @@ class _FormTamabahDataBensinState extends State<FormTamabahDataBensin>
 
   bool _isButtonDisabled = false;
 
+  bool isLoading = false;
+
+
+  bool markerLoading = false;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -146,6 +151,7 @@ class _FormTamabahDataBensinState extends State<FormTamabahDataBensin>
 
     setState(() {
       initialLocation();
+      isLoading = true;
       // getLocation();
     });
 
@@ -155,6 +161,7 @@ class _FormTamabahDataBensinState extends State<FormTamabahDataBensin>
     );
 
     _initializeControllerFuture = _cameraController.initialize();
+
   }
 
   @override
@@ -200,6 +207,7 @@ class _FormTamabahDataBensinState extends State<FormTamabahDataBensin>
           position: LatLng(position.latitude, position.longitude),
         ),
       );
+      markerLoading = true;
     });
   }
 
@@ -504,7 +512,7 @@ class _FormTamabahDataBensinState extends State<FormTamabahDataBensin>
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
+    return isLoading ? WillPopScope(
       onWillPop: () => _onWillPop(),
       child: Scaffold(
         backgroundColor: Color(0xffE3EAEA),
@@ -585,7 +593,7 @@ class _FormTamabahDataBensinState extends State<FormTamabahDataBensin>
           ),
         ),
       ),
-    );
+    ) : Container();
   }
 
   Widget ButtonSave() {
@@ -1037,7 +1045,7 @@ class _FormTamabahDataBensinState extends State<FormTamabahDataBensin>
           target: LatLng(48.8561, 2.2930),
           zoom: 15,
         ),
-        markers: _markers,
+        markers: markerLoading ? _markers : {},
         zoomControlsEnabled: false,
         mapType: MapType.normal,
         onMapCreated: (GoogleMapController controller) {
@@ -1179,18 +1187,6 @@ class _FormTamabahDataBensinState extends State<FormTamabahDataBensin>
                     ),
                   ),
                 ),
-                Container(
-                  alignment: Alignment.topRight,
-                  child: Text(
-                    "Sebelumnya : 2080 km",
-                    style: TextStyle(
-                      color: Color(0xFF1A0F0F),
-                      fontFamily: 'Poppins',
-                      fontSize: 5,
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                ),
                 SizedBox(
                   height: 10,
                 ),
@@ -1218,7 +1214,7 @@ class _FormTamabahDataBensinState extends State<FormTamabahDataBensin>
                 Container(
                   alignment: Alignment.topLeft,
                   child: Text(
-                    "Kondisi Bensin Saat ini",
+                    "Perkiraan Bensin Saat ini",
                     style: TextStyle(
                       fontSize: 10,
                       fontFamily: 'Poppins',

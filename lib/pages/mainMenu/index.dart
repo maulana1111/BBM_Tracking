@@ -43,11 +43,9 @@ class _IndexMainMenuState extends State<IndexMainMenu> {
     count = 0;
     loadData(_selected);
     super.initState();
-    print("hit 1");
   }
 
   Future<void> loadData(DateTime date) async {
-    print("hit 2 ${date}");
     List<KendaraanModel> dtKendaraan =
         await KendaraanRepository().loadKendaraan();
     setState(() {
@@ -106,7 +104,6 @@ class _IndexMainMenuState extends State<IndexMainMenu> {
     setState(() {
       _selected = time;
       loadData(time);
-      print("hit 3 ${time.toString()}");
     });
   }
 
@@ -326,7 +323,7 @@ class _IndexMainMenuState extends State<IndexMainMenu> {
                               ),
                             ),
                             child: Container(
-                              margin: EdgeInsets.only(top: 5),
+                              margin: EdgeInsets.only(top: 7),
                               child: Text(
                                 "Harga",
                                 style: TextStyle(
@@ -356,7 +353,7 @@ class _IndexMainMenuState extends State<IndexMainMenu> {
                               ),
                             ),
                             child: Container(
-                              margin: EdgeInsets.only(top: 5),
+                              margin: EdgeInsets.only(top: 7),
                               child: Text(
                                 "Liter",
                                 style: TextStyle(

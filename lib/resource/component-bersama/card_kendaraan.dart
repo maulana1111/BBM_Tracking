@@ -140,7 +140,7 @@ class MainCardKendaraan extends StatelessWidget {
                                 ),
                               ),
                               SizedBox(
-                                height: 20,
+                                height: 10,
                               ),
                               Container(
                                 child: Column(
@@ -155,9 +155,9 @@ class MainCardKendaraan extends StatelessWidget {
                                         color: Color(0xFF25235B),
                                       ),
                                     ),
-                                    SizedBox(
-                                      height: 5,
-                                    ),
+                                    // SizedBox(
+                                    //   height: 5,
+                                    // ),
                                     Text(
                                       kendaraanModel != null
                                           ? kendaraanModel!.bahanBakar

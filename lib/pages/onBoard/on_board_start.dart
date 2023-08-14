@@ -12,31 +12,39 @@ class OnBoardStart extends StatefulWidget {
 }
 
 class _OnBoardStartState extends State<OnBoardStart> {
-  bool isFirst = false;
+  bool isFirst = true;
   bool isLoading = true;
 
   @override
   void initState() {
-    loadData();
-    setState(() {
-      isLoading = false;
-    });
     super.initState();
+    print("object");
+    loadData();
   }
 
   Future<void> loadData() async {
     List<StatusModel> dt = await TransaksiRepository().getStatusIn();
     if (dt.isNotEmpty) {
       setState(() {
-        isFirst = true;
+        isFirst = false;
+        isLoading = false;
+      });
+    } else {
+      setState(() {
+        isLoading = false;
       });
     }
+  }
+
+  Future<void> updateFirstIn() async {
+    await TransaksiRepository().insertStatusIn();
   }
 
   @override
   Widget build(BuildContext context) {
     return isLoading
-        ? Scaffold(
+        ? Container()
+        : Scaffold(
             backgroundColor: Color(0xffE3EAEA),
             body: SafeArea(
               child: Column(
@@ -102,6 +110,7 @@ class _OnBoardStartState extends State<OnBoardStart> {
                           ? showDialog(
                               context: context,
                               builder: (BuildContext context) {
+                                updateFirstIn();
                                 return showDialogKendaraan(context);
                               },
                             )
@@ -139,103 +148,95 @@ class _OnBoardStartState extends State<OnBoardStart> {
                 ],
               ),
             ),
-          )
-        : Container();
+          );
   }
 }
-
-TextStyle stylee = TextStyle(
-  color: Color(0xFF677D81),
-  fontSize: 16,
-  fontFamily: 'Poppins',
-  fontWeight: FontWeight.w700,
-);
 
 Dialog showDialogKendaraan(BuildContext context) {
   return Dialog(
     elevation: 1,
     backgroundColor: Color(0xffE3EAEA),
     child: Container(
-      height: 230,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Text(
-            'Required Permissions',
-            style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          SizedBox(height: 20),
-          Text(
-            "By using this [application/platform/website], you agree to grant us the following permissions:",
-          ),
-          SizedBox(height: 10),
-          Text(
-            "1. Camera Access: We may request access to your device's camera in order to enable [specific feature, e.g., video recording, photo capture].",
-          ),
-          Text(
-            "2. Microphone Access: We may request access to your device's microphone to enable [specific feature, e.g., audio recording, voice input].",
-          ),
-          Text(
-            "3. Location Access: We may request access to your device's location to provide [specific feature, e.g., location-based services, mapping].",
-          ),
-          Text(
-            "4. Storage Access: We may request access to your device's storage to save and retrieve [specific content, e.g., images, videos, documents].",
-          ),
-          Text(
-            "5. Internet Connectivity: Our application requires an active internet connection to [function properly, e.g., load content, sync data].",
-          ),
-          SizedBox(height: 20),
-          Text(
-            "These permissions are necessary for the proper functioning of the [application/platform/website] and to provide you with a seamless user experience. We assure you that your data and privacy will be handled according to our [Privacy Policy/Terms of Service], and we do not collect or share any personal information without your consent.",
-          ),
-          SizedBox(height: 20),
-          Text(
-            "You can manage and revoke these permissions in your device settings at any time. If you have any concerns or questions regarding these permissions, please feel free to contact our support team at [contact email/phone number].",
-          ),
-          SizedBox(height: 20),
-          Text(
-            "Thank you for using [application/platform/website]!",
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          SizedBox(height: 20),
-          Text(
-            "[Your Company/Developer Name]",
-            style: TextStyle(
-              fontStyle: FontStyle.italic,
-            ),
-          ),
-          // Text(
-          //   "Pilih Kendaraan",
-          //   style: stylee,
-          //   textAlign: TextAlign.center,
-          // ),
-          SizedBox(
-            height: 7,
-          ),
-          InkWell(
-            onTap: () {
-              Navigator.of(context).pushReplacement(
-                _createRoute(),
-              );
-            },
-            child: Text(
-              "Okay",
+      height: 600,
+      padding: EdgeInsets.all(15),
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              'Required Permissions',
               style: TextStyle(
-                color: Color(0xFF677D81),
-                fontSize: 14,
-                fontFamily: 'Poppins',
-                fontWeight: FontWeight.w700,
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
               ),
-              textAlign: TextAlign.center,
             ),
-          ),
-        ],
+            SizedBox(height: 20),
+            Text(
+              "By using this BBM Tracking Application, you agree to grant us the following permissions:",
+            ),
+            SizedBox(height: 10),
+            Text(
+              "1. Camera Access: We may request access to your device's camera in order to enable capture proof of transaction or capture location.",
+            ),
+            Text(
+              "2. Location Access: We may request access to your device location to make it easier to set gas filling locations.",
+            ),
+            Text(
+              "3. Storage Access: We may request access to your device's storage to save and retrieve image after you take picture your transaction gas.",
+            ),
+            Text(
+              "4. Internet Connectivity: Our application requires an active internet connection to running google maps.",
+            ),
+            SizedBox(height: 20),
+            Text(
+              "These permissions are necessary for the proper functioning of the BBM Tracking and to provide you with a seamless user experience. We assure you that your data and privacy will be handled according to our Privacy Policy & Terms of Service, and we do not collect or share any personal information without your consent.",
+            ),
+            SizedBox(height: 20),
+            Text(
+              "You can manage and revoke these permissions in your device settings at any time. If you have any concerns or questions regarding these permissions.",
+            ),
+            SizedBox(height: 20),
+            Text(
+              "Thank you for using BBM Tracking Application!",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(height: 20),
+            Text(
+              "Management System",
+              style: TextStyle(
+                fontStyle: FontStyle.italic,
+              ),
+            ),
+            // Text(
+            //   "Pilih Kendaraan",
+            //   style: stylee,
+            //   textAlign: TextAlign.center,
+            // ),
+            SizedBox(
+              height: 7,
+            ),
+            InkWell(
+              onTap: () {
+                Navigator.of(context).pushReplacement(
+                  _createRoute(),
+                );
+              },
+              child: Text(
+                "Okay",
+                style: TextStyle(
+                  color: Color(0xFF677D81),
+                  fontSize: 14,
+                  fontFamily: 'Poppins',
+                  fontWeight: FontWeight.w700,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ],
+        ),
       ),
     ),
   );

@@ -33,9 +33,9 @@ class TransaksiRepository
   }
 
   //status
-  Future<void> insertStatusIn(StatusModel model) async
+  Future<void> insertStatusIn() async
   {
-    await service.insertDataStatus(model);
+    await service.insertDataStatus();
   }
 
   Future<List<StatusModel>> getStatusIn() async{

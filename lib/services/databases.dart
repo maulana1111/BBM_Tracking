@@ -82,12 +82,13 @@ class DatabasesMain {
 
   Future<sql.Database> dbs() async {
     return sql.openDatabase(
-      join(await sql.getDatabasesPath(), 'bbmtracking.db'),
+      join(await sql.getDatabasesPath(), 'bbmtracking1.db'),
       version: 1,
       onCreate: (sql.Database database, int version) async {
         await createTablesBensin(database);
         await createTablesTransaksi(database);
         await createTablesKendaraan(database);
+        await createTablesFirstIn(database);
         await createTableMapPhotoTransaction(database);
       },
     );
@@ -106,10 +107,10 @@ class DatabasesMain {
     });
   }
 
-  Future<void> insertDataStatus(StatusModel rw) async {
+  Future<void> insertDataStatus() async {
     final db = await dbs();
     await db.rawInsert(
-        "INSERT INTO firstIn(id,status) VALUES('${rw.id}','${rw.status}'')");
+        "INSERT INTO firstIn(status) VALUES(1)");
   }
 
   //bensin

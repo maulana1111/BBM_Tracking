@@ -1,6 +1,6 @@
 class StatusModel {
   int id;
-  String status;
+  int status;
 
   StatusModel(
       {required this.id,

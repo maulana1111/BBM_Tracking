@@ -1,6 +1,7 @@
 import 'package:bbm_tracking/model/bensin_m.dart';
 import 'package:bbm_tracking/model/kendaraan_m.dart';
 import 'package:bbm_tracking/model/photo_m.dart';
+import 'package:bbm_tracking/model/status_m.dart';
 import 'package:bbm_tracking/model/transaksiPerMonth_m.dart';
 import 'package:bbm_tracking/model/transaksi_m.dart';
 import 'package:flutter/material.dart';
@@ -61,6 +62,14 @@ class DatabasesMain {
       )
       """);
   }
+  
+  Future<void> createTablesFirstIn(sql.Database database) async {
+    await database.execute("""CREATE TABLE firstIn(
+        id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+        status INTEGER
+      )
+      """);
+  }
 
   Future<void> createTableMapPhotoTransaction(sql.Database database) async {
     await database.execute("""CREATE TABLE photo(
@@ -82,6 +91,25 @@ class DatabasesMain {
         await createTableMapPhotoTransaction(database);
       },
     );
+  }
+
+  //kendaraan
+  Future<List<StatusModel>> getStatusIn() async {
+    final db = await dbs();
+
+    final List<Map<String, dynamic>> maps = await db.query('firstIn');
+    return List.generate(maps.length, (index) {
+      return StatusModel(
+        id: maps[index]['id'],
+        status: maps[index]['status'],
+      );
+    });
+  }
+
+  Future<void> insertDataStatus(StatusModel rw) async {
+    final db = await dbs();
+    await db.rawInsert(
+        "INSERT INTO firstIn(id,status) VALUES('${rw.id}','${rw.status}'')");
   }
 
   //bensin

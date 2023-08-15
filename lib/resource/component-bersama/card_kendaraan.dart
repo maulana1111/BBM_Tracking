@@ -123,10 +123,10 @@ class MainCardKendaraan extends StatelessWidget {
                                             height: 5,
                                           ),
                                           Text(
-                                            // kendaraanModel != null
-                                            //     ? kendaraanModel!.nomorPlat
-                                            //     : "-",
-                                            "AS 7713 JJA",
+                                            kendaraanModel != null
+                                                ? kendaraanModel!.nomorPlat
+                                                : "-",
+                                            // "AS 7713 JJA",
                                             style: TextStyle(
                                               fontFamily: 'Poppins',
                                               fontSize: 14,

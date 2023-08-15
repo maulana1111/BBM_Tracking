@@ -29,10 +29,8 @@ class _ItemHistoryState extends State<ItemHistory> {
 
   String reformatDate(DateTime date) {
     String data = "";
-    for(int i = 0; i < bulan.length; i++)
-    {
-      if( i+1 == date.month)
-      {
+    for (int i = 0; i < bulan.length; i++) {
+      if (i + 1 == date.month) {
         data += "${bulan[i].substring(0, 3)}, ${date.day} ${date.year}";
       }
     }
@@ -44,12 +42,15 @@ class _ItemHistoryState extends State<ItemHistory> {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 5),
       child: InkWell(
-        onTap: () => Navigator.of(context).push(MaterialPageRoute(
+        onTap: () => Navigator.of(context).push(
+          MaterialPageRoute(
             builder: (context) => RiwayatDetail(
-                  data: data!,
-                  key: UniqueKey(),
-                  kendaraan: kendaraan!,
-                ))),
+              data: data!,
+              key: UniqueKey(),
+              kendaraan: kendaraan!,
+            ),
+          ),
+        ),
         child: Container(
           decoration: BoxDecoration(
             border: Border.all(width: 1, color: Color(0xFF677D81)),

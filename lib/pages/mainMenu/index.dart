@@ -223,7 +223,7 @@ class _IndexMainMenuState extends State<IndexMainMenu> {
   Widget DatePerforma(dataTransaksiThisMonth) {
     return Container(
       width: double.infinity,
-      height: 300,
+      height: 350,
       margin: EdgeInsets.all(5),
       decoration: BoxDecoration(
         color: Color(0xffE3EAEA),

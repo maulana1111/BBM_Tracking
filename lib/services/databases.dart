@@ -62,7 +62,7 @@ class DatabasesMain {
       )
       """);
   }
-  
+
   Future<void> createTablesFirstIn(sql.Database database) async {
     await database.execute("""CREATE TABLE firstIn(
         id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
@@ -109,8 +109,7 @@ class DatabasesMain {
 
   Future<void> insertDataStatus() async {
     final db = await dbs();
-    await db.rawInsert(
-        "INSERT INTO firstIn(status) VALUES(1)");
+    await db.rawInsert("INSERT INTO firstIn(status) VALUES(1)");
   }
 
   //bensin
@@ -153,6 +152,28 @@ class DatabasesMain {
     final db = await dbs();
     await db.rawInsert(
         "INSERT INTO kendaraan(bahanBakar,jenisKendaraan,namaKendaraan,nomorPlat,cc,odometer,kepemilikan,status) VALUES('${kendaraan.bahanBakar}','${kendaraan.jenisKendaraan}','${kendaraan.namaKendaraan}','${kendaraan.nomorPlat}','${kendaraan.cc}','${kendaraan.odometer}','${kendaraan.kepemilikan}','${kendaraan.status}')");
+  }
+
+  Future<void> updateDataKendaraan(KendaraanModel kendaraan) async {
+    final db = await dbs();
+    db.rawUpdate(
+      "UPDATE kendaraan SET bahanBakar=?, jenisKendaraan = ?, namaKendaraan = ?, nomorPlat = ?, cc = ?, odometer = ?, kepemilikan = ? WHERE id = ?",
+      [
+        kendaraan.bahanBakar,
+        kendaraan.jenisKendaraan,
+        kendaraan.namaKendaraan,
+        kendaraan.nomorPlat,
+        kendaraan.cc,
+        kendaraan.odometer,
+        kendaraan.kepemilikan,
+        kendaraan.id,
+      ],
+    );
+  }
+
+  Future<void> deleteDataKendaraan(int id) async {
+    final db = await dbs();
+    await db.rawDelete("DELETE FROM kendaraan WHERE id = ${id}");
   }
 
   Future<void> updateStatusAktifKendaraan(int id, int status) async {

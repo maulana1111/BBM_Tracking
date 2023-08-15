@@ -23,4 +23,14 @@ class KendaraanRepository{
     return service.updateStatusAktifKendaraan(id, status);
   }
 
+  Future<void> deleteDataKendaraan(int id) async
+  {
+    await service.deleteDataKendaraan(id);
+  }
+
+  Future<void> updateDataKendaraan(KendaraanModel data) async
+  {
+    await service.updateDataKendaraan(data);
+  }
+
 }

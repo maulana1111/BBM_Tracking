@@ -9,16 +9,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
-class FormKendaraan extends StatefulWidget {
-  String kendaraan;
-  FormKendaraan({super.key, required this.kendaraan});
+class FormUpdateKendaraan extends StatefulWidget {
+  KendaraanModel kendaraan;
+  FormUpdateKendaraan({super.key, required this.kendaraan});
 
   @override
-  State<FormKendaraan> createState() => _FormKendaraanState();
+  State<FormUpdateKendaraan> createState() => _FormUpdateKendaraanState();
 }
 
-class _FormKendaraanState extends State<FormKendaraan> {
-  late String kendaraan;
+class _FormUpdateKendaraanState extends State<FormUpdateKendaraan> {
+  late KendaraanModel kendaraan;
   late String selectedValueBensin;
   late KendaraanModel kendaraanModel;
 
@@ -36,6 +36,14 @@ class _FormKendaraanState extends State<FormKendaraan> {
   void initState() {
     super.initState();
     kendaraan = widget.kendaraan;
+    tipeKendaraanController.text = kendaraan.namaKendaraan;
+    kilometerController.text = kendaraan.odometer;
+    jenisBBMController.text = kendaraan.bahanBakar;
+    kepemilikanController.text = kendaraan.kepemilikan;
+    nomorPlatController.text = kendaraan.nomorPlat;
+    ccController.text = kendaraan.cc.toString();
+    print(kendaraan.jenisKendaraan);
+
   }
 
   void _submit() {
@@ -49,30 +57,27 @@ class _FormKendaraanState extends State<FormKendaraan> {
         kepemilikanController.value.text != "" &&
         nomorPlatController.value.text != "" &&
         ccController.value.text != "") {
-      print("success");
       kendaraanModel = KendaraanModel(
-        id: 0,
-        jenisKendaraan: kendaraan,
+        id: kendaraan.id,
+        jenisKendaraan: kendaraan.jenisKendaraan,
         namaKendaraan: tipeKendaraanController.value.text,
         nomorPlat: nomorPlatController.value.text,
         bahanBakar: jenisBBMController.value.text,
         cc: int.parse(ccController.value.text),
         odometer: kilometerController.value.text,
         kepemilikan: kepemilikanController.value.text,
-        status: 0,
+        status: kendaraan.status,
       );
-      context.read<BbmBloc>().add(BBMDataKendaraanAdded(kendaraanModel));
+      context.read<BbmBloc>().add(BBMDataKendaraanUpdated(kendaraanModel));
       Navigator.of(context).pushReplacement(MaterialPageRoute(
         builder: (context) => Home("", ""),
       ));
       showDialog(
         context: context,
         builder: (BuildContext context) {
-          return SuccessDialogBox(deskripsi: "Berhasil Menambah Data");
+          return SuccessDialogBox(deskripsi: "Berhasil Mengubah Data");
         },
       );
-    } else {
-      print("faield");
     }
   }
 
@@ -226,7 +231,7 @@ class _FormKendaraanState extends State<FormKendaraan> {
             width: 20,
           ),
           Image.asset(
-            kendaraan == "motor"
+            kendaraan.jenisKendaraan == "motor"
                 ? "assets/images/motor.png"
                 : "assets/images/car.png",
             width: 50,
@@ -236,7 +241,7 @@ class _FormKendaraanState extends State<FormKendaraan> {
             width: 20,
           ),
           Text(
-            kendaraan == "motor" ? "Motor" : "Mobil",
+            kendaraan.jenisKendaraan == "motor" ? "Motor" : "Mobil",
             style: TextStyle(
               fontFamily: 'Poppins',
               fontSize: 15,

@@ -23,6 +23,7 @@ class BbmBloc extends Bloc<BbmEvent, BbmState> {
       : super(BbmInitial()) {
     on<BBMStarted>(_onBBMStarted);
     on<BBMDataKendaraanAdded>(_onBBMKendaraanAdded);
+    on<BBMDataKendaraanUpdated>(_onBBMKendaraanUpdated);
     on<BBMChangeStatusKendaraan>(_onBBMChangeStatusKendaraan);
     on<BBMDataKendaraan>(_onBBMGetDataKendaraan);
     on<BBMInsertTransaksion>(_onBBMInsertTransaksi);
@@ -117,6 +118,34 @@ class BbmBloc extends Bloc<BbmEvent, BbmState> {
         List<KendaraanModel> dataKendaraan = state.kendaraan;
         event.kendaraanModel.id = state.kendaraan.length + 1;
         dataKendaraan.add(event.kendaraanModel);
+        List<TransaksiModel> dataTransaksi = state.transaksi;
+        List<TransaksiPerMonthModel> dataTransaksiThisMonth =
+            await transaksiRepository.loadTransaksiThisMonth(
+                DateFormat("yyyy-MM-dd")
+                    .parse(DateTime.now().toString())
+                    .toString());
+        emit(
+          BBMLoaded(dataKendaraan, dataTransaksi, dataTransaksiThisMonth),
+        );
+      }
+    } catch (e) {
+      emit(BBMError(message: "Something Error, ${e}, We Will Fix it"));
+    }
+  }
+
+  Future<void> _onBBMKendaraanUpdated(
+    BBMDataKendaraanUpdated event,
+    Emitter<BbmState> emit,
+  ) async {
+    final state = this.state;
+    try {
+      if (state is BBMLoaded) {
+        await kendaraanRepository.updateDataKendaraan(event.kendaraanModel);
+        List<KendaraanModel> dataKendaraan = state.kendaraan;
+        // event.kendaraanModel.id = state.kendaraan.length + 1;
+        // dataKendaraan.add(event.kendaraanModel);
+        // dataKendaraan.removeWhere((element) => element.id == event.kendaraanModel.id);
+        dataKendaraan[dataKendaraan.indexWhere((element) => element.id == event.kendaraanModel.id)] = event.kendaraanModel;
         List<TransaksiModel> dataTransaksi = state.transaksi;
         List<TransaksiPerMonthModel> dataTransaksiThisMonth =
             await transaksiRepository.loadTransaksiThisMonth(

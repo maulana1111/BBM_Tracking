@@ -17,6 +17,14 @@ class BBMDataKendaraanAdded extends BbmEvent{
   List<Object> get props => [kendaraanModel];
 }
 
+class BBMDataKendaraanUpdated extends BbmEvent{
+  const BBMDataKendaraanUpdated(this.kendaraanModel);
+  final KendaraanModel kendaraanModel;
+  
+  @override
+  List<Object> get props => [kendaraanModel];
+}
+
 class BBMDataKendaraan extends BbmEvent{
   final KendaraanModel kendaraanModel;
   const BBMDataKendaraan({required this.kendaraanModel});

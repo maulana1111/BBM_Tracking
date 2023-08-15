@@ -1,16 +1,18 @@
 import 'package:bbm_tracking/model/Kendaraan_model.dart';
 import 'package:bbm_tracking/model/kendaraan_m.dart';
 import 'package:bbm_tracking/pages/component/custom_dialog_box.dart';
+import 'package:bbm_tracking/repository/kendaraan/kendaraan_repository.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 
 class CardKendaraan extends StatefulWidget {
   final KendaraanModel kendaraan;
   final Function onChangeStatus;
-  CardKendaraan({
-    required this.kendaraan,
-    required this.onChangeStatus,
-    Key? key
-  }) : super(key: key);
+  final Function onDelete;
+  final Function onUpdate;
+  CardKendaraan(
+      {required this.kendaraan, required this.onChangeStatus, required this.onDelete, required this.onUpdate, Key? key})
+      : super(key: key);
 
   @override
   State<CardKendaraan> createState() => _CardKendaraanState();
@@ -19,18 +21,22 @@ class CardKendaraan extends StatefulWidget {
 class _CardKendaraanState extends State<CardKendaraan> {
   late KendaraanModel kendaraan;
   late Function onChangeStatus;
+  late Function onDelete;
+  late Function onUpdate;
   @override
   void initState() {
     super.initState();
     kendaraan = widget.kendaraan;
     onChangeStatus = widget.onChangeStatus;
+    onDelete = widget.onDelete;
+    onUpdate = widget.onUpdate;
   }
 
   int count = 0;
-  changeStatus(id, status)
-  {
+  changeStatus(id, status) {
     onChangeStatus(id, status);
   }
+
   TextStyle styleText = TextStyle(
     fontFamily: 'Poppins',
     fontSize: 12,
@@ -52,24 +58,51 @@ class _CardKendaraanState extends State<CardKendaraan> {
     color: Color(0xFFFFFFFF),
   );
 
+  void deleteData() async {
+    onDelete(kendaraan.id);
+  }
+
+  void updateData() async {
+    onUpdate(kendaraan);
+  }
+
   @override
   Widget build(BuildContext context) {
-    print("child rerender = ");
-    return InkWell(
-      key: widget.key,
-      onTap: () {
-        kendaraan.status == 0
-            ? showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return showDialogError();
-                },
-              )
-            : print("object");
-      },
+    return Slidable(
+      // Specify a key if the Slidable is dismissible.
+      key: const ValueKey(0),
+
+      // The start action pane is the one at the left or the top side.
+      startActionPane: ActionPane(
+        // A motion is a widget used to control how the pane animates.
+        motion: const DrawerMotion(),
+
+        // A pane can dismiss the Slidable.
+        // dismissible: DismissiblePane(onDismissed: () {}),
+
+        // All actions are defined in the children parameter.
+        children: [
+          // A SlidableAction can have an icon and/or a label.
+          SlidableAction(
+            backgroundColor: Color(0xFFFE4A49),
+            foregroundColor: Colors.white,
+            icon: Icons.delete,
+            label: 'Delete',
+            onPressed: (context) => deleteData(),
+          ),
+          SlidableAction(
+            onPressed: (context) => updateData(),
+            backgroundColor: Color(0xFF21B7CA),
+            foregroundColor: Colors.white,
+            icon: Icons.share,
+            label: 'Update',
+          ),
+        ],
+      ),
+
       child: Container(
         width: double.infinity,
-        height: 135,
+        height: 145,
         margin: EdgeInsets.only(
           top: 8,
           bottom: 8,

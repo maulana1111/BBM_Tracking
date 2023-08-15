@@ -7,6 +7,8 @@ import 'package:bbm_tracking/pages/Performa/index.dart';
 import 'package:bbm_tracking/pages/home.dart';
 import 'package:bbm_tracking/pages/kendaraan/component/card-kendaraan.dart';
 import 'package:bbm_tracking/pages/kendaraan/form-tambah-kendaraan/form.dart';
+import 'package:bbm_tracking/pages/kendaraan/form-update-kendaraan/form-update.dart';
+import 'package:bbm_tracking/repository/kendaraan/kendaraan_repository.dart';
 import 'package:bbm_tracking/resource/popup/popup.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -33,6 +35,25 @@ class _IndexKendaraanState extends State<IndexKendaraan> {
     setState(() {
       counter++;
     });
+  }
+
+  void deleteDataKendaraan(int id) async {
+    await KendaraanRepository().deleteDataKendaraan(id);
+    dataKendaraan.removeWhere((element) => element.id == id);
+    setState(() {
+      counter++;
+    });
+  }
+
+  void updateKendaraan(KendaraanModel data) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => FormUpdateKendaraan(
+          kendaraan: data,
+          key: UniqueKey(),
+        ),
+      ),
+    );
   }
 
   void checkKendaraan(List<KendaraanModel> data) {
@@ -162,10 +183,15 @@ class _IndexKendaraanState extends State<IndexKendaraan> {
                                   itemBuilder:
                                       (BuildContext context, int index) {
                                     return CardKendaraan(
-                                      kendaraan:
-                                          dataKendaraan.elementAt(index),
+                                      kendaraan: dataKendaraan.elementAt(index),
                                       onChangeStatus: (int id, int status) {
                                         changeStatuKendaraan(id, status);
+                                      },
+                                      onDelete: (int id) {
+                                        deleteDataKendaraan(id);
+                                      },
+                                      onUpdate: (KendaraanModel kendaraan) {
+                                        updateKendaraan(kendaraan);
                                       },
                                       key: UniqueKey(),
                                     );

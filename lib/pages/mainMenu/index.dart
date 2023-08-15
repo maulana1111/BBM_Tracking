@@ -67,9 +67,8 @@ class _IndexMainMenuState extends State<IndexMainMenu> {
     }
 
     List<TransaksiPerMonthModel> dt = await TransaksiRepository()
-        .loadTransaksiThisMonth(DateFormat("yyyy-MM-dd")
-            .parse(date.toString())
-            .toString());
+        .loadTransaksiThisMonth(
+            DateFormat("yyyy-MM-dd").parse(date.toString()).toString());
     dataTransaksiThisMonth.clear();
     dt.forEach((element) {
       if (element.kendaraanId == dataKendaraanObject?.id.toString()) {
@@ -117,26 +116,25 @@ class _IndexMainMenuState extends State<IndexMainMenu> {
   // String _month = 0;
   // int _year = 0;
 
-  
-
-   Future<bool> _onWillPop() async {
+  Future<bool> _onWillPop() async {
     return (await showDialog(
-      context: context,
-      builder: (context) => new AlertDialog(
-        title: new Text('Apa Kamu Yakin?'),
-        content: new Text('Kamu ingin Keluar Aplikasi'),
-        actions: <Widget>[
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: new Text('No'),
+          context: context,
+          builder: (context) => new AlertDialog(
+            title: new Text('Apa Kamu Yakin?'),
+            content: new Text('Kamu ingin Keluar Aplikasi'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: new Text('No'),
+              ),
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(true),
+                child: new Text('Yes'),
+              ),
+            ],
           ),
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(true),
-            child: new Text('Yes'),
-          ),
-        ],
-      ),
-    )) ?? false;
+        )) ??
+        false;
   }
 
   @override
@@ -177,6 +175,10 @@ class _IndexMainMenuState extends State<IndexMainMenu> {
                           SizedBox(
                             height: 5,
                           ),
+                          SizedBox(
+                            height: 15,
+                          ),
+                          ItemListBensin(listBensin),
                           Container(
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.end,
@@ -200,10 +202,6 @@ class _IndexMainMenuState extends State<IndexMainMenu> {
                               ],
                             ),
                           ),
-                          SizedBox(
-                            height: 15,
-                          ),
-                          ItemListBensin(listBensin),
                           SizedBox(
                             height: 15,
                           ),
@@ -247,6 +245,27 @@ class _IndexMainMenuState extends State<IndexMainMenu> {
         child: Column(
           children: [
             Container(
+              child: Text(
+                "Grafik Pengisian Bahan Bakar",
+                style: TextStyle(
+                  fontFamily: 'Poppins',
+                  fontSize: 16,
+                  color: Color(0xFF1A0F0F),
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Divider(
+              color: Color(0xFF1A0F0F3D),
+              height: 2,
+              thickness: 2,
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Container(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
@@ -269,6 +288,7 @@ class _IndexMainMenuState extends State<IndexMainMenu> {
                     },
                     child: Container(
                       decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(8)),
                         border: Border.all(
                           width: 2,
                           color: Color(0xffDDB05E),

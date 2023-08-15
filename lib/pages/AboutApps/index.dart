@@ -21,7 +21,7 @@ class _AboutAppsState extends State<AboutApps> {
               width: double.infinity,
               margin: EdgeInsets.only(top: 10),
               child: Text(
-                "Pengisian Bahan Bakar",
+                "Tentang Aplikasi",
                 style: TextStyle(
                   fontFamily: 'Poppins',
                   fontWeight: FontWeight.w500,

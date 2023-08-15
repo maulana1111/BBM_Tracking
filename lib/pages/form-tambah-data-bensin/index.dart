@@ -949,23 +949,6 @@ class _FormTamabahDataBensinState extends State<FormTamabahDataBensin>
         SizedBox(
           height: 10,
         ),
-        Container(
-          padding: EdgeInsets.all(5),
-          decoration: BoxDecoration(
-            border: Border.all(color: Color(0xFFFC8D05)),
-            borderRadius: BorderRadius.all(
-              Radius.circular(8),
-            ),
-          ),
-          child: Text(
-            "Lokasi SPBU dapat Anda temukan melalui google map",
-            style: TextStyle(
-              fontFamily: 'Poppins',
-              fontWeight: FontWeight.w500,
-              fontSize: 9,
-            ),
-          ),
-        ),
         SizedBox(
           height: 10,
         ),
@@ -1013,7 +996,7 @@ class _FormTamabahDataBensinState extends State<FormTamabahDataBensin>
                       left: 15,
                       right: 15,
                     ),
-                    hintText: "Alamat SPBU (optional)",
+                    hintText: "Lokasi/Nama SPBU (optional)",
                     hintStyle: TextStyle(
                       fontFamily: 'Poppins',
                       color: Color(0xFFAEAEAE),
@@ -1034,12 +1017,6 @@ class _FormTamabahDataBensinState extends State<FormTamabahDataBensin>
     return Container(
       height: 150,
       width: double.infinity,
-      decoration: BoxDecoration(
-        border: Border.all(color: Color(0xFFAEAEAE)),
-        borderRadius: BorderRadius.all(
-          Radius.circular(8),
-        ),
-      ),
       child: GoogleMap(
         initialCameraPosition: CameraPosition(
           target: LatLng(48.8561, 2.2930),

@@ -115,7 +115,7 @@ class _IndexKendaraanState extends State<IndexKendaraan> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  backButton(),
+                                  Container(),
                                   Container(
                                     child: InkWell(
                                       onTap: () =>
@@ -123,7 +123,7 @@ class _IndexKendaraanState extends State<IndexKendaraan> {
                                       child: Text(
                                         "Performa Kendaraan",
                                         style: TextStyle(
-                                          fontSize: 10,
+                                          fontSize: 13,
                                           fontFamily: 'Poppins',
                                           color: Color(0xff25A35A),
                                           fontWeight: FontWeight.w600,

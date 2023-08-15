@@ -46,13 +46,13 @@ class MainCardKendaraan extends StatelessWidget {
                             ? kendaraanModel?.jenisKendaraan != "motor"
                                 ? Image.asset(
                                     "assets/images/car.png",
-                                    width: 120,
-                                    height: 120,
+                                    width: 110,
+                                    height: 110,
                                   )
                                 : Image.asset(
                                     "assets/images/motor.png",
-                                    width: 120,
-                                    height: 120,
+                                    width: 110,
+                                    height: 110,
                                   )
                             : Image.asset(
                                 "assets/images/img_empty.png",
@@ -123,9 +123,10 @@ class MainCardKendaraan extends StatelessWidget {
                                             height: 5,
                                           ),
                                           Text(
-                                            kendaraanModel != null
-                                                ? kendaraanModel!.nomorPlat
-                                                : "-",
+                                            // kendaraanModel != null
+                                            //     ? kendaraanModel!.nomorPlat
+                                            //     : "-",
+                                            "AS 7713 JJA",
                                             style: TextStyle(
                                               fontFamily: 'Poppins',
                                               fontSize: 14,

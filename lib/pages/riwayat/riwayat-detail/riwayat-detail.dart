@@ -64,7 +64,7 @@ class _RiwayatDetailState extends State<RiwayatDetail> {
 
   TextStyle style = TextStyle(
     fontFamily: 'Poppins',
-    fontSize: 9,
+    fontSize: 13,
     fontWeight: FontWeight.w400,
   );
 
@@ -88,30 +88,6 @@ class _RiwayatDetailState extends State<RiwayatDetail> {
               padding: EdgeInsets.all(10),
               child: Column(
                 children: [
-                  InkWell(
-                    onTap: () => Navigator.pop(context),
-                    child: Container(
-                      child: Container(
-                        child: Row(
-                          children: [
-                            Icon(
-                              Icons.arrow_back_ios,
-                              size: 15,
-                            ),
-                            Text(
-                              "Kembali",
-                              style: TextStyle(
-                                fontSize: 10,
-                                fontFamily: 'Poppins',
-                                color: Color(0xff1A0F0F),
-                                fontWeight: FontWeight.w400,
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
                   SizedBox(
                     height: 10,
                   ),
@@ -142,7 +118,7 @@ class _RiwayatDetailState extends State<RiwayatDetail> {
                       "Transaksi Berhasil",
                       style: TextStyle(
                         fontFamily: 'Poppins',
-                        fontSize: 11,
+                        fontSize: 15,
                         fontWeight: FontWeight.w500,
                         color: Color(0xFF25A35A),
                       ),
@@ -170,11 +146,11 @@ class _RiwayatDetailState extends State<RiwayatDetail> {
                               flex: 1,
                               child: InkWell(
                                 onTap: () {
-    
                                   Navigator.of(context).push(
                                     MaterialPageRoute(
                                       builder: (context) => MakePdf(
-                                          transaksi: data, kendaraan: kendaraan),
+                                          transaksi: data,
+                                          kendaraan: kendaraan),
                                     ),
                                   );
                                 },
@@ -183,7 +159,7 @@ class _RiwayatDetailState extends State<RiwayatDetail> {
                                     "Download",
                                     style: TextStyle(
                                       fontFamily: 'Poppins',
-                                      fontSize: 9,
+                                      fontSize: 13,
                                       fontWeight: FontWeight.w400,
                                       color: Color(0xFF1C7A44),
                                       fontStyle: FontStyle.italic,
@@ -201,12 +177,19 @@ class _RiwayatDetailState extends State<RiwayatDetail> {
                     height: 10,
                   ),
                   Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(width: 1, color: Color(0xFF677D81)),
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(5),
+                      ),
+                    ),
+                    padding: EdgeInsets.all(5),
                     alignment: Alignment.topLeft,
                     child: Text(
                       "Tipe Kendaraan",
                       style: TextStyle(
                         fontFamily: 'Poppins',
-                        fontSize: 11,
+                        fontSize: 13,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -219,12 +202,19 @@ class _RiwayatDetailState extends State<RiwayatDetail> {
                     height: 10,
                   ),
                   Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(width: 1, color: Color(0xFF677D81)),
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(5),
+                      ),
+                    ),
+                    padding: EdgeInsets.all(5),
                     alignment: Alignment.topLeft,
                     child: Text(
                       "Details",
                       style: TextStyle(
                         fontFamily: 'Poppins',
-                        fontSize: 11,
+                        fontSize: 13,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -280,7 +270,12 @@ class _RiwayatDetailState extends State<RiwayatDetail> {
                   child: Text(
                     value,
                     textAlign: TextAlign.right,
-                    style: style,
+                    style: TextStyle(
+                      fontFamily: 'Poppins',
+                      fontSize: 13,
+                      fontWeight: FontWeight.w400,
+                      color: Color(0xFF25A35A),
+                    ),
                   ),
                 ),
               ),

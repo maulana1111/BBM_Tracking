@@ -118,7 +118,6 @@ class _FormKendaraanState extends State<FormKendaraan> {
                   SizedBox(
                     height: 55,
                   ),
-                  BackButton(),
                   Container(
                     width: double.infinity,
                     margin: EdgeInsets.only(top: 10),
@@ -281,32 +280,6 @@ class _FormKendaraanState extends State<FormKendaraan> {
     );
   }
 
-  Widget BackButton() {
-    return Container(
-      child: InkWell(
-        onTap: () => Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => Home("kendaraan", ""))),
-        child: Row(
-          children: [
-            Icon(
-              Icons.arrow_back_ios,
-              size: 15,
-            ),
-            Text(
-              "Kembali",
-              style: TextStyle(
-                fontSize: 10,
-                fontFamily: 'Poppins',
-                color: Color(0xff1A0F0F),
-                fontWeight: FontWeight.w400,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
   Widget dropdownField(title, data, TextEditingController controller) {
     return Container(
       child: Column(
@@ -377,6 +350,12 @@ class _FormKendaraanState extends State<FormKendaraan> {
             ),
           ),
           TextField(
+            textCapitalization: title == "Nomor Plat Kendaraan"
+                ? TextCapitalization.characters
+                : title == "Kendaraan"
+                    ? TextCapitalization.characters
+                    : TextCapitalization.none,
+            maxLength: title == "Nomor Plat Kendaraan" ? 11 : 100,
             controller: controller,
             readOnly: typeField == "date" && true,
             keyboardType: typeField != "date" && typeField != "text"

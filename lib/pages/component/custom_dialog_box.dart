@@ -83,18 +83,19 @@ class _CustomeDialogBoxState extends State<CustomeDialogBox> {
             ),
           ),
           SizedBox(
-            height: 20,
+            height: 35,
           ),
           Container(
             width: double.infinity,
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 InkWell(
                   onTap: () {
                     Navigator.of(context).pop();
                   },
                   child: Container(
+                    margin: EdgeInsets.only(left: 15),
                     child: Text(
                       widget.negativeText,
                       style: TextStyle(

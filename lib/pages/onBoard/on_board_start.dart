@@ -157,7 +157,7 @@ Dialog showDialogKendaraan(BuildContext context) {
     elevation: 1,
     backgroundColor: Color(0xffE3EAEA),
     child: Container(
-      height: 600,
+      height: 400,
       padding: EdgeInsets.all(15),
       child: SingleChildScrollView(
         child: Column(
@@ -173,32 +173,15 @@ Dialog showDialogKendaraan(BuildContext context) {
             ),
             SizedBox(height: 20),
             Text(
-              "By using this BBM Tracking Application, you agree to grant us the following permissions:",
+              "Perhatian!",
             ),
             SizedBox(height: 10),
             Text(
-              "1. Camera Access: We may request access to your device's camera in order to enable capture proof of transaction or capture location.",
-            ),
-            Text(
-              "2. Location Access: We may request access to your device location to make it easier to set gas filling locations.",
-            ),
-            Text(
-              "3. Storage Access: We may request access to your device's storage to save and retrieve image after you take picture your transaction gas.",
-            ),
-            Text(
-              "4. Internet Connectivity: Our application requires an active internet connection to running google maps.",
+              "Kami ingin memberitahukan bahwa kami hanya menggunakan layanan lokasi saat Anda ingin mengisi bensin. Lokasi Anda tidak akan digunakan di latar belakang atau dalam situasi lainnya. Kami menghargai privasi Anda dan hanya menggunakan informasi lokasi yang diberikan saat Anda memilih untuk mengisi bensin. Jika Anda memiliki pertanyaan lebih lanjut tentang penggunaan lokasi dalam aplikasi kami, jangan ragu untuk menghubungi kami",
             ),
             SizedBox(height: 20),
             Text(
-              "These permissions are necessary for the proper functioning of the BBM Tracking and to provide you with a seamless user experience. We assure you that your data and privacy will be handled according to our Privacy Policy & Terms of Service, and we do not collect or share any personal information without your consent.",
-            ),
-            SizedBox(height: 20),
-            Text(
-              "You can manage and revoke these permissions in your device settings at any time. If you have any concerns or questions regarding these permissions.",
-            ),
-            SizedBox(height: 20),
-            Text(
-              "Thank you for using BBM Tracking Application!",
+              "Terima kasih sudah menggunakan aplikasi BBM Tracking",
               style: TextStyle(
                 fontWeight: FontWeight.bold,
               ),

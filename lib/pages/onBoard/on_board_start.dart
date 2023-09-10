@@ -165,19 +165,28 @@ Dialog showDialogKendaraan(BuildContext context) {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
-              'Required Permissions',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
+              'Aplikasi ini mengakses lokasi perangkat Anda untuk mencatat lokasi Anda saat mengisi bahan bakar. Informasi lokasi ini digunakan secara eksklusif untuk memberikan layanan yang lebih baik dalam mencatat riwayat pengisian bahan bakar Anda. Privasi Anda adalah prioritas kami, dan data lokasi Anda tidak akan digunakan untuk tujuan lain atau dibagikan kepada pihak ketiga tanpa izin Anda.',
+              style: TextStyle(fontSize: 16.0),
             ),
-            SizedBox(height: 20),
+            SizedBox(height: 16.0),
             Text(
-              "Perhatian!",
+              'Aplikasi ini tidak menggunakan lokasi saat berjalan di latar belakang. Saat aplikasi ditutup, lokasi tidak akan digunakan. Lokasi hanya akan digunakan saat Anda secara aktif ingin mencatat lokasi pengisian bensin secara detail menggunakan koordinat. Saat aplikasi tidak digunakan, lokasi tidak akan digunakan.',
+              style: TextStyle(fontSize: 16.0),
             ),
-            SizedBox(height: 10),
+            SizedBox(height: 16.0),
             Text(
-              "Kami ingin memberitahukan bahwa kami hanya menggunakan layanan lokasi saat Anda ingin mengisi bensin. Lokasi Anda tidak akan digunakan di latar belakang atau dalam situasi lainnya. Kami menghargai privasi Anda dan hanya menggunakan informasi lokasi yang diberikan saat Anda memilih untuk mengisi bensin. Jika Anda memiliki pertanyaan lebih lanjut tentang penggunaan lokasi dalam aplikasi kami, jangan ragu untuk menghubungi kami",
+              'Fitur utama aplikasi yang menggunakan lokasi perangkat adalah:',
+              style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 8.0),
+            Text(
+              '- Fitur Pencatatan Lokasi: Fitur yang menggunakan lokasi adalah fitur saat Anda menambahkan data pengisian bensin pada form pengisian bensin.',
+              style: TextStyle(fontSize: 16.0),
+            ),
+            SizedBox(height: 16.0),
+            Text(
+              'Kami menghargai kepercayaan Anda dan berkomitmen untuk menjaga keamanan serta privasi data Anda.',
+              style: TextStyle(fontSize: 16.0),
             ),
             SizedBox(height: 20),
             Text(
@@ -193,11 +202,6 @@ Dialog showDialogKendaraan(BuildContext context) {
                 fontStyle: FontStyle.italic,
               ),
             ),
-            // Text(
-            //   "Pilih Kendaraan",
-            //   style: stylee,
-            //   textAlign: TextAlign.center,
-            // ),
             SizedBox(
               height: 7,
             ),

@@ -165,32 +165,32 @@ Dialog showDialogKendaraan(BuildContext context) {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
-              'Aplikasi ini mengakses lokasi perangkat Anda untuk mencatat lokasi Anda saat mengisi bahan bakar. Informasi lokasi ini digunakan secara eksklusif untuk memberikan layanan yang lebih baik dalam mencatat riwayat pengisian bahan bakar Anda. Privasi Anda adalah prioritas kami, dan data lokasi Anda tidak akan digunakan untuk tujuan lain atau dibagikan kepada pihak ketiga tanpa izin Anda.',
+              "This app accesses your device's location to record your location while refueling. This location information is used exclusively to provide a better service in recording your refueling history. Your privacy is our priority, and your location data will not be used for any other purpose or shared with third parties without your permission.",
               style: TextStyle(fontSize: 16.0),
             ),
             SizedBox(height: 16.0),
             Text(
-              'Aplikasi ini tidak menggunakan lokasi saat berjalan di latar belakang. Saat aplikasi ditutup, lokasi tidak akan digunakan. Lokasi hanya akan digunakan saat Anda secara aktif ingin mencatat lokasi pengisian bensin secara detail menggunakan koordinat. Saat aplikasi tidak digunakan, lokasi tidak akan digunakan.',
+              'when the app/location is running in the background or when the app is closed, location/system does not retrieve your location data. Location will only be used when you actively want to log detailed gas station locations using coordinates.',
               style: TextStyle(fontSize: 16.0),
             ),
             SizedBox(height: 16.0),
             Text(
-              'Fitur utama aplikasi yang menggunakan lokasi perangkat adalah:',
+              'The main features of apps that use device location are:',
               style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 8.0),
             Text(
-              '- Fitur Pencatatan Lokasi: Fitur yang menggunakan lokasi adalah fitur saat Anda menambahkan data pengisian bensin pada form pengisian bensin.',
+              '- Location Logging Feature: The feature that uses location is when you add gas filling data on the gas filling form.',
               style: TextStyle(fontSize: 16.0),
             ),
             SizedBox(height: 16.0),
             Text(
-              'Kami menghargai kepercayaan Anda dan berkomitmen untuk menjaga keamanan serta privasi data Anda.',
+              'We value your trust and are committed to maintaining the security and privacy of your data.',
               style: TextStyle(fontSize: 16.0),
             ),
             SizedBox(height: 20),
             Text(
-              "Terima kasih sudah menggunakan aplikasi BBM Tracking",
+              "Thank you for using BBM Tracking application",
               style: TextStyle(
                 fontWeight: FontWeight.bold,
               ),
@@ -212,7 +212,7 @@ Dialog showDialogKendaraan(BuildContext context) {
                 );
               },
               child: Text(
-                "Okay",
+                "I Accept",
                 style: TextStyle(
                   color: Color(0xFF677D81),
                   fontSize: 14,
